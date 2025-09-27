@@ -16,7 +16,7 @@ website:
       - href: blog
         text: Blog
   page-footer:
-    center: "(c) Manikandan Ravi, 2020–. All rights reserved."
+    left: "(c) Manikandan Ravi, 2020–. All rights reserved."
   twitter-card: true
   open-graph: true
 
