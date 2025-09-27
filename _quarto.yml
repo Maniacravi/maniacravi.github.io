@@ -1,0 +1,35 @@
+# Quarto website configuration file
+project:
+  type: website
+  output-dir: docs
+
+website:
+  title: "Mani Ravi"
+  site-url: "https://maniravi.com"
+  description: "Mani is a Bioengineer and Data Scientist working on the intersection of Humans, Sensors and AI."
+  navbar:
+    left:
+      - href: index.qmd
+        text: Home
+      - href: projects
+        text: Projects
+      - href: blog
+        text: Blog
+  page-footer:
+    left: "(c) Manikandan Ravi, 2020–. All rights reserved."
+  twitter-card: true
+  open-graph: true
+
+format:
+  html:
+    respect-user-color-scheme: true
+    theme:
+      light: cosmo
+      dark: [cosmo, theme-dark.scss]
+    theme-toggle: true
+    toc-location: left
+    css: styles.css
+    toc: true
+
+
+

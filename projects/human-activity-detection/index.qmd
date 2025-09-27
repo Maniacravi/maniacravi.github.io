@@ -1,0 +1,501 @@
+---
+title: Human Activity Detection using UCI's HAR Dataset
+description: Classifying Accelerometer data to various activities of daily living (ADL) using Deep Learning.
+jupyter: python3
+categories:
+- IMU
+- Gait
+- Human Activity
+- Machine Learning
+- CNN
+date: 2025-09-25
+---
+
+
+Okay, now we are stepping things up a little bit. This time, the data comes from [UCI](https://archive.ics.uci.edu/dataset/240/human+activity+recognition+using+smartphones). According to the website:
+
+>For each record in the dataset it is provided:
+>- Triaxial acceleration from the accelerometer (total acceleration) and the estimated body acceleration.
+>- Triaxial Angular velocity from the gyroscope.
+>- A 561-feature vector with time and frequency domain variables.
+>- Its activity label.
+>- An identifier of the subject who carried out the experiment.
+
+The dataset is a bit different - it's already been divided into train and test sets but they are all text files. Once again, let's get into it - for fun, let's also use the same model from last time to see if that architecture still works fine for this dataset. If it doesn't, let's see if we can build a different one.
+
+
+## Load Data
+
+The data is split into total, body and gyro - these are the sensor values. There's also another dataset that has some 561 features extracted from this. Might be fun to play with them but for now, let's focus on building our CNN network - so this 'total' values would be fine for now. May play with .body' accel values later.
+
+```{python}
+#| colab: {base_uri: https://localhost:8080/, height: 342}
+file_location = '/Users/manikandanravi/Code/quarto-test/uci-har-dataset/train/Inertial Signals/total_acc_x_train.txt' # Update this path to your file location
+
+# Load into pandas
+import pandas as pd
+import re
+
+data = pd.read_csv(file_location, sep='\s+', header=None)
+display(data.head())
+data.shape
+```
+
+```{python}
+#| colab: {base_uri: https://localhost:8080/, height: 293}
+# Let's see how the labels look like
+
+file_location = '/Users/manikandanravi/Code/quarto-test/uci-har-dataset/train/y_train.txt'
+
+# Load
+data = pd.read_csv(file_location, sep='\s+', header=None)
+display(data.head())
+data.shape
+```
+
+
+Okay looks like there are 7352 segments of windowed data with associated labels
+
+### Make a Dataframe
+
+```{python}
+#| colab: {base_uri: https://localhost:8080/}
+#| collapsed: true
+#| output: false
+# Load X axis data
+file_location = '/Users/manikandanravi/Code/quarto-test/uci-har-dataset/train/Inertial Signals/total_acc_x_train.txt'
+df_total = pd.read_csv(file_location, sep='\s+', header=None)
+file_loc_body = '/Users/manikandanravi/Code/quarto-test/uci-har-dataset/train/Inertial Signals/body_acc_x_train.txt'
+df_body = pd.read_csv(file_loc_body, sep='\s+', header=None)
+file_loc_gyro = '/Users/manikandanravi/Code/quarto-test/uci-har-dataset/train/Inertial Signals/body_gyro_x_train.txt'
+df_gyro = pd.read_csv(file_loc_gyro, sep='\s+', header=None)
+
+# Append Y axis data
+file_location = '/Users/manikandanravi/Code/quarto-test/uci-har-dataset/train/Inertial Signals/total_acc_y_train.txt'
+df_total = pd.concat([df_total, pd.read_csv(file_location, sep='\s+', header=None)], axis=1)
+file_loc_body = '/Users/manikandanravi/Code/quarto-test/uci-har-dataset/train/Inertial Signals/body_acc_y_train.txt'
+df_body = pd.concat([df_body, pd.read_csv(file_loc_body, sep='\s+', header=None)], axis=1)
+file_loc_gyro = '/Users/manikandanravi/Code/quarto-test/uci-har-dataset/train/Inertial Signals/body_gyro_y_train.txt'
+df_gyro = pd.concat([df_gyro, pd.read_csv(file_loc_gyro, sep='\s+', header=None)], axis=1)
+
+# Z axis
+file_location = '/Users/manikandanravi/Code/quarto-test/uci-har-dataset/train/Inertial Signals/total_acc_z_train.txt'
+df_total = pd.concat([df_total, pd.read_csv(file_location, sep='\s+', header=None)], axis=1)
+file_loc_body = '/Users/manikandanravi/Code/quarto-test/uci-har-dataset/train/Inertial Signals/body_acc_z_train.txt'
+df_body = pd.concat([df_body, pd.read_csv(file_loc_body, sep='\s+', header=None)], axis=1)
+file_loc_gyro = '/Users/manikandanravi/Code/quarto-test/uci-har-dataset/train/Inertial Signals/body_gyro_z_train.txt'
+df_gyro = pd.concat([df_gyro, pd.read_csv(file_loc_gyro, sep='\s+', header=None)], axis=1)
+
+# Labels
+file_location = '/Users/manikandanravi/Code/quarto-test/uci-har-dataset/train/y_train.txt'
+y_train = pd.read_csv(file_location, sep='\s+', header=None)
+# Subtract 1 from values
+y_train -= 1
+```
+
+```{python}
+#| colab: {base_uri: https://localhost:8080/}
+df_total.shape, df_body.shape, y_train.shape
+```
+
+```{python}
+# Load into 3 dimensional numpy arrays
+
+import numpy as np
+
+X_total_train = df_total.values.reshape(7352, 128, 3)
+X_body_train = df_body.values.reshape(7352, 128, 3)
+X_gyro_train = df_gyro.values.reshape(7352, 128, 3)
+y_train = np.array(y_train)
+```
+
+```{python}
+#| colab: {base_uri: https://localhost:8080/}
+#| collapsed: true
+#| output: false
+# Do the same for test data
+
+# Load X axis data
+file_location = '/Users/manikandanravi/Code/quarto-test/uci-har-dataset/test/Inertial Signals/total_acc_x_test.txt'
+df_total_test = pd.read_csv(file_location, sep='\s+', header=None)
+file_loc_body = '/Users/manikandanravi/Code/quarto-test/uci-har-dataset/test/Inertial Signals/body_acc_x_test.txt'
+df_body_test = pd.read_csv(file_loc_body, sep='\s+', header=None)
+file_loc_gyro = '/Users/manikandanravi/Code/quarto-test/uci-har-dataset/test/Inertial Signals/body_gyro_x_test.txt'
+df_gyro = pd.read_csv(file_loc_gyro, sep='\s+', header=None)
+
+# Append Y axis data
+file_location = '/Users/manikandanravi/Code/quarto-test/uci-har-dataset/test/Inertial Signals/total_acc_y_test.txt'
+df_total_test = pd.concat([df_total_test, pd.read_csv(file_location, sep='\s+', header=None)], axis=1)
+file_loc_body = '/Users/manikandanravi/Code/quarto-test/uci-har-dataset/test/Inertial Signals/body_acc_y_test.txt'
+df_body_test = pd.concat([df_body_test, pd.read_csv(file_loc_body, sep='\s+', header=None)], axis=1)
+file_loc_gyro = '/Users/manikandanravi/Code/quarto-test/uci-har-dataset/test/Inertial Signals/body_gyro_y_test.txt'
+df_gyro = pd.concat([df_gyro, pd.read_csv(file_loc_gyro, sep='\s+', header=None)], axis=1)
+
+# Z axis
+file_location = '/Users/manikandanravi/Code/quarto-test/uci-har-dataset/test/Inertial Signals/total_acc_z_test.txt'
+df_total_test = pd.concat([df_total_test, pd.read_csv(file_location, sep='\s+', header=None)], axis=1)
+file_loc_body = '/Users/manikandanravi/Code/quarto-test/uci-har-dataset/test/Inertial Signals/body_acc_z_test.txt'
+df_body_test = pd.concat([df_body_test, pd.read_csv(file_loc_body, sep='\s+', header=None)], axis=1)
+file_loc_gyro = '/Users/manikandanravi/Code/quarto-test/uci-har-dataset/test/Inertial Signals/body_gyro_z_test.txt'
+df_gyro = pd.concat([df_gyro, pd.read_csv(file_loc_gyro, sep='\s+', header=None)], axis=1)
+
+# Labels
+file_location = '/Users/manikandanravi/Code/quarto-test/uci-har-dataset/test/y_test.txt'
+y_test = pd.read_csv(file_location, sep='\s+', header=None)
+y_test -= 1
+
+# Convert to numpy arrays
+X_total_test = df_total_test.values.reshape(len(df_total_test), 128, 3)
+X_body_test = df_body_test.values.reshape(len(df_body_test), 128, 3)
+X_gyro_test = df_gyro.values.reshape(len(df_gyro), 128, 3)
+y_test = np.array(y_test)
+
+print("Shapes of test data:")
+print("X_total_test:", X_total_test.shape)
+print("X_body_test:", X_body_test.shape)
+print("X_gyro_test:", X_gyro_test.shape)
+print("y_test:", y_test.shape)
+```
+
+OKay, now we have the data. Let's get to work on building dataloaders and the models
+
+## Build Model
+
+### Data Loader
+
+```{python}
+import torch
+import torch.nn as nn
+from torch.utils.data import Dataset, DataLoader
+
+# Dataset wrapper
+class UCIDatasetWrapper(Dataset):
+  def __init__(self, X, y):
+    # Convert (N, T, C) -> (N, C, T) for Conv1D
+    self.X = torch.tensor(X.transpose(0,2,1), dtype=torch.float32)
+    self.y = torch.tensor(y, dtype=torch.long)
+
+  def __len__(self):
+    return len(self.y)
+
+  def __getitem__(self, i):
+    return self.X[i], self.y[i]
+```
+
+```{python}
+  train_ds = UCIDatasetWrapper(X_total_train, y_train)
+  train_ds_body = UCIDatasetWrapper(X_body_train, y_train)
+  test_ds = UCIDatasetWrapper(X_total_test, y_test)
+  test_ds_body = UCIDatasetWrapper(X_body_test, y_test)
+
+  train_dl = DataLoader(train_ds, batch_size=32, shuffle=True)
+  train_dl_body = DataLoader(train_ds_body, batch_size=32, shuffle=True)
+  test_dl = DataLoader(test_ds, batch_size=32, shuffle=False)
+```
+
+### Model
+
+Lets use the same model from the [previous notbook](https://colab.research.google.com/drive/1An5hpfwl3Jv0iM5qd3wFF2sbwfmGaN4R?usp=sharing)
+
+```{python}
+# 1D CNN model (Same as our previous notebook)
+import torch.nn.functional as F
+class HAR1DCNN(nn.Module):
+    def __init__(self, in_channels=3, n_classes=6):  # adjust n_classes!
+        super().__init__()
+        self.conv1 = nn.Conv1d(in_channels, 32, kernel_size=3, padding=1)
+        self.bn1 = nn.BatchNorm1d(32)
+        self.conv2 = nn.Conv1d(32, 64, kernel_size=3, padding=1)
+        self.bn2 = nn.BatchNorm1d(64)
+        self.pool = nn.MaxPool1d(2)
+        self.conv3 = nn.Conv1d(64, 128, kernel_size=3, padding=1)
+        self.bn3 = nn.BatchNorm1d(128)
+        self.global_pool = nn.AdaptiveAvgPool1d(1)
+        self.fc = nn.Linear(128, n_classes)
+
+    def forward(self, x):
+        x = F.relu(self.bn1(self.conv1(x)))
+        x = self.pool(x)          # (N, 32, 20)
+        x = F.relu(self.bn2(self.conv2(x)))
+        x = self.pool(x)          # (N, 64, 10)
+        x = F.relu(self.bn3(self.conv3(x)))
+        x = self.global_pool(x).squeeze(-1)  # (N, 128)
+        return self.fc(x)
+```
+
+## Train the model
+
+```{python}
+device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+if device.type != "cuda":
+  device = torch.device("mps" if torch.backends.mps.is_available() else "cpu")
+
+n_classes = len(torch.unique(torch.tensor(y_train)))
+model = HAR1DCNN(in_channels=3, n_classes=n_classes).to(device)
+```
+
+```{python}
+# Optimizer and loss function
+optim = torch.optim.Adam(model.parameters(), lr=1e-3)
+loss_fn = nn.CrossEntropyLoss()
+```
+
+```{python}
+def run_epoch(loader, train=True):
+  if train:
+    model.train()
+  else:
+    model.eval()
+  total_loss, correct, total = 0, 0, 0
+  for Xb, yb in loader:
+    Xb, yb = Xb.to(device), yb.to(device)
+    if train:
+      optim.zero_grad()
+    out = model(Xb)
+    loss = loss_fn(out, yb.squeeze()) # Removed - 1
+    if train:
+      loss.backward()
+      optim.step()
+
+    total_loss += loss.item() * Xb.size(0)
+    preds = out.argmax(1)
+
+    correct += (preds == yb.squeeze()).sum().item() # Removed - 1
+    total += Xb.size(0)
+  return total_loss/total, correct/total
+```
+
+```{python}
+#| colab: {base_uri: https://localhost:8080/}
+for epoch in range(10):
+  train_loss, train_acc = run_epoch(train_dl)
+  test_loss, test_acc = run_epoch(test_dl, train=False)
+  print(f'Epoch {epoch+1}: train_loss={train_loss:.4f}, train_acc={train_acc:.4f}, test_loss={test_loss:.4f}, test_acc={test_acc:.4f}')
+```
+
+## Evaluate model
+
+```{python}
+#| colab: {base_uri: https://localhost:8080/, height: 735}
+# Evaluate the model - get F1 score, confusion matrix
+
+from sklearn.metrics import f1_score, confusion_matrix
+
+model.eval()
+y_pred = []
+y_true = []
+with torch.no_grad():
+    for Xb, yb in test_dl:
+        Xb, yb = Xb.to(device), yb.to(device)
+        out = model(Xb)
+        preds = out.argmax(1)
+        y_pred.extend(preds.cpu().numpy())
+        y_true.extend(yb.cpu().numpy())
+
+f1 = f1_score(y_true, y_pred, average='macro')
+cm = confusion_matrix(y_true, y_pred)
+print(f'F1 score: {f1:.4f}')
+
+# PLot confusion matrix
+
+import seaborn as sns
+import matplotlib.pyplot as plt
+
+plt.figure(figsize=(10, 8))
+sns.heatmap(cm, annot=True, fmt='d', cmap='Blues')
+plt.xlabel('Predicted')
+plt.ylabel('True')
+plt.title(f'Confusion Matrix (F1 score= {f1:.4f})')
+plt.xticks([0.5, 1.5, 2.5, 3.5, 4.5, 5.5], ['Walking', 'Upstairs', 'Downstairs', 'Sitting', 'Standing', 'Laying'])
+plt.yticks([0.5, 1.5, 2.5, 3.5, 4.5, 5.5], ['Walking', 'Upstairs', 'Downstairs', 'Sitting', 'Standing', 'Laying]'])
+plt.show()
+```
+
+## Changing Data
+
+What if we train the model just with the 'body' accelerometer data?
+
+Just to recap:
+>  The sensor signals (accelerometer and gyroscope) were pre-processed by applying noise filters and then sampled in fixed-width sliding windows of 2.56 sec and 50% overlap (128 readings/window). The sensor acceleration signal, which has gravitational and body motion components, was separated using a Butterworth low-pass filter into body acceleration and gravity. The gravitational force is assumed to have only low frequency components, therefore a filter with 0.3 Hz cutoff frequency was used. From each window, a vector of features was obtained by calculating variables from the time and frequency domain.
+
+```{python}
+#| colab: {base_uri: https://localhost:8080/}
+for epoch in range(10):
+  train_loss, train_acc = run_epoch(train_dl_body)
+  test_loss, test_acc = run_epoch(test_dl, train=False)
+  print(f'Epoch {epoch+1}: train_loss={train_loss:.4f}, train_acc={train_acc:.4f}, test_loss={test_loss:.4f}, test_acc={test_acc:.4f}')
+```
+
+```{python}
+#| colab: {base_uri: https://localhost:8080/, height: 735}
+# Evaluate the model - get F1 score, confusion matrix
+
+from sklearn.metrics import f1_score, confusion_matrix
+
+model.eval()
+y_pred = []
+y_true = []
+with torch.no_grad():
+    for Xb, yb in test_dl:
+        Xb, yb = Xb.to(device), yb.to(device)
+        out = model(Xb)
+        preds = out.argmax(1)
+        y_pred.extend(preds.cpu().numpy())
+        y_true.extend(yb.cpu().numpy())
+
+f1 = f1_score(y_true, y_pred, average='macro')
+cm = confusion_matrix(y_true, y_pred)
+print(f'F1 score: {f1:.4f}')
+
+# PLot confusion matrix
+
+import seaborn as sns
+import matplotlib.pyplot as plt
+
+plt.figure(figsize=(10, 8))
+sns.heatmap(cm, annot=True, fmt='d', cmap='Blues')
+plt.xlabel('Predicted')
+plt.ylabel('True')
+plt.title(f'Confusion Matrix (F1 score= {f1:.4f})')
+plt.xticks([0.5, 1.5, 2.5, 3.5, 4.5, 5.5], ['Walking', 'Upstairs', 'Downstairs', 'Sitting', 'Standing', 'Laying'])
+plt.yticks([0.5, 1.5, 2.5, 3.5, 4.5, 5.5], ['Walking', 'Upstairs', 'Downstairs', 'Sitting', 'Standing', 'Laying]'])
+plt.show()
+```
+
+As we can see (and intutitively expect), if we take out the gravitational component, the accuracy values are pretty poor. What if we feed all these 9 vectors in?
+
+## Running the model with all the data
+
+```{python}
+#| colab: {base_uri: https://localhost:8080/, height: 86}
+# Concatenate total, body and gyro
+
+X_all_train = np.concat((X_total_train, X_body_train, X_gyro_train), axis=2)
+display(X_all_train.shape, y_train.shape) # We should have 9 channels now
+X_all_test = np.concat((X_total_test, X_body_test, X_gyro_test), axis=2)
+display(X_all_test.shape, y_test.shape)
+```
+
+```{python}
+# Create data loaders
+
+train_ds_all = UCIDatasetWrapper(X_all_train, y_train)
+train_dl_all = DataLoader(train_ds_all, batch_size=32, shuffle=True)
+test_ds_all = UCIDatasetWrapper(X_all_test, y_test)
+test_dl_all = DataLoader(test_ds_all, batch_size=32, shuffle=False)
+```
+
+```{python}
+# We need a new model with 9 channels
+
+class HAR1DCNN_9ch(nn.Module):
+    def __init__(self, in_channels=9, n_classes=6):  # adjust n_classes!
+        super().__init__()
+        self.conv1 = nn.Conv1d(in_channels, 32, kernel_size=3, padding=1)
+        self.bn1 = nn.BatchNorm1d(32)
+        self.conv2 = nn.Conv1d(32, 64, kernel_size=3, padding=1)
+        self.bn2 = nn.BatchNorm1d(64)
+        self.pool = nn.MaxPool1d(2)
+        self.conv3 = nn.Conv1d(64, 128, kernel_size=3, padding=1)
+        self.bn3 = nn.BatchNorm1d(128)
+        self.global_pool = nn.AdaptiveAvgPool1d(1)
+        self.fc = nn.Linear(128, n_classes)
+
+    def forward(self, x):
+        x = F.relu(self.bn1(self.conv1(x)))
+        x = self.pool(x)          # (N, 32, 20)
+        x = F.relu(self.bn2(self.conv2(x)))
+        x = self.pool(x)          # (N, 64, 10)
+        x = F.relu(self.bn3(self.conv3(x)))
+        x = self.global_pool(x).squeeze(-1)  # (N, 128)
+        return self.fc(x)
+```
+
+### Train the new model
+
+```{python}
+device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+if device.type != "cuda":
+  device = torch.device("mps" if torch.backends.mps.is_available() else "cpu")
+n_classes = len(torch.unique(torch.tensor(y_train)))
+model_2 = HAR1DCNN_9ch(in_channels=9, n_classes=n_classes).to(device)
+```
+
+```{python}
+# Optimizer and loss function
+optim = torch.optim.Adam(model_2.parameters(), lr=1e-3)
+loss_fn = nn.CrossEntropyLoss()
+```
+
+```{python}
+def run_epoch(loader, train=True):
+  if train:
+    model_2.train()
+  else:
+    model_2.eval()
+  total_loss, correct, total = 0, 0, 0
+  for Xb, yb in loader:
+    Xb, yb = Xb.to(device), yb.to(device)
+    if train:
+      optim.zero_grad()
+    out = model_2(Xb)
+    loss = loss_fn(out, yb.squeeze())
+    if train:
+      loss.backward()
+      optim.step()
+
+    total_loss += loss.item() * Xb.size(0)
+    preds = out.argmax(1)
+
+    correct += (preds == yb.squeeze()).sum().item()
+    total += Xb.size(0)
+  return total_loss/total, correct/total
+```
+
+```{python}
+#| colab: {base_uri: https://localhost:8080/}
+for epoch in range(20):
+  train_loss, train_acc = run_epoch(train_dl_all)
+  test_loss, test_acc = run_epoch(test_dl_all, train=False)
+  print(f'Epoch {epoch+1}: train_loss={train_loss:.4f}, train_acc={train_acc:.4f}, test_loss={test_loss:.4f}, test_acc={test_acc:.4f}')
+```
+
+```{python}
+#| colab: {base_uri: https://localhost:8080/, height: 735}
+# Evaluate the model - get F1 score, confusion matrix
+
+from sklearn.metrics import f1_score, confusion_matrix
+
+model_2.eval()
+y_pred = []
+y_true = []
+with torch.no_grad():
+    for Xb, yb in test_dl_all:
+        Xb, yb = Xb.to(device), yb.to(device)
+        out = model_2(Xb)
+        preds = out.argmax(1)
+        y_pred.extend(preds.cpu().numpy())
+        y_true.extend(yb.cpu().numpy())
+
+f1 = f1_score(y_true, y_pred, average='macro')
+cm = confusion_matrix(y_true, y_pred)
+print(f'F1 score: {f1:.4f}')
+
+# PLot confusion matrix
+
+import seaborn as sns
+import matplotlib.pyplot as plt
+
+plt.figure(figsize=(10, 8))
+sns.heatmap(cm, annot=True, fmt='d', cmap='Blues')
+plt.xlabel('Predicted')
+plt.ylabel('True')
+plt.title(f'Confusion Matrix (F1 score= {f1:.4f})')
+plt.xticks([0.5, 1.5, 2.5, 3.5, 4.5, 5.5], ['Walking', 'Upstairs', 'Downstairs', 'Sitting', 'Standing', 'Laying'])
+plt.yticks([0.5, 1.5, 2.5, 3.5, 4.5, 5.5], ['Walking', 'Upstairs', 'Downstairs', 'Sitting', 'Standing', 'Laying]'])
+plt.show()
+```
+
+As we can see, this has improved on the accuracy on our first model (albeit, not by a lot - because our first model was already quite good).
+
+
