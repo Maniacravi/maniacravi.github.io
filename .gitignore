@@ -5,5 +5,7 @@ Gemfile.lock
 
 #venv
 .venv/
-/.quarto/
+.quarto/
 **/*.quarto_ipynb
+
+/.quarto/

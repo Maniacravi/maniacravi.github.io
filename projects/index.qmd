@@ -10,5 +10,8 @@ listing:
   type: default
 page-layout: full
 title: Projects
+description: Selected projects — from short explorations to full-fledged ones.
 title-block-bannerrR: false
 ---
+
+This page lists selected projects in data science, bioengineering, and sensor/AI systems. Each entry includes a short write-up and links to code or demos when available.

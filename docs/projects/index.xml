@@ -8,7 +8,7 @@
 <title>Mani Ravi</title>
 <link>https://maniravi.com/projects/</link>
 <atom:link href="https://maniravi.com/projects/index.xml" rel="self" type="application/rss+xml"/>
-<description>Mani is a Bioengineer and Data Scientist working on the intersection of Humans, Sensors and AI.</description>
+<description>Selected projects — from short explorations to full-fledged ones.</description>
 <generator>quarto-1.8.24</generator>
 <lastBuildDate>Thu, 25 Sep 2025 04:00:00 GMT</lastBuildDate>
 <item>
@@ -28,7 +28,7 @@
 <section id="load-data" class="level2">
 <h2 class="anchored" data-anchor-id="load-data">Load Data</h2>
 <p>The data is split into total, body and gyro - these are the sensor values. There’s also another dataset that has some 561 features extracted from this. Might be fun to play with them but for now, let’s focus on building our CNN network - so this ‘total’ values would be fine for now. May play with .body’ accel values later.</p>
-<div id="0b7ebae3" class="cell" data-quarto-private-1="{&quot;key&quot;:&quot;colab&quot;,&quot;value&quot;:{&quot;base_uri&quot;:&quot;https://localhost:8080/&quot;,&quot;height&quot;:342}}" data-execution_count="1">
+<div id="6a156d6b" class="cell" data-quarto-private-1="{&quot;key&quot;:&quot;colab&quot;,&quot;value&quot;:{&quot;base_uri&quot;:&quot;https://localhost:8080/&quot;,&quot;height&quot;:342}}" data-execution_count="1">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1">file_location <span class="op" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">=</span> <span class="st" style="color: #20794D;
@@ -69,7 +69,7 @@ font-style: inherit;">None</span>)</span>
 <div class="cell-output cell-output-stderr">
 <pre><code>&lt;&gt;:7: SyntaxWarning: invalid escape sequence '\s'
 &lt;&gt;:7: SyntaxWarning: invalid escape sequence '\s'
-/var/folders/q7/ftl_yg4n1gndbwlnk654hq1h0000gn/T/ipykernel_95605/3576027909.py:7: SyntaxWarning: invalid escape sequence '\s'
+/var/folders/q7/ftl_yg4n1gndbwlnk654hq1h0000gn/T/ipykernel_99227/3576027909.py:7: SyntaxWarning: invalid escape sequence '\s'
   data = pd.read_csv(file_location, sep='\s+', header=None)</code></pre>
 </div>
 <div class="cell-output cell-output-display">
@@ -234,7 +234,7 @@ font-style: inherit;">None</span>)</span>
 <pre><code>(7352, 128)</code></pre>
 </div>
 </div>
-<div id="4493675e" class="cell" data-quarto-private-1="{&quot;key&quot;:&quot;colab&quot;,&quot;value&quot;:{&quot;base_uri&quot;:&quot;https://localhost:8080/&quot;,&quot;height&quot;:293}}" data-execution_count="2">
+<div id="7d799fd3" class="cell" data-quarto-private-1="{&quot;key&quot;:&quot;colab&quot;,&quot;value&quot;:{&quot;base_uri&quot;:&quot;https://localhost:8080/&quot;,&quot;height&quot;:293}}" data-execution_count="2">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb4" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1"><span class="co" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;"># Let's see how the labels look like</span></span>
@@ -268,7 +268,7 @@ font-style: inherit;">None</span>)</span>
 <div class="cell-output cell-output-stderr">
 <pre><code>&lt;&gt;:6: SyntaxWarning: invalid escape sequence '\s'
 &lt;&gt;:6: SyntaxWarning: invalid escape sequence '\s'
-/var/folders/q7/ftl_yg4n1gndbwlnk654hq1h0000gn/T/ipykernel_95605/3965665900.py:6: SyntaxWarning: invalid escape sequence '\s'
+/var/folders/q7/ftl_yg4n1gndbwlnk654hq1h0000gn/T/ipykernel_99227/3965665900.py:6: SyntaxWarning: invalid escape sequence '\s'
   data = pd.read_csv(file_location, sep='\s+', header=None)</code></pre>
 </div>
 <div class="cell-output cell-output-display">
@@ -315,7 +315,7 @@ font-style: inherit;">None</span>)</span>
 <p>Okay looks like there are 7352 segments of windowed data with associated labels</p>
 <section id="make-a-dataframe" class="level3">
 <h3 class="anchored" data-anchor-id="make-a-dataframe">Make a Dataframe</h3>
-<div id="dbe89b29" class="cell" data-quarto-private-1="{&quot;key&quot;:&quot;colab&quot;,&quot;value&quot;:{&quot;base_uri&quot;:&quot;https://localhost:8080/&quot;}}" data-execution_count="3">
+<div id="27bee2fe" class="cell" data-quarto-private-1="{&quot;key&quot;:&quot;colab&quot;,&quot;value&quot;:{&quot;base_uri&quot;:&quot;https://localhost:8080/&quot;}}" data-execution_count="3">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb7" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb7-1"><span class="co" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;"># Load X axis data</span></span>
@@ -564,13 +564,13 @@ font-style: inherit;">-=</span> <span class="dv" style="color: #AD0000;
 background-color: null;
 font-style: inherit;">1</span></span></code></pre></div></div>
 </div>
-<div id="903777cc" class="cell" data-quarto-private-1="{&quot;key&quot;:&quot;colab&quot;,&quot;value&quot;:{&quot;base_uri&quot;:&quot;https://localhost:8080/&quot;}}" data-execution_count="4">
+<div id="1a66f94b" class="cell" data-quarto-private-1="{&quot;key&quot;:&quot;colab&quot;,&quot;value&quot;:{&quot;base_uri&quot;:&quot;https://localhost:8080/&quot;}}" data-execution_count="4">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb8" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb8-1">df_total.shape, df_body.shape, y_train.shape</span></code></pre></div></div>
 <div class="cell-output cell-output-display" data-execution_count="4">
 <pre><code>((7352, 384), (7352, 384), (7352, 1))</code></pre>
 </div>
 </div>
-<div id="4fcab244" class="cell" data-execution_count="5">
+<div id="9cdb28f5" class="cell" data-execution_count="5">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb10" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb10-1"><span class="co" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;"># Load into 3 dimensional numpy arrays</span></span>
@@ -612,7 +612,7 @@ font-style: inherit;">3</span>)</span>
 background-color: null;
 font-style: inherit;">=</span> np.array(y_train)</span></code></pre></div></div>
 </div>
-<div id="4856c8ec" class="cell" data-quarto-private-1="{&quot;key&quot;:&quot;colab&quot;,&quot;value&quot;:{&quot;base_uri&quot;:&quot;https://localhost:8080/&quot;}}" data-execution_count="6">
+<div id="917546f2" class="cell" data-quarto-private-1="{&quot;key&quot;:&quot;colab&quot;,&quot;value&quot;:{&quot;base_uri&quot;:&quot;https://localhost:8080/&quot;}}" data-execution_count="6">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb11" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb11-1"><span class="co" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;"># Do the same for test data</span></span>
@@ -929,7 +929,7 @@ font-style: inherit;">"y_test:"</span>, y_test.shape)</span></code></pre></div><
 <h2 class="anchored" data-anchor-id="build-model">Build Model</h2>
 <section id="data-loader" class="level3">
 <h3 class="anchored" data-anchor-id="data-loader">Data Loader</h3>
-<div id="92860c7d" class="cell" data-execution_count="7">
+<div id="244b3fb1" class="cell" data-execution_count="7">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb12" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb12-1"><span class="im" style="color: #00769E;
 background-color: null;
 font-style: inherit;">import</span> torch</span>
@@ -1019,7 +1019,7 @@ font-style: inherit;">self</span>.X[i], <span class="va" style="color: #111111;
 background-color: null;
 font-style: inherit;">self</span>.y[i]</span></code></pre></div></div>
 </div>
-<div id="31bebb4c" class="cell" data-execution_count="8">
+<div id="29aaa5cf" class="cell" data-execution_count="8">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb13" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb13-1">  train_ds <span class="op" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">=</span> UCIDatasetWrapper(X_total_train, y_train)</span>
@@ -1071,7 +1071,7 @@ font-style: inherit;">False</span>)</span></code></pre></div></div>
 <section id="model" class="level3">
 <h3 class="anchored" data-anchor-id="model">Model</h3>
 <p>Lets use the same model from the <a href="https://colab.research.google.com/drive/1An5hpfwl3Jv0iM5qd3wFF2sbwfmGaN4R?usp=sharing">previous notbook</a></p>
-<div id="66c30242" class="cell" data-execution_count="9">
+<div id="149721cc" class="cell" data-execution_count="9">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb14" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb14-1"><span class="co" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;"># 1D CNN model (Same as our previous notebook)</span></span>
@@ -1262,7 +1262,7 @@ font-style: inherit;">self</span>.fc(x)</span></code></pre></div></div>
 </section>
 <section id="train-the-model" class="level2">
 <h2 class="anchored" data-anchor-id="train-the-model">Train the model</h2>
-<div id="b98c3b2b" class="cell" data-execution_count="10">
+<div id="d9463f0f" class="cell" data-execution_count="10">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb15" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb15-1">device <span class="op" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">=</span> torch.device(<span class="st" style="color: #20794D;
@@ -1315,7 +1315,7 @@ font-style: inherit;">3</span>, n_classes<span class="op" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">=</span>n_classes).to(device)</span></code></pre></div></div>
 </div>
-<div id="f274efb3" class="cell" data-execution_count="11">
+<div id="9d608648" class="cell" data-execution_count="11">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb16" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb16-1"><span class="co" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;"># Optimizer and loss function</span></span>
@@ -1330,7 +1330,7 @@ font-style: inherit;">1e-3</span>)</span>
 background-color: null;
 font-style: inherit;">=</span> nn.CrossEntropyLoss()</span></code></pre></div></div>
 </div>
-<div id="be86c977" class="cell" data-execution_count="12">
+<div id="310aaa69" class="cell" data-execution_count="12">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb17" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb17-1"><span class="kw" style="color: #003B4F;
 background-color: null;
 font-weight: bold;
@@ -1426,7 +1426,7 @@ font-style: inherit;">/</span>total, correct<span class="op" style="color: #5E5E
 background-color: null;
 font-style: inherit;">/</span>total</span></code></pre></div></div>
 </div>
-<div id="91d5eebf" class="cell" data-quarto-private-1="{&quot;key&quot;:&quot;colab&quot;,&quot;value&quot;:{&quot;base_uri&quot;:&quot;https://localhost:8080/&quot;}}" data-execution_count="13">
+<div id="bc7205df" class="cell" data-quarto-private-1="{&quot;key&quot;:&quot;colab&quot;,&quot;value&quot;:{&quot;base_uri&quot;:&quot;https://localhost:8080/&quot;}}" data-execution_count="13">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb18" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb18-1"><span class="cf" style="color: #003B4F;
 background-color: null;
 font-weight: bold;
@@ -1488,22 +1488,22 @@ font-style: inherit;">:.4f}</span><span class="ss" style="color: #20794D;
 background-color: null;
 font-style: inherit;">'</span>)</span></code></pre></div></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>Epoch 1: train_loss=0.5845, train_acc=0.8229, test_loss=0.3221, test_acc=0.8792
-Epoch 2: train_loss=0.2579, train_acc=0.9110, test_loss=0.2817, test_acc=0.8816
-Epoch 3: train_loss=0.1922, train_acc=0.9272, test_loss=0.2426, test_acc=0.9043
-Epoch 4: train_loss=0.1741, train_acc=0.9301, test_loss=0.2714, test_acc=0.8870
-Epoch 5: train_loss=0.1632, train_acc=0.9359, test_loss=0.3476, test_acc=0.8680
-Epoch 6: train_loss=0.1580, train_acc=0.9366, test_loss=0.3187, test_acc=0.8782
-Epoch 7: train_loss=0.1492, train_acc=0.9372, test_loss=0.4305, test_acc=0.8375
-Epoch 8: train_loss=0.1347, train_acc=0.9441, test_loss=0.2659, test_acc=0.8975
-Epoch 9: train_loss=0.1397, train_acc=0.9419, test_loss=0.5809, test_acc=0.8154
-Epoch 10: train_loss=0.1434, train_acc=0.9418, test_loss=0.2682, test_acc=0.9155</code></pre>
+<pre><code>Epoch 1: train_loss=0.6116, train_acc=0.8156, test_loss=0.4655, test_acc=0.7815
+Epoch 2: train_loss=0.2725, train_acc=0.9063, test_loss=0.5308, test_acc=0.7815
+Epoch 3: train_loss=0.2072, train_acc=0.9237, test_loss=0.2954, test_acc=0.8839
+Epoch 4: train_loss=0.1807, train_acc=0.9295, test_loss=0.2947, test_acc=0.8775
+Epoch 5: train_loss=0.1657, train_acc=0.9342, test_loss=0.3485, test_acc=0.8772
+Epoch 6: train_loss=0.1620, train_acc=0.9353, test_loss=0.2724, test_acc=0.9118
+Epoch 7: train_loss=0.1496, train_acc=0.9373, test_loss=0.2644, test_acc=0.8972
+Epoch 8: train_loss=0.1495, train_acc=0.9373, test_loss=0.4436, test_acc=0.8314
+Epoch 9: train_loss=0.1502, train_acc=0.9399, test_loss=0.4513, test_acc=0.8354
+Epoch 10: train_loss=0.1378, train_acc=0.9433, test_loss=0.2238, test_acc=0.9199</code></pre>
 </div>
 </div>
 </section>
 <section id="evaluate-model" class="level2">
 <h2 class="anchored" data-anchor-id="evaluate-model">Evaluate model</h2>
-<div id="2a2ef5f6" class="cell" data-quarto-private-1="{&quot;key&quot;:&quot;colab&quot;,&quot;value&quot;:{&quot;base_uri&quot;:&quot;https://localhost:8080/&quot;,&quot;height&quot;:735}}" data-execution_count="14">
+<div id="09e25628" class="cell" data-quarto-private-1="{&quot;key&quot;:&quot;colab&quot;,&quot;value&quot;:{&quot;base_uri&quot;:&quot;https://localhost:8080/&quot;,&quot;height&quot;:735}}" data-execution_count="14">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb20" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb20-1"><span class="co" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;"># Evaluate the model - get F1 score, confusion matrix</span></span>
@@ -1672,7 +1672,7 @@ background-color: null;
 font-style: inherit;">'Laying]'</span>])</span>
 <span id="cb20-32">plt.show()</span></code></pre></div></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>F1 score: 0.9154</code></pre>
+<pre><code>F1 score: 0.9206</code></pre>
 </div>
 <div class="cell-output cell-output-display">
 <div>
@@ -1687,7 +1687,7 @@ font-style: inherit;">'Laying]'</span>])</span>
 <h2 class="anchored" data-anchor-id="changing-data">Changing Data</h2>
 <p>What if we train the model just with the ‘body’ accelerometer data?</p>
 <p>Just to recap: &gt; The sensor signals (accelerometer and gyroscope) were pre-processed by applying noise filters and then sampled in fixed-width sliding windows of 2.56 sec and 50% overlap (128 readings/window). The sensor acceleration signal, which has gravitational and body motion components, was separated using a Butterworth low-pass filter into body acceleration and gravity. The gravitational force is assumed to have only low frequency components, therefore a filter with 0.3 Hz cutoff frequency was used. From each window, a vector of features was obtained by calculating variables from the time and frequency domain.</p>
-<div id="e7258ba3" class="cell" data-quarto-private-1="{&quot;key&quot;:&quot;colab&quot;,&quot;value&quot;:{&quot;base_uri&quot;:&quot;https://localhost:8080/&quot;}}" data-execution_count="15">
+<div id="50680fec" class="cell" data-quarto-private-1="{&quot;key&quot;:&quot;colab&quot;,&quot;value&quot;:{&quot;base_uri&quot;:&quot;https://localhost:8080/&quot;}}" data-execution_count="15">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb22" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb22-1"><span class="cf" style="color: #003B4F;
 background-color: null;
 font-weight: bold;
@@ -1749,19 +1749,19 @@ font-style: inherit;">:.4f}</span><span class="ss" style="color: #20794D;
 background-color: null;
 font-style: inherit;">'</span>)</span></code></pre></div></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>Epoch 1: train_loss=0.7097, train_acc=0.6035, test_loss=9.6068, test_acc=0.1863
-Epoch 2: train_loss=0.6705, train_acc=0.6200, test_loss=8.4766, test_acc=0.2457
-Epoch 3: train_loss=0.6396, train_acc=0.6333, test_loss=12.5178, test_acc=0.3115
-Epoch 4: train_loss=0.6429, train_acc=0.6291, test_loss=14.8952, test_acc=0.1982
-Epoch 5: train_loss=0.6350, train_acc=0.6362, test_loss=10.3467, test_acc=0.3135
-Epoch 6: train_loss=0.6207, train_acc=0.6472, test_loss=12.0206, test_acc=0.2100
-Epoch 7: train_loss=0.6333, train_acc=0.6425, test_loss=10.5265, test_acc=0.2976
-Epoch 8: train_loss=0.6232, train_acc=0.6479, test_loss=14.7182, test_acc=0.2704
-Epoch 9: train_loss=0.6213, train_acc=0.6439, test_loss=16.1825, test_acc=0.2307
-Epoch 10: train_loss=0.6098, train_acc=0.6591, test_loss=18.7088, test_acc=0.2121</code></pre>
+<pre><code>Epoch 1: train_loss=0.7446, train_acc=0.5947, test_loss=4.3886, test_acc=0.4055
+Epoch 2: train_loss=0.6669, train_acc=0.6287, test_loss=5.8494, test_acc=0.3590
+Epoch 3: train_loss=0.6581, train_acc=0.6363, test_loss=10.5056, test_acc=0.3156
+Epoch 4: train_loss=0.6429, train_acc=0.6341, test_loss=8.6658, test_acc=0.3146
+Epoch 5: train_loss=0.6239, train_acc=0.6391, test_loss=7.5618, test_acc=0.2820
+Epoch 6: train_loss=0.6272, train_acc=0.6431, test_loss=12.1228, test_acc=0.2633
+Epoch 7: train_loss=0.6199, train_acc=0.6440, test_loss=9.1903, test_acc=0.2803
+Epoch 8: train_loss=0.6179, train_acc=0.6578, test_loss=16.8655, test_acc=0.2847
+Epoch 9: train_loss=0.6167, train_acc=0.6533, test_loss=14.1179, test_acc=0.3010
+Epoch 10: train_loss=0.6167, train_acc=0.6570, test_loss=16.3485, test_acc=0.2715</code></pre>
 </div>
 </div>
-<div id="a0e23ed3" class="cell" data-quarto-private-1="{&quot;key&quot;:&quot;colab&quot;,&quot;value&quot;:{&quot;base_uri&quot;:&quot;https://localhost:8080/&quot;,&quot;height&quot;:735}}" data-execution_count="16">
+<div id="ba48d8cf" class="cell" data-quarto-private-1="{&quot;key&quot;:&quot;colab&quot;,&quot;value&quot;:{&quot;base_uri&quot;:&quot;https://localhost:8080/&quot;,&quot;height&quot;:735}}" data-execution_count="16">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb24" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb24-1"><span class="co" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;"># Evaluate the model - get F1 score, confusion matrix</span></span>
@@ -1930,7 +1930,7 @@ background-color: null;
 font-style: inherit;">'Laying]'</span>])</span>
 <span id="cb24-32">plt.show()</span></code></pre></div></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>F1 score: 0.1105</code></pre>
+<pre><code>F1 score: 0.1815</code></pre>
 </div>
 <div class="cell-output cell-output-display">
 <div>
@@ -1944,7 +1944,7 @@ font-style: inherit;">'Laying]'</span>])</span>
 </section>
 <section id="running-the-model-with-all-the-data" class="level2">
 <h2 class="anchored" data-anchor-id="running-the-model-with-all-the-data">Running the model with all the data</h2>
-<div id="dc54f129" class="cell" data-quarto-private-1="{&quot;key&quot;:&quot;colab&quot;,&quot;value&quot;:{&quot;base_uri&quot;:&quot;https://localhost:8080/&quot;,&quot;height&quot;:86}}" data-execution_count="17">
+<div id="bc7f323b" class="cell" data-quarto-private-1="{&quot;key&quot;:&quot;colab&quot;,&quot;value&quot;:{&quot;base_uri&quot;:&quot;https://localhost:8080/&quot;,&quot;height&quot;:86}}" data-execution_count="17">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb26" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb26-1"><span class="co" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;"># Concatenate total, body and gyro</span></span>
@@ -1980,7 +1980,7 @@ font-style: inherit;">2</span>)</span>
 <pre><code>(2947, 1)</code></pre>
 </div>
 </div>
-<div id="995e811b" class="cell" data-execution_count="18">
+<div id="80aa202b" class="cell" data-execution_count="18">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb31" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb31-1"><span class="co" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;"># Create data loaders</span></span>
@@ -2014,7 +2014,7 @@ font-style: inherit;">=</span><span class="va" style="color: #111111;
 background-color: null;
 font-style: inherit;">False</span>)</span></code></pre></div></div>
 </div>
-<div id="96ae5f91" class="cell" data-execution_count="19">
+<div id="cbedcc1a" class="cell" data-execution_count="19">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb32" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb32-1"><span class="co" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;"># We need a new model with 9 channels</span></span>
@@ -2199,7 +2199,7 @@ font-style: inherit;">self</span>.fc(x)</span></code></pre></div></div>
 </div>
 <section id="train-the-new-model" class="level3">
 <h3 class="anchored" data-anchor-id="train-the-new-model">Train the new model</h3>
-<div id="c3391201" class="cell" data-execution_count="20">
+<div id="b85550d7" class="cell" data-execution_count="20">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb33" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb33-1">device <span class="op" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">=</span> torch.device(<span class="st" style="color: #20794D;
@@ -2251,7 +2251,7 @@ font-style: inherit;">9</span>, n_classes<span class="op" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">=</span>n_classes).to(device)</span></code></pre></div></div>
 </div>
-<div id="ed85ccaf" class="cell" data-execution_count="21">
+<div id="332d1569" class="cell" data-execution_count="21">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb34" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb34-1"><span class="co" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;"># Optimizer and loss function</span></span>
@@ -2266,7 +2266,7 @@ font-style: inherit;">1e-3</span>)</span>
 background-color: null;
 font-style: inherit;">=</span> nn.CrossEntropyLoss()</span></code></pre></div></div>
 </div>
-<div id="0e56d381" class="cell" data-execution_count="22">
+<div id="42ef69aa" class="cell" data-execution_count="22">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb35" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb35-1"><span class="kw" style="color: #003B4F;
 background-color: null;
 font-weight: bold;
@@ -2358,7 +2358,7 @@ font-style: inherit;">/</span>total, correct<span class="op" style="color: #5E5E
 background-color: null;
 font-style: inherit;">/</span>total</span></code></pre></div></div>
 </div>
-<div id="bf9226df" class="cell" data-quarto-private-1="{&quot;key&quot;:&quot;colab&quot;,&quot;value&quot;:{&quot;base_uri&quot;:&quot;https://localhost:8080/&quot;}}" data-execution_count="23">
+<div id="d1cc7db3" class="cell" data-quarto-private-1="{&quot;key&quot;:&quot;colab&quot;,&quot;value&quot;:{&quot;base_uri&quot;:&quot;https://localhost:8080/&quot;}}" data-execution_count="23">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb36" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb36-1"><span class="cf" style="color: #003B4F;
 background-color: null;
 font-weight: bold;
@@ -2420,29 +2420,29 @@ font-style: inherit;">:.4f}</span><span class="ss" style="color: #20794D;
 background-color: null;
 font-style: inherit;">'</span>)</span></code></pre></div></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>Epoch 1: train_loss=0.6184, train_acc=0.7956, test_loss=0.3463, test_acc=0.8768
-Epoch 2: train_loss=0.2316, train_acc=0.9206, test_loss=0.2765, test_acc=0.9179
-Epoch 3: train_loss=0.1717, train_acc=0.9327, test_loss=0.2674, test_acc=0.8965
-Epoch 4: train_loss=0.1565, train_acc=0.9372, test_loss=0.2246, test_acc=0.9250
-Epoch 5: train_loss=0.1411, train_acc=0.9419, test_loss=0.2674, test_acc=0.9030
-Epoch 6: train_loss=0.1343, train_acc=0.9450, test_loss=0.2528, test_acc=0.9125
-Epoch 7: train_loss=0.1221, train_acc=0.9464, test_loss=0.2397, test_acc=0.9128
-Epoch 8: train_loss=0.1218, train_acc=0.9468, test_loss=0.2297, test_acc=0.9284
-Epoch 9: train_loss=0.1231, train_acc=0.9459, test_loss=0.2474, test_acc=0.9315
-Epoch 10: train_loss=0.1161, train_acc=0.9506, test_loss=0.2374, test_acc=0.9270
-Epoch 11: train_loss=0.1180, train_acc=0.9479, test_loss=0.2367, test_acc=0.9196
-Epoch 12: train_loss=0.1165, train_acc=0.9499, test_loss=0.2830, test_acc=0.8972
-Epoch 13: train_loss=0.1171, train_acc=0.9493, test_loss=0.5716, test_acc=0.8392
-Epoch 14: train_loss=0.1179, train_acc=0.9480, test_loss=0.2171, test_acc=0.9362
-Epoch 15: train_loss=0.1111, train_acc=0.9527, test_loss=0.2389, test_acc=0.9260
-Epoch 16: train_loss=0.1070, train_acc=0.9546, test_loss=0.2823, test_acc=0.9050
-Epoch 17: train_loss=0.1177, train_acc=0.9521, test_loss=0.2516, test_acc=0.9182
-Epoch 18: train_loss=0.1094, train_acc=0.9538, test_loss=0.2291, test_acc=0.9301
-Epoch 19: train_loss=0.1021, train_acc=0.9577, test_loss=0.2268, test_acc=0.9325
-Epoch 20: train_loss=0.1058, train_acc=0.9562, test_loss=0.2266, test_acc=0.9291</code></pre>
+<pre><code>Epoch 1: train_loss=0.5799, train_acc=0.8203, test_loss=0.3687, test_acc=0.8748
+Epoch 2: train_loss=0.2129, train_acc=0.9267, test_loss=0.3317, test_acc=0.8622
+Epoch 3: train_loss=0.1801, train_acc=0.9317, test_loss=0.3841, test_acc=0.8571
+Epoch 4: train_loss=0.1486, train_acc=0.9388, test_loss=0.2287, test_acc=0.9169
+Epoch 5: train_loss=0.1417, train_acc=0.9382, test_loss=0.2518, test_acc=0.9080
+Epoch 6: train_loss=0.1381, train_acc=0.9421, test_loss=0.2403, test_acc=0.9192
+Epoch 7: train_loss=0.1242, train_acc=0.9509, test_loss=0.2335, test_acc=0.9203
+Epoch 8: train_loss=0.1198, train_acc=0.9490, test_loss=0.2324, test_acc=0.9311
+Epoch 9: train_loss=0.1206, train_acc=0.9484, test_loss=0.2452, test_acc=0.9148
+Epoch 10: train_loss=0.1190, train_acc=0.9497, test_loss=0.2798, test_acc=0.9016
+Epoch 11: train_loss=0.1078, train_acc=0.9561, test_loss=0.2884, test_acc=0.9077
+Epoch 12: train_loss=0.1212, train_acc=0.9483, test_loss=0.2468, test_acc=0.9230
+Epoch 13: train_loss=0.1124, train_acc=0.9529, test_loss=0.2659, test_acc=0.9125
+Epoch 14: train_loss=0.1144, train_acc=0.9544, test_loss=0.2195, test_acc=0.9379
+Epoch 15: train_loss=0.1063, train_acc=0.9563, test_loss=0.2379, test_acc=0.9304
+Epoch 16: train_loss=0.1037, train_acc=0.9591, test_loss=0.3022, test_acc=0.9179
+Epoch 17: train_loss=0.1060, train_acc=0.9573, test_loss=0.2041, test_acc=0.9362
+Epoch 18: train_loss=0.1008, train_acc=0.9585, test_loss=0.2672, test_acc=0.9196
+Epoch 19: train_loss=0.1024, train_acc=0.9581, test_loss=0.2157, test_acc=0.9389
+Epoch 20: train_loss=0.1033, train_acc=0.9554, test_loss=0.3729, test_acc=0.8836</code></pre>
 </div>
 </div>
-<div id="e4c74e76" class="cell" data-quarto-private-1="{&quot;key&quot;:&quot;colab&quot;,&quot;value&quot;:{&quot;base_uri&quot;:&quot;https://localhost:8080/&quot;,&quot;height&quot;:735}}" data-execution_count="24">
+<div id="78cbf91a" class="cell" data-quarto-private-1="{&quot;key&quot;:&quot;colab&quot;,&quot;value&quot;:{&quot;base_uri&quot;:&quot;https://localhost:8080/&quot;,&quot;height&quot;:735}}" data-execution_count="24">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb38" style="background: #f1f3f5;"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb38-1"><span class="co" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;"># Evaluate the model - get F1 score, confusion matrix</span></span>
@@ -2611,7 +2611,7 @@ background-color: null;
 font-style: inherit;">'Laying]'</span>])</span>
 <span id="cb38-32">plt.show()</span></code></pre></div></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>F1 score: 0.9303</code></pre>
+<pre><code>F1 score: 0.8832</code></pre>
 </div>
 <div class="cell-output cell-output-display">
 <div>
