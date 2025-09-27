@@ -419,7 +419,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <section id="load-data" class="level2">
 <h2 class="anchored" data-anchor-id="load-data">Load Data</h2>
 <p>The data is split into total, body and gyro - these are the sensor values. There’s also another dataset that has some 561 features extracted from this. Might be fun to play with them but for now, let’s focus on building our CNN network - so this ‘total’ values would be fine for now. May play with .body’ accel values later.</p>
-<div id="cbeab8e3" class="cell" data-quarto-private-1="{&quot;key&quot;:&quot;colab&quot;,&quot;value&quot;:{&quot;base_uri&quot;:&quot;https://localhost:8080/&quot;,&quot;height&quot;:342}}" data-execution_count="1">
+<div id="0b7ebae3" class="cell" data-quarto-private-1="{&quot;key&quot;:&quot;colab&quot;,&quot;value&quot;:{&quot;base_uri&quot;:&quot;https://localhost:8080/&quot;,&quot;height&quot;:342}}" data-execution_count="1">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>file_location <span class="op">=</span> <span class="st">'/Users/manikandanravi/Code/quarto-test/uci-har-dataset/train/Inertial Signals/total_acc_x_train.txt'</span> <span class="co"># Update this path to your file location</span></span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Load into pandas</span></span>
@@ -432,7 +432,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <div class="cell-output cell-output-stderr">
 <pre><code>&lt;&gt;:7: SyntaxWarning: invalid escape sequence '\s'
 &lt;&gt;:7: SyntaxWarning: invalid escape sequence '\s'
-/var/folders/q7/ftl_yg4n1gndbwlnk654hq1h0000gn/T/ipykernel_91706/3576027909.py:7: SyntaxWarning: invalid escape sequence '\s'
+/var/folders/q7/ftl_yg4n1gndbwlnk654hq1h0000gn/T/ipykernel_95605/3576027909.py:7: SyntaxWarning: invalid escape sequence '\s'
   data = pd.read_csv(file_location, sep='\s+', header=None)</code></pre>
 </div>
 <div class="cell-output cell-output-display">
@@ -593,11 +593,11 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <p>5 rows × 128 columns</p>
 </div>
 </div>
-<div class="cell-output cell-output-display" data-execution_count="72">
+<div class="cell-output cell-output-display" data-execution_count="1">
 <pre><code>(7352, 128)</code></pre>
 </div>
 </div>
-<div id="7197bd3a" class="cell" data-quarto-private-1="{&quot;key&quot;:&quot;colab&quot;,&quot;value&quot;:{&quot;base_uri&quot;:&quot;https://localhost:8080/&quot;,&quot;height&quot;:293}}" data-execution_count="2">
+<div id="4493675e" class="cell" data-quarto-private-1="{&quot;key&quot;:&quot;colab&quot;,&quot;value&quot;:{&quot;base_uri&quot;:&quot;https://localhost:8080/&quot;,&quot;height&quot;:293}}" data-execution_count="2">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb4"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Let's see how the labels look like</span></span>
 <span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>file_location <span class="op">=</span> <span class="st">'/Users/manikandanravi/Code/quarto-test/uci-har-dataset/train/y_train.txt'</span></span>
@@ -609,7 +609,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <div class="cell-output cell-output-stderr">
 <pre><code>&lt;&gt;:6: SyntaxWarning: invalid escape sequence '\s'
 &lt;&gt;:6: SyntaxWarning: invalid escape sequence '\s'
-/var/folders/q7/ftl_yg4n1gndbwlnk654hq1h0000gn/T/ipykernel_91706/3965665900.py:6: SyntaxWarning: invalid escape sequence '\s'
+/var/folders/q7/ftl_yg4n1gndbwlnk654hq1h0000gn/T/ipykernel_95605/3965665900.py:6: SyntaxWarning: invalid escape sequence '\s'
   data = pd.read_csv(file_location, sep='\s+', header=None)</code></pre>
 </div>
 <div class="cell-output cell-output-display">
@@ -649,14 +649,14 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 
 </div>
 </div>
-<div class="cell-output cell-output-display" data-execution_count="73">
+<div class="cell-output cell-output-display" data-execution_count="2">
 <pre><code>(7352, 1)</code></pre>
 </div>
 </div>
 <p>Okay looks like there are 7352 segments of windowed data with associated labels</p>
 <section id="make-a-dataframe" class="level3">
 <h3 class="anchored" data-anchor-id="make-a-dataframe">Make a Dataframe</h3>
-<div id="f79b21bd" class="cell" data-quarto-private-1="{&quot;key&quot;:&quot;colab&quot;,&quot;value&quot;:{&quot;base_uri&quot;:&quot;https://localhost:8080/&quot;}}" data-execution_count="3">
+<div id="dbe89b29" class="cell" data-quarto-private-1="{&quot;key&quot;:&quot;colab&quot;,&quot;value&quot;:{&quot;base_uri&quot;:&quot;https://localhost:8080/&quot;}}" data-execution_count="3">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb7"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Load X axis data</span></span>
 <span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>file_location <span class="op">=</span> <span class="st">'/Users/manikandanravi/Code/quarto-test/uci-har-dataset/train/Inertial Signals/total_acc_x_train.txt'</span></span>
 <span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>df_total <span class="op">=</span> pd.read_csv(file_location, sep<span class="op">=</span><span class="st">'</span><span class="er">\</span><span class="st">s+'</span>, header<span class="op">=</span><span class="va">None</span>)</span>
@@ -687,13 +687,13 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb7-28"><a href="#cb7-28" aria-hidden="true" tabindex="-1"></a><span class="co"># Subtract 1 from values</span></span>
 <span id="cb7-29"><a href="#cb7-29" aria-hidden="true" tabindex="-1"></a>y_train <span class="op">-=</span> <span class="dv">1</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
-<div id="c181d610" class="cell" data-quarto-private-1="{&quot;key&quot;:&quot;colab&quot;,&quot;value&quot;:{&quot;base_uri&quot;:&quot;https://localhost:8080/&quot;}}" data-execution_count="4">
+<div id="903777cc" class="cell" data-quarto-private-1="{&quot;key&quot;:&quot;colab&quot;,&quot;value&quot;:{&quot;base_uri&quot;:&quot;https://localhost:8080/&quot;}}" data-execution_count="4">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb8"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>df_total.shape, df_body.shape, y_train.shape</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<div class="cell-output cell-output-display" data-execution_count="75">
+<div class="cell-output cell-output-display" data-execution_count="4">
 <pre><code>((7352, 384), (7352, 384), (7352, 1))</code></pre>
 </div>
 </div>
-<div id="0c6e205b" class="cell" data-execution_count="5">
+<div id="4fcab244" class="cell" data-execution_count="5">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb10"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Load into 3 dimensional numpy arrays</span></span>
 <span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
@@ -703,7 +703,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb10-7"><a href="#cb10-7" aria-hidden="true" tabindex="-1"></a>X_gyro_train <span class="op">=</span> df_gyro.values.reshape(<span class="dv">7352</span>, <span class="dv">128</span>, <span class="dv">3</span>)</span>
 <span id="cb10-8"><a href="#cb10-8" aria-hidden="true" tabindex="-1"></a>y_train <span class="op">=</span> np.array(y_train)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
-<div id="4fe7ead4" class="cell" data-quarto-private-1="{&quot;key&quot;:&quot;colab&quot;,&quot;value&quot;:{&quot;base_uri&quot;:&quot;https://localhost:8080/&quot;}}" data-execution_count="6">
+<div id="4856c8ec" class="cell" data-quarto-private-1="{&quot;key&quot;:&quot;colab&quot;,&quot;value&quot;:{&quot;base_uri&quot;:&quot;https://localhost:8080/&quot;}}" data-execution_count="6">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb11"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Do the same for test data</span></span>
 <span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Load X axis data</span></span>
@@ -754,7 +754,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <h2 class="anchored" data-anchor-id="build-model">Build Model</h2>
 <section id="data-loader" class="level3">
 <h3 class="anchored" data-anchor-id="data-loader">Data Loader</h3>
-<div id="bcf10ae2" class="cell" data-execution_count="7">
+<div id="92860c7d" class="cell" data-execution_count="7">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb12"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> torch</span>
 <span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> torch.nn <span class="im">as</span> nn</span>
 <span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> torch.utils.data <span class="im">import</span> Dataset, DataLoader</span>
@@ -772,7 +772,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb12-15"><a href="#cb12-15" aria-hidden="true" tabindex="-1"></a>  <span class="kw">def</span> <span class="fu">__getitem__</span>(<span class="va">self</span>, i):</span>
 <span id="cb12-16"><a href="#cb12-16" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> <span class="va">self</span>.X[i], <span class="va">self</span>.y[i]</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
-<div id="b3146da6" class="cell" data-execution_count="8">
+<div id="31bebb4c" class="cell" data-execution_count="8">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb13"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a>  train_ds <span class="op">=</span> UCIDatasetWrapper(X_total_train, y_train)</span>
 <span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a>  train_ds_body <span class="op">=</span> UCIDatasetWrapper(X_body_train, y_train)</span>
 <span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a>  test_ds <span class="op">=</span> UCIDatasetWrapper(X_total_test, y_test)</span>
@@ -786,7 +786,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <section id="model" class="level3">
 <h3 class="anchored" data-anchor-id="model">Model</h3>
 <p>Lets use the same model from the <a href="https://colab.research.google.com/drive/1An5hpfwl3Jv0iM5qd3wFF2sbwfmGaN4R?usp=sharing">previous notbook</a></p>
-<div id="e30999a4" class="cell" data-execution_count="9">
+<div id="66c30242" class="cell" data-execution_count="9">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb14"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="co"># 1D CNN model (Same as our previous notebook)</span></span>
 <span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> torch.nn.functional <span class="im">as</span> F</span>
 <span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a><span class="kw">class</span> HAR1DCNN(nn.Module):</span>
@@ -815,7 +815,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </section>
 <section id="train-the-model" class="level2">
 <h2 class="anchored" data-anchor-id="train-the-model">Train the model</h2>
-<div id="14754317" class="cell" data-execution_count="10">
+<div id="b98c3b2b" class="cell" data-execution_count="10">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb15"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a>device <span class="op">=</span> torch.device(<span class="st">"cuda"</span> <span class="cf">if</span> torch.cuda.is_available() <span class="cf">else</span> <span class="st">"cpu"</span>)</span>
 <span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span> device.<span class="bu">type</span> <span class="op">!=</span> <span class="st">"cuda"</span>:</span>
 <span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a>  device <span class="op">=</span> torch.device(<span class="st">"mps"</span> <span class="cf">if</span> torch.backends.mps.is_available() <span class="cf">else</span> <span class="st">"cpu"</span>)</span>
@@ -823,12 +823,12 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb15-5"><a href="#cb15-5" aria-hidden="true" tabindex="-1"></a>n_classes <span class="op">=</span> <span class="bu">len</span>(torch.unique(torch.tensor(y_train)))</span>
 <span id="cb15-6"><a href="#cb15-6" aria-hidden="true" tabindex="-1"></a>model <span class="op">=</span> HAR1DCNN(in_channels<span class="op">=</span><span class="dv">3</span>, n_classes<span class="op">=</span>n_classes).to(device)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
-<div id="e9a10daf" class="cell" data-execution_count="11">
+<div id="f274efb3" class="cell" data-execution_count="11">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb16"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Optimizer and loss function</span></span>
 <span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a>optim <span class="op">=</span> torch.optim.Adam(model.parameters(), lr<span class="op">=</span><span class="fl">1e-3</span>)</span>
 <span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a>loss_fn <span class="op">=</span> nn.CrossEntropyLoss()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
-<div id="12097651" class="cell" data-execution_count="12">
+<div id="be86c977" class="cell" data-execution_count="12">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb17"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> run_epoch(loader, train<span class="op">=</span><span class="va">True</span>):</span>
 <span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a>  <span class="cf">if</span> train:</span>
 <span id="cb17-3"><a href="#cb17-3" aria-hidden="true" tabindex="-1"></a>    model.train()</span>
@@ -852,28 +852,28 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb17-21"><a href="#cb17-21" aria-hidden="true" tabindex="-1"></a>    total <span class="op">+=</span> Xb.size(<span class="dv">0</span>)</span>
 <span id="cb17-22"><a href="#cb17-22" aria-hidden="true" tabindex="-1"></a>  <span class="cf">return</span> total_loss<span class="op">/</span>total, correct<span class="op">/</span>total</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
-<div id="b8d05798" class="cell" data-quarto-private-1="{&quot;key&quot;:&quot;colab&quot;,&quot;value&quot;:{&quot;base_uri&quot;:&quot;https://localhost:8080/&quot;}}" data-execution_count="13">
+<div id="91d5eebf" class="cell" data-quarto-private-1="{&quot;key&quot;:&quot;colab&quot;,&quot;value&quot;:{&quot;base_uri&quot;:&quot;https://localhost:8080/&quot;}}" data-execution_count="13">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb18"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> epoch <span class="kw">in</span> <span class="bu">range</span>(<span class="dv">10</span>):</span>
 <span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a>  train_loss, train_acc <span class="op">=</span> run_epoch(train_dl)</span>
 <span id="cb18-3"><a href="#cb18-3" aria-hidden="true" tabindex="-1"></a>  test_loss, test_acc <span class="op">=</span> run_epoch(test_dl, train<span class="op">=</span><span class="va">False</span>)</span>
 <span id="cb18-4"><a href="#cb18-4" aria-hidden="true" tabindex="-1"></a>  <span class="bu">print</span>(<span class="ss">f'Epoch </span><span class="sc">{</span>epoch<span class="op">+</span><span class="dv">1</span><span class="sc">}</span><span class="ss">: train_loss=</span><span class="sc">{</span>train_loss<span class="sc">:.4f}</span><span class="ss">, train_acc=</span><span class="sc">{</span>train_acc<span class="sc">:.4f}</span><span class="ss">, test_loss=</span><span class="sc">{</span>test_loss<span class="sc">:.4f}</span><span class="ss">, test_acc=</span><span class="sc">{</span>test_acc<span class="sc">:.4f}</span><span class="ss">'</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>Epoch 1: train_loss=0.5972, train_acc=0.8224, test_loss=0.3346, test_acc=0.8748
-Epoch 2: train_loss=0.2438, train_acc=0.9159, test_loss=0.3157, test_acc=0.8812
-Epoch 3: train_loss=0.1846, train_acc=0.9325, test_loss=0.2898, test_acc=0.8836
-Epoch 4: train_loss=0.1789, train_acc=0.9317, test_loss=0.4101, test_acc=0.8422
-Epoch 5: train_loss=0.1512, train_acc=0.9385, test_loss=0.2492, test_acc=0.9189
-Epoch 6: train_loss=0.1553, train_acc=0.9380, test_loss=0.2193, test_acc=0.9237
-Epoch 7: train_loss=0.1452, train_acc=0.9400, test_loss=0.2641, test_acc=0.8985
-Epoch 8: train_loss=0.1344, train_acc=0.9440, test_loss=0.3449, test_acc=0.8660
-Epoch 9: train_loss=0.1375, train_acc=0.9437, test_loss=0.8128, test_acc=0.7842
-Epoch 10: train_loss=0.1337, train_acc=0.9438, test_loss=0.3011, test_acc=0.8911</code></pre>
+<pre><code>Epoch 1: train_loss=0.5845, train_acc=0.8229, test_loss=0.3221, test_acc=0.8792
+Epoch 2: train_loss=0.2579, train_acc=0.9110, test_loss=0.2817, test_acc=0.8816
+Epoch 3: train_loss=0.1922, train_acc=0.9272, test_loss=0.2426, test_acc=0.9043
+Epoch 4: train_loss=0.1741, train_acc=0.9301, test_loss=0.2714, test_acc=0.8870
+Epoch 5: train_loss=0.1632, train_acc=0.9359, test_loss=0.3476, test_acc=0.8680
+Epoch 6: train_loss=0.1580, train_acc=0.9366, test_loss=0.3187, test_acc=0.8782
+Epoch 7: train_loss=0.1492, train_acc=0.9372, test_loss=0.4305, test_acc=0.8375
+Epoch 8: train_loss=0.1347, train_acc=0.9441, test_loss=0.2659, test_acc=0.8975
+Epoch 9: train_loss=0.1397, train_acc=0.9419, test_loss=0.5809, test_acc=0.8154
+Epoch 10: train_loss=0.1434, train_acc=0.9418, test_loss=0.2682, test_acc=0.9155</code></pre>
 </div>
 </div>
 </section>
 <section id="evaluate-model" class="level2">
 <h2 class="anchored" data-anchor-id="evaluate-model">Evaluate model</h2>
-<div id="3ac3ba93" class="cell" data-quarto-private-1="{&quot;key&quot;:&quot;colab&quot;,&quot;value&quot;:{&quot;base_uri&quot;:&quot;https://localhost:8080/&quot;,&quot;height&quot;:735}}" data-execution_count="14">
+<div id="2a2ef5f6" class="cell" data-quarto-private-1="{&quot;key&quot;:&quot;colab&quot;,&quot;value&quot;:{&quot;base_uri&quot;:&quot;https://localhost:8080/&quot;,&quot;height&quot;:735}}" data-execution_count="14">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb20"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Evaluate the model - get F1 score, confusion matrix</span></span>
 <span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb20-3"><a href="#cb20-3" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> sklearn.metrics <span class="im">import</span> f1_score, confusion_matrix</span>
@@ -907,7 +907,7 @@ Epoch 10: train_loss=0.1337, train_acc=0.9438, test_loss=0.3011, test_acc=0.8911
 <span id="cb20-31"><a href="#cb20-31" aria-hidden="true" tabindex="-1"></a>plt.yticks([<span class="fl">0.5</span>, <span class="fl">1.5</span>, <span class="fl">2.5</span>, <span class="fl">3.5</span>, <span class="fl">4.5</span>, <span class="fl">5.5</span>], [<span class="st">'Walking'</span>, <span class="st">'Upstairs'</span>, <span class="st">'Downstairs'</span>, <span class="st">'Sitting'</span>, <span class="st">'Standing'</span>, <span class="st">'Laying]'</span>])</span>
 <span id="cb20-32"><a href="#cb20-32" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>F1 score: 0.8911</code></pre>
+<pre><code>F1 score: 0.9154</code></pre>
 </div>
 <div class="cell-output cell-output-display">
 <div>
@@ -922,25 +922,25 @@ Epoch 10: train_loss=0.1337, train_acc=0.9438, test_loss=0.3011, test_acc=0.8911
 <h2 class="anchored" data-anchor-id="changing-data">Changing Data</h2>
 <p>What if we train the model just with the ‘body’ accelerometer data?</p>
 <p>Just to recap: &gt; The sensor signals (accelerometer and gyroscope) were pre-processed by applying noise filters and then sampled in fixed-width sliding windows of 2.56 sec and 50% overlap (128 readings/window). The sensor acceleration signal, which has gravitational and body motion components, was separated using a Butterworth low-pass filter into body acceleration and gravity. The gravitational force is assumed to have only low frequency components, therefore a filter with 0.3 Hz cutoff frequency was used. From each window, a vector of features was obtained by calculating variables from the time and frequency domain.</p>
-<div id="be534fe9" class="cell" data-quarto-private-1="{&quot;key&quot;:&quot;colab&quot;,&quot;value&quot;:{&quot;base_uri&quot;:&quot;https://localhost:8080/&quot;}}" data-execution_count="15">
+<div id="e7258ba3" class="cell" data-quarto-private-1="{&quot;key&quot;:&quot;colab&quot;,&quot;value&quot;:{&quot;base_uri&quot;:&quot;https://localhost:8080/&quot;}}" data-execution_count="15">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb22"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> epoch <span class="kw">in</span> <span class="bu">range</span>(<span class="dv">10</span>):</span>
 <span id="cb22-2"><a href="#cb22-2" aria-hidden="true" tabindex="-1"></a>  train_loss, train_acc <span class="op">=</span> run_epoch(train_dl_body)</span>
 <span id="cb22-3"><a href="#cb22-3" aria-hidden="true" tabindex="-1"></a>  test_loss, test_acc <span class="op">=</span> run_epoch(test_dl, train<span class="op">=</span><span class="va">False</span>)</span>
 <span id="cb22-4"><a href="#cb22-4" aria-hidden="true" tabindex="-1"></a>  <span class="bu">print</span>(<span class="ss">f'Epoch </span><span class="sc">{</span>epoch<span class="op">+</span><span class="dv">1</span><span class="sc">}</span><span class="ss">: train_loss=</span><span class="sc">{</span>train_loss<span class="sc">:.4f}</span><span class="ss">, train_acc=</span><span class="sc">{</span>train_acc<span class="sc">:.4f}</span><span class="ss">, test_loss=</span><span class="sc">{</span>test_loss<span class="sc">:.4f}</span><span class="ss">, test_acc=</span><span class="sc">{</span>test_acc<span class="sc">:.4f}</span><span class="ss">'</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>Epoch 1: train_loss=0.7195, train_acc=0.6013, test_loss=5.6029, test_acc=0.4167
-Epoch 2: train_loss=0.6618, train_acc=0.6265, test_loss=7.7905, test_acc=0.2131
-Epoch 3: train_loss=0.6509, train_acc=0.6330, test_loss=10.3415, test_acc=0.1904
-Epoch 4: train_loss=0.6354, train_acc=0.6383, test_loss=11.1202, test_acc=0.1982
-Epoch 5: train_loss=0.6318, train_acc=0.6481, test_loss=11.9602, test_acc=0.1890
-Epoch 6: train_loss=0.6207, train_acc=0.6428, test_loss=9.3616, test_acc=0.2185
-Epoch 7: train_loss=0.6265, train_acc=0.6462, test_loss=12.9440, test_acc=0.1822
-Epoch 8: train_loss=0.6175, train_acc=0.6502, test_loss=8.5913, test_acc=0.2151
-Epoch 9: train_loss=0.6117, train_acc=0.6553, test_loss=14.4816, test_acc=0.1890
-Epoch 10: train_loss=0.6114, train_acc=0.6526, test_loss=9.9407, test_acc=0.2711</code></pre>
+<pre><code>Epoch 1: train_loss=0.7097, train_acc=0.6035, test_loss=9.6068, test_acc=0.1863
+Epoch 2: train_loss=0.6705, train_acc=0.6200, test_loss=8.4766, test_acc=0.2457
+Epoch 3: train_loss=0.6396, train_acc=0.6333, test_loss=12.5178, test_acc=0.3115
+Epoch 4: train_loss=0.6429, train_acc=0.6291, test_loss=14.8952, test_acc=0.1982
+Epoch 5: train_loss=0.6350, train_acc=0.6362, test_loss=10.3467, test_acc=0.3135
+Epoch 6: train_loss=0.6207, train_acc=0.6472, test_loss=12.0206, test_acc=0.2100
+Epoch 7: train_loss=0.6333, train_acc=0.6425, test_loss=10.5265, test_acc=0.2976
+Epoch 8: train_loss=0.6232, train_acc=0.6479, test_loss=14.7182, test_acc=0.2704
+Epoch 9: train_loss=0.6213, train_acc=0.6439, test_loss=16.1825, test_acc=0.2307
+Epoch 10: train_loss=0.6098, train_acc=0.6591, test_loss=18.7088, test_acc=0.2121</code></pre>
 </div>
 </div>
-<div id="856aa9e2" class="cell" data-quarto-private-1="{&quot;key&quot;:&quot;colab&quot;,&quot;value&quot;:{&quot;base_uri&quot;:&quot;https://localhost:8080/&quot;,&quot;height&quot;:735}}" data-execution_count="16">
+<div id="a0e23ed3" class="cell" data-quarto-private-1="{&quot;key&quot;:&quot;colab&quot;,&quot;value&quot;:{&quot;base_uri&quot;:&quot;https://localhost:8080/&quot;,&quot;height&quot;:735}}" data-execution_count="16">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb24"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Evaluate the model - get F1 score, confusion matrix</span></span>
 <span id="cb24-2"><a href="#cb24-2" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb24-3"><a href="#cb24-3" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> sklearn.metrics <span class="im">import</span> f1_score, confusion_matrix</span>
@@ -974,7 +974,7 @@ Epoch 10: train_loss=0.6114, train_acc=0.6526, test_loss=9.9407, test_acc=0.2711
 <span id="cb24-31"><a href="#cb24-31" aria-hidden="true" tabindex="-1"></a>plt.yticks([<span class="fl">0.5</span>, <span class="fl">1.5</span>, <span class="fl">2.5</span>, <span class="fl">3.5</span>, <span class="fl">4.5</span>, <span class="fl">5.5</span>], [<span class="st">'Walking'</span>, <span class="st">'Upstairs'</span>, <span class="st">'Downstairs'</span>, <span class="st">'Sitting'</span>, <span class="st">'Standing'</span>, <span class="st">'Laying]'</span>])</span>
 <span id="cb24-32"><a href="#cb24-32" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>F1 score: 0.1747</code></pre>
+<pre><code>F1 score: 0.1105</code></pre>
 </div>
 <div class="cell-output cell-output-display">
 <div>
@@ -988,7 +988,7 @@ Epoch 10: train_loss=0.6114, train_acc=0.6526, test_loss=9.9407, test_acc=0.2711
 </section>
 <section id="running-the-model-with-all-the-data" class="level2">
 <h2 class="anchored" data-anchor-id="running-the-model-with-all-the-data">Running the model with all the data</h2>
-<div id="186ab99e" class="cell" data-quarto-private-1="{&quot;key&quot;:&quot;colab&quot;,&quot;value&quot;:{&quot;base_uri&quot;:&quot;https://localhost:8080/&quot;,&quot;height&quot;:86}}" data-execution_count="17">
+<div id="dc54f129" class="cell" data-quarto-private-1="{&quot;key&quot;:&quot;colab&quot;,&quot;value&quot;:{&quot;base_uri&quot;:&quot;https://localhost:8080/&quot;,&quot;height&quot;:86}}" data-execution_count="17">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb26"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Concatenate total, body and gyro</span></span>
 <span id="cb26-2"><a href="#cb26-2" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb26-3"><a href="#cb26-3" aria-hidden="true" tabindex="-1"></a>X_all_train <span class="op">=</span> np.concat((X_total_train, X_body_train, X_gyro_train), axis<span class="op">=</span><span class="dv">2</span>)</span>
@@ -1008,7 +1008,7 @@ Epoch 10: train_loss=0.6114, train_acc=0.6526, test_loss=9.9407, test_acc=0.2711
 <pre><code>(2947, 1)</code></pre>
 </div>
 </div>
-<div id="aa220f0a" class="cell" data-execution_count="18">
+<div id="995e811b" class="cell" data-execution_count="18">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb31"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb31-1"><a href="#cb31-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Create data loaders</span></span>
 <span id="cb31-2"><a href="#cb31-2" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb31-3"><a href="#cb31-3" aria-hidden="true" tabindex="-1"></a>train_ds_all <span class="op">=</span> UCIDatasetWrapper(X_all_train, y_train)</span>
@@ -1016,7 +1016,7 @@ Epoch 10: train_loss=0.6114, train_acc=0.6526, test_loss=9.9407, test_acc=0.2711
 <span id="cb31-5"><a href="#cb31-5" aria-hidden="true" tabindex="-1"></a>test_ds_all <span class="op">=</span> UCIDatasetWrapper(X_all_test, y_test)</span>
 <span id="cb31-6"><a href="#cb31-6" aria-hidden="true" tabindex="-1"></a>test_dl_all <span class="op">=</span> DataLoader(test_ds_all, batch_size<span class="op">=</span><span class="dv">32</span>, shuffle<span class="op">=</span><span class="va">False</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
-<div id="d4e2733c" class="cell" data-execution_count="19">
+<div id="96ae5f91" class="cell" data-execution_count="19">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb32"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb32-1"><a href="#cb32-1" aria-hidden="true" tabindex="-1"></a><span class="co"># We need a new model with 9 channels</span></span>
 <span id="cb32-2"><a href="#cb32-2" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb32-3"><a href="#cb32-3" aria-hidden="true" tabindex="-1"></a><span class="kw">class</span> HAR1DCNN_9ch(nn.Module):</span>
@@ -1043,19 +1043,19 @@ Epoch 10: train_loss=0.6114, train_acc=0.6526, test_loss=9.9407, test_acc=0.2711
 </div>
 <section id="train-the-new-model" class="level3">
 <h3 class="anchored" data-anchor-id="train-the-new-model">Train the new model</h3>
-<div id="ba2875d6" class="cell" data-execution_count="20">
+<div id="c3391201" class="cell" data-execution_count="20">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb33"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb33-1"><a href="#cb33-1" aria-hidden="true" tabindex="-1"></a>device <span class="op">=</span> torch.device(<span class="st">"cuda"</span> <span class="cf">if</span> torch.cuda.is_available() <span class="cf">else</span> <span class="st">"cpu"</span>)</span>
 <span id="cb33-2"><a href="#cb33-2" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span> device.<span class="bu">type</span> <span class="op">!=</span> <span class="st">"cuda"</span>:</span>
 <span id="cb33-3"><a href="#cb33-3" aria-hidden="true" tabindex="-1"></a>  device <span class="op">=</span> torch.device(<span class="st">"mps"</span> <span class="cf">if</span> torch.backends.mps.is_available() <span class="cf">else</span> <span class="st">"cpu"</span>)</span>
 <span id="cb33-4"><a href="#cb33-4" aria-hidden="true" tabindex="-1"></a>n_classes <span class="op">=</span> <span class="bu">len</span>(torch.unique(torch.tensor(y_train)))</span>
 <span id="cb33-5"><a href="#cb33-5" aria-hidden="true" tabindex="-1"></a>model_2 <span class="op">=</span> HAR1DCNN_9ch(in_channels<span class="op">=</span><span class="dv">9</span>, n_classes<span class="op">=</span>n_classes).to(device)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
-<div id="f1201e77" class="cell" data-execution_count="21">
+<div id="ed85ccaf" class="cell" data-execution_count="21">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb34"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb34-1"><a href="#cb34-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Optimizer and loss function</span></span>
 <span id="cb34-2"><a href="#cb34-2" aria-hidden="true" tabindex="-1"></a>optim <span class="op">=</span> torch.optim.Adam(model_2.parameters(), lr<span class="op">=</span><span class="fl">1e-3</span>)</span>
 <span id="cb34-3"><a href="#cb34-3" aria-hidden="true" tabindex="-1"></a>loss_fn <span class="op">=</span> nn.CrossEntropyLoss()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
-<div id="e43b0a65" class="cell" data-execution_count="22">
+<div id="0e56d381" class="cell" data-execution_count="22">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb35"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb35-1"><a href="#cb35-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> run_epoch(loader, train<span class="op">=</span><span class="va">True</span>):</span>
 <span id="cb35-2"><a href="#cb35-2" aria-hidden="true" tabindex="-1"></a>  <span class="cf">if</span> train:</span>
 <span id="cb35-3"><a href="#cb35-3" aria-hidden="true" tabindex="-1"></a>    model_2.train()</span>
@@ -1079,35 +1079,35 @@ Epoch 10: train_loss=0.6114, train_acc=0.6526, test_loss=9.9407, test_acc=0.2711
 <span id="cb35-21"><a href="#cb35-21" aria-hidden="true" tabindex="-1"></a>    total <span class="op">+=</span> Xb.size(<span class="dv">0</span>)</span>
 <span id="cb35-22"><a href="#cb35-22" aria-hidden="true" tabindex="-1"></a>  <span class="cf">return</span> total_loss<span class="op">/</span>total, correct<span class="op">/</span>total</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
-<div id="24e196a8" class="cell" data-quarto-private-1="{&quot;key&quot;:&quot;colab&quot;,&quot;value&quot;:{&quot;base_uri&quot;:&quot;https://localhost:8080/&quot;}}" data-execution_count="23">
+<div id="bf9226df" class="cell" data-quarto-private-1="{&quot;key&quot;:&quot;colab&quot;,&quot;value&quot;:{&quot;base_uri&quot;:&quot;https://localhost:8080/&quot;}}" data-execution_count="23">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb36"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb36-1"><a href="#cb36-1" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> epoch <span class="kw">in</span> <span class="bu">range</span>(<span class="dv">20</span>):</span>
 <span id="cb36-2"><a href="#cb36-2" aria-hidden="true" tabindex="-1"></a>  train_loss, train_acc <span class="op">=</span> run_epoch(train_dl_all)</span>
 <span id="cb36-3"><a href="#cb36-3" aria-hidden="true" tabindex="-1"></a>  test_loss, test_acc <span class="op">=</span> run_epoch(test_dl_all, train<span class="op">=</span><span class="va">False</span>)</span>
 <span id="cb36-4"><a href="#cb36-4" aria-hidden="true" tabindex="-1"></a>  <span class="bu">print</span>(<span class="ss">f'Epoch </span><span class="sc">{</span>epoch<span class="op">+</span><span class="dv">1</span><span class="sc">}</span><span class="ss">: train_loss=</span><span class="sc">{</span>train_loss<span class="sc">:.4f}</span><span class="ss">, train_acc=</span><span class="sc">{</span>train_acc<span class="sc">:.4f}</span><span class="ss">, test_loss=</span><span class="sc">{</span>test_loss<span class="sc">:.4f}</span><span class="ss">, test_acc=</span><span class="sc">{</span>test_acc<span class="sc">:.4f}</span><span class="ss">'</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>Epoch 1: train_loss=0.5655, train_acc=0.8259, test_loss=0.3217, test_acc=0.8975
-Epoch 2: train_loss=0.2185, train_acc=0.9227, test_loss=0.2600, test_acc=0.9138
-Epoch 3: train_loss=0.1702, train_acc=0.9358, test_loss=0.2306, test_acc=0.9182
-Epoch 4: train_loss=0.1505, train_acc=0.9382, test_loss=0.2432, test_acc=0.9209
-Epoch 5: train_loss=0.1351, train_acc=0.9434, test_loss=0.4624, test_acc=0.8364
-Epoch 6: train_loss=0.1360, train_acc=0.9421, test_loss=0.2184, test_acc=0.9274
-Epoch 7: train_loss=0.1262, train_acc=0.9461, test_loss=0.3418, test_acc=0.8931
-Epoch 8: train_loss=0.1253, train_acc=0.9472, test_loss=0.3280, test_acc=0.8992
-Epoch 9: train_loss=0.1221, train_acc=0.9498, test_loss=0.1982, test_acc=0.9430
-Epoch 10: train_loss=0.1175, train_acc=0.9505, test_loss=0.2267, test_acc=0.9287
-Epoch 11: train_loss=0.1103, train_acc=0.9517, test_loss=0.2051, test_acc=0.9444
-Epoch 12: train_loss=0.1071, train_acc=0.9539, test_loss=0.2660, test_acc=0.9118
-Epoch 13: train_loss=0.1105, train_acc=0.9527, test_loss=0.2171, test_acc=0.9447
-Epoch 14: train_loss=0.1035, train_acc=0.9551, test_loss=0.5525, test_acc=0.8527
-Epoch 15: train_loss=0.1295, train_acc=0.9495, test_loss=0.2448, test_acc=0.9335
-Epoch 16: train_loss=0.1072, train_acc=0.9547, test_loss=0.2114, test_acc=0.9298
-Epoch 17: train_loss=0.1041, train_acc=0.9540, test_loss=0.2010, test_acc=0.9430
-Epoch 18: train_loss=0.1066, train_acc=0.9548, test_loss=0.2100, test_acc=0.9396
-Epoch 19: train_loss=0.1008, train_acc=0.9561, test_loss=0.2304, test_acc=0.9104
-Epoch 20: train_loss=0.0980, train_acc=0.9588, test_loss=0.2317, test_acc=0.9454</code></pre>
+<pre><code>Epoch 1: train_loss=0.6184, train_acc=0.7956, test_loss=0.3463, test_acc=0.8768
+Epoch 2: train_loss=0.2316, train_acc=0.9206, test_loss=0.2765, test_acc=0.9179
+Epoch 3: train_loss=0.1717, train_acc=0.9327, test_loss=0.2674, test_acc=0.8965
+Epoch 4: train_loss=0.1565, train_acc=0.9372, test_loss=0.2246, test_acc=0.9250
+Epoch 5: train_loss=0.1411, train_acc=0.9419, test_loss=0.2674, test_acc=0.9030
+Epoch 6: train_loss=0.1343, train_acc=0.9450, test_loss=0.2528, test_acc=0.9125
+Epoch 7: train_loss=0.1221, train_acc=0.9464, test_loss=0.2397, test_acc=0.9128
+Epoch 8: train_loss=0.1218, train_acc=0.9468, test_loss=0.2297, test_acc=0.9284
+Epoch 9: train_loss=0.1231, train_acc=0.9459, test_loss=0.2474, test_acc=0.9315
+Epoch 10: train_loss=0.1161, train_acc=0.9506, test_loss=0.2374, test_acc=0.9270
+Epoch 11: train_loss=0.1180, train_acc=0.9479, test_loss=0.2367, test_acc=0.9196
+Epoch 12: train_loss=0.1165, train_acc=0.9499, test_loss=0.2830, test_acc=0.8972
+Epoch 13: train_loss=0.1171, train_acc=0.9493, test_loss=0.5716, test_acc=0.8392
+Epoch 14: train_loss=0.1179, train_acc=0.9480, test_loss=0.2171, test_acc=0.9362
+Epoch 15: train_loss=0.1111, train_acc=0.9527, test_loss=0.2389, test_acc=0.9260
+Epoch 16: train_loss=0.1070, train_acc=0.9546, test_loss=0.2823, test_acc=0.9050
+Epoch 17: train_loss=0.1177, train_acc=0.9521, test_loss=0.2516, test_acc=0.9182
+Epoch 18: train_loss=0.1094, train_acc=0.9538, test_loss=0.2291, test_acc=0.9301
+Epoch 19: train_loss=0.1021, train_acc=0.9577, test_loss=0.2268, test_acc=0.9325
+Epoch 20: train_loss=0.1058, train_acc=0.9562, test_loss=0.2266, test_acc=0.9291</code></pre>
 </div>
 </div>
-<div id="2d775958" class="cell" data-quarto-private-1="{&quot;key&quot;:&quot;colab&quot;,&quot;value&quot;:{&quot;base_uri&quot;:&quot;https://localhost:8080/&quot;,&quot;height&quot;:735}}" data-execution_count="24">
+<div id="e4c74e76" class="cell" data-quarto-private-1="{&quot;key&quot;:&quot;colab&quot;,&quot;value&quot;:{&quot;base_uri&quot;:&quot;https://localhost:8080/&quot;,&quot;height&quot;:735}}" data-execution_count="24">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb38"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb38-1"><a href="#cb38-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Evaluate the model - get F1 score, confusion matrix</span></span>
 <span id="cb38-2"><a href="#cb38-2" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb38-3"><a href="#cb38-3" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> sklearn.metrics <span class="im">import</span> f1_score, confusion_matrix</span>
@@ -1141,7 +1141,7 @@ Epoch 20: train_loss=0.0980, train_acc=0.9588, test_loss=0.2317, test_acc=0.9454
 <span id="cb38-31"><a href="#cb38-31" aria-hidden="true" tabindex="-1"></a>plt.yticks([<span class="fl">0.5</span>, <span class="fl">1.5</span>, <span class="fl">2.5</span>, <span class="fl">3.5</span>, <span class="fl">4.5</span>, <span class="fl">5.5</span>], [<span class="st">'Walking'</span>, <span class="st">'Upstairs'</span>, <span class="st">'Downstairs'</span>, <span class="st">'Sitting'</span>, <span class="st">'Standing'</span>, <span class="st">'Laying]'</span>])</span>
 <span id="cb38-32"><a href="#cb38-32" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>F1 score: 0.9452</code></pre>
+<pre><code>F1 score: 0.9303</code></pre>
 </div>
 <div class="cell-output cell-output-display">
 <div>
