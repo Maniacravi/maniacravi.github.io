@@ -17,6 +17,29 @@ image: img/portrait.png
 comments: false
 ---
 
-This is a Quarto website.
+## About Me
 
-To learn more about Quarto websites visit <https://quarto.org/docs/websites>.
+I'm a Biomedical Engineer and Data Scientist working on, and enthusiastic about, the intersection of Humans, Sensors and AI. I've spent over a decade developing algorithms that translate complex physiological signals - from EMG and ECG to PPG and IMU data - into meaningful, actionable information. 
+
+I currently work at Kessler Foundation's [Center for Spinal Stimulation](https://kesslerfoundation.org/research/tim-and-caroline-reynolds-center-spinal-stimulation), leading biomedical signal processing and machine learning projects focused on [Neuromodulation](https://www.neuromodulation.com/about-neuromodulation) and spinal cord injury research. 
+
+My long-term goal is to build technologies that make physiological data more actionable and interpretable. I’m endlessly curious about how technology can deepen our understanding of the body — the signals we measure tell stories about how we move, sleep, think, and even feel.
+
+> "Nobody ever figures out what life is all about, and it doesn't matter. Explore the world. Nearly everything is really interesting if you go into it deeply enough." - Richard P. Feynman
+
+## Key Interests
+
+* Biomedical signal processing
+* Wearables & Digital Health
+* Machine Learning and Deep Learning
+* Brain-Computer Interfaces (BCI)
+* Neuromodulation and Neuroengineering
+
+## Personal Life
+
+I live in New Jersey where I split my time between work, side [projects](projects), playing badminton, watching physics lectures, reading philosophy books and catching up on sports - basketball, soccer and test cricket (yes, it's 5 days long but there's nothing quite like it!).
+
+## Contact 
+
+If you find something in here interesting or if you want to chat with me about something, please drop a message (or a connection request) on [LinkedIn](https://www.linkedin.com/in/mravi1/)!
+

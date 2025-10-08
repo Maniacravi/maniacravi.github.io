@@ -10,8 +10,8 @@ listing:
   type: default
 page-layout: full
 title: Projects
-description: Selected projects — from short explorations to full-fledged ones.
+# description: Some of my projects — from short explorations to months-long endeavors.
 title-block-bannerrR: false
 ---
 
-This page lists selected projects in data science, bioengineering, and sensor/AI systems. Each entry includes a short write-up and links to code or demos when available.
+A collection of projects exploring the intersection of data science, bioengineering, and AI-driven sensing — with links to code and demos where available.

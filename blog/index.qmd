@@ -15,4 +15,4 @@ title-block-bannerrR: false
 
 <!-- Add an optional intro below the listing -->
 
-Welcome to the blog. This page will list all posts in the `blog/` folder.
+Welcome to my corner of the internet. Here, I write about whatever catches my curiosity — from random thoughts and philosophy to the science that shapes how we see the world.

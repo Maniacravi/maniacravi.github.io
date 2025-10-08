@@ -6,7 +6,7 @@ project:
 website:
   title: "Mani Ravi"
   site-url: "https://maniravi.com"
-  description: "Mani is a Bioengineer and Data Scientist working on the intersection of Humans, Sensors and AI."
+  description: "Mani Ravi is a Bioengineer and Data Scientist working on the intersection of Humans, Sensors and AI."
   navbar:
     left:
       - href: index.qmd
@@ -16,7 +16,7 @@ website:
       - href: blog
         text: Blog
   page-footer:
-    left: "(c) Manikandan Ravi, 2020–. All rights reserved."
+    left: "(c) Manikandan Ravi, 2020–. All rights reserved. [Disclaimer](disclaimer)"
   twitter-card: true
   open-graph: true
 
