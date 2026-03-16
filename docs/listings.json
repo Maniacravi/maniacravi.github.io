@@ -6,8 +6,7 @@
   {
     "listing": "/projects/index.html",
     "items": [
-      "/projects/imu-processing-cnn-svm/index.html",
-      "/projects/human-activity-detection/index.html"
+      "/projects/imu-processing-cnn-svm/index.html"
     ]
   }
 ]

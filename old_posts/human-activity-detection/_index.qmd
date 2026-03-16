@@ -9,6 +9,8 @@ categories:
 - Machine Learning
 - CNN
 date: 2025-09-25
+execute:
+  eval: false
 ---
 
 
