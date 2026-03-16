@@ -1,0 +1,21 @@
+---
+title: "A Tale of Two Eras: Handcrafted Features vs. Deep Learning for IMU Activity Recognition"
+description: It no longer makes sense to spend hours engineering features for IMU activity recognition when deep learning can 'just figure it out'. But at what cost?
+jupyter: python3
+categories:
+- IMU
+- Machine Learning
+- Deep Learning
+- CNN
+- SVM
+- XAI
+date: 2026-02-25
+---
+
+In what seems like many lifetimes ago, it was standard practice to spend the majority of time on a machine learning project engineering features rather than training models. Support Vector Machines (SVMs) for example, were only as good as the features you gave it and therefore, researchers would spend weeks or months actually understanding the physics of the problem before writing a single line of code to build or train the model. 
+
+Activity recognition from inertial measurement unit (IMU) is a good example. We couldn't just hand the raw accelerometer signal to an SVM and hope for the best. Instead, we had to come up with features that would help the model distinguish between activities much like how basketball nerds have to come up with new statistics to classify players across eras into different tiers. The researchers had to think: what does walking actually look like in frequency space? How does the energy distribution change between sitting and standing? What time-domain statistics capture the difference between climbing stairs and walking on flat ground? Then they would compute those features - mean, variance, signal energy, FFT coefficients, jerk signals — window by window, axis by axis. It was slow. It required domain expertise and a lot of trial and error. And it worked pretty well^[Okay to be honest, it worked for most activities but not all. Some activities are just too similar to be distinguished by handcrafted features alone.].
+
+Then came deep learning models. Specifically Convolutional Neural Networks (CNNs) which could take in the raw IMU signal and *automatically* learn features that help in distinguisghing between activities. Even without any preprocessing or filtering whatsoever. We don't even need to feed it the spectrogram of the signal or the FFT coefficients. 
+
+# The Dataset

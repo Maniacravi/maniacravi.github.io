@@ -11,7 +11,7 @@ listing:
 page-layout: full
 title: Projects
 # description: Some of my projects — from short explorations to months-long endeavors.
-title-block-bannerrR: false
+title-block-banner: false
 ---
 
 A collection of projects exploring the intersection of data science, bioengineering, and AI-driven sensing — with links to code and demos where available.

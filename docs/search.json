@@ -74,7 +74,7 @@
     "href": "projects/index.html",
     "title": "Projects",
     "section": "",
-    "text": "A collection of projects exploring the intersection of data science, bioengineering, and AI-driven sensing — with links to code and demos where available.\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nHuman Activity Detection using UCI’s HAR Dataset\n\n\n\nIMU\n\nGait\n\nHuman Activity\n\nMachine Learning\n\nCNN\n\n\n\nClassifying Accelerometer data to various activities of daily living (ADL) using Deep Learning.\n\n\n\n\n\nSep 25, 2025\n\n\n\n\n\nNo matching items"
+    "text": "A collection of projects exploring the intersection of data science, bioengineering, and AI-driven sensing — with links to code and demos where available.\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nA Tale of Two Eras: Handcrafted Features vs. Deep Learning for IMU Activity Recognition\n\n\n\nIMU\n\nMachine Learning\n\nDeep Learning\n\nCNN\n\nSVM\n\nXAI\n\n\n\nIt no longer makes sense to spend hours engineering features for IMU activity recognition when deep learning can ‘just figure it out’. But at what cost?\n\n\n\n\n\nFeb 25, 2026\n\n\n\n\n\n\n\n\n\n\n\n\nHuman Activity Detection using UCI’s HAR Dataset\n\n\n\nIMU\n\nGait\n\nHuman Activity\n\nMachine Learning\n\nCNN\n\n\n\nClassifying Accelerometer data to various activities of daily living (ADL) using Deep Learning.\n\n\n\n\n\nSep 25, 2025\n\n\n\n\n\nNo matching items"
   },
   {
     "objectID": "index.html",
@@ -110,5 +110,19 @@
     "title": "Manikandan (Mani) Ravi",
     "section": "Contact",
     "text": "Contact\nIf you find something in here interesting or if you want to chat with me about something, please drop a message (or a connection request) on LinkedIn!"
+  },
+  {
+    "objectID": "projects/imu-processing-cnn-svm/index.html",
+    "href": "projects/imu-processing-cnn-svm/index.html",
+    "title": "A Tale of Two Eras: Handcrafted Features vs. Deep Learning for IMU Activity Recognition",
+    "section": "",
+    "text": "In what seems like many lifetimes ago, it was standard practice to spend the majority of time on a machine learning project engineering features rather than training models. Support Vector Machines (SVMs) for example, were only as good as the features you gave it and therefore, researchers would spend weeks or months actually understanding the physics of the problem before writing a single line of code to build or train the model.\nActivity recognition from inertial measurement unit (IMU) is a good example. We couldn’t just hand the raw accelerometer signal to an SVM and hope for the best. Instead, we had to come up with features that would help the model distinguish between activities much like how basketball nerds have to come up with new statistics to classify players across eras into different tiers. The researchers had to think: what does walking actually look like in frequency space? How does the energy distribution change between sitting and standing? What time-domain statistics capture the difference between climbing stairs and walking on flat ground? Then they would compute those features - mean, variance, signal energy, FFT coefficients, jerk signals — window by window, axis by axis. It was slow. It required domain expertise and a lot of trial and error. And it worked pretty well.1\nThen came deep learning models. Specifically Convolutional Neural Networks (CNNs) which could take in the raw IMU signal and automatically learn features that help in distinguisghing between activities. Even without any preprocessing or filtering whatsoever2."
+  },
+  {
+    "objectID": "projects/imu-processing-cnn-svm/index.html#footnotes",
+    "href": "projects/imu-processing-cnn-svm/index.html#footnotes",
+    "title": "A Tale of Two Eras: Handcrafted Features vs. Deep Learning for IMU Activity Recognition",
+    "section": "Footnotes",
+    "text": "Footnotes\n\n\nOkay to be honest, it worked for most activities but not all. Some activities are just too similar to be distinguished by handcrafted features alone.↩︎\nNot counting hardware filtering like built-in low pass filters↩︎"
   }
 ]

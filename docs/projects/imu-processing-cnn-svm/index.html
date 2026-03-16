@@ -6,8 +6,10 @@
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
+<meta name="dcterms.date" content="2026-02-25">
+<meta name="description" content="It no longer makes sense to spend hours engineering features for IMU activity recognition when deep learning can ‘just figure it out’. But at what cost?">
 
-<title>Manikandan (Mani) Ravi – Mani Ravi</title>
+<title>A Tale of Two Eras: Handcrafted Features vs.&nbsp;Deep Learning for IMU Activity Recognition – Mani Ravi</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -23,27 +25,28 @@ ul.task-list li input[type="checkbox"] {
 </style>
 
 
-<script src="site_libs/quarto-nav/quarto-nav.js"></script>
-<script src="site_libs/quarto-nav/headroom.min.js"></script>
-<script src="site_libs/clipboard/clipboard.min.js"></script>
-<script src="site_libs/quarto-search/autocomplete.umd.js"></script>
-<script src="site_libs/quarto-search/fuse.min.js"></script>
-<script src="site_libs/quarto-search/quarto-search.js"></script>
-<meta name="quarto:offset" content="./">
-<script src="site_libs/quarto-html/quarto.js" type="module"></script>
-<script src="site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
-<script src="site_libs/quarto-html/axe/axe-check.js" type="module"></script>
-<script src="site_libs/quarto-html/popper.min.js"></script>
-<script src="site_libs/quarto-html/tippy.umd.min.js"></script>
-<link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
-<link href="site_libs/quarto-html/quarto-syntax-highlighting-dc55a5b9e770e841cd82e46aadbfb9b0.css" rel="stylesheet" class="quarto-color-scheme" id="quarto-text-highlighting-styles">
-<link href="site_libs/quarto-html/quarto-syntax-highlighting-dark-b651517ce65839d647a86e2780455cfb.css" rel="stylesheet" class="quarto-color-scheme quarto-color-alternate" id="quarto-text-highlighting-styles">
-<link href="site_libs/quarto-html/quarto-syntax-highlighting-dc55a5b9e770e841cd82e46aadbfb9b0.css" rel="stylesheet" class="quarto-color-scheme-extra" id="quarto-text-highlighting-styles">
-<script src="site_libs/bootstrap/bootstrap.min.js"></script>
-<link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="site_libs/bootstrap/bootstrap-5b4ad623e5705c0698d39aec6f10cf02.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme" id="quarto-bootstrap" data-mode="light">
-<link href="site_libs/bootstrap/bootstrap-dark-7cd99d61f35755d4443da320b4f2583a.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme quarto-color-alternate" id="quarto-bootstrap" data-mode="dark">
-<link href="site_libs/bootstrap/bootstrap-5b4ad623e5705c0698d39aec6f10cf02.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme-extra" id="quarto-bootstrap" data-mode="light">
+<script src="../../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../../site_libs/quarto-nav/headroom.min.js"></script>
+<script src="../../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../../">
+<script src="../../site_libs/quarto-html/quarto.js" type="module"></script>
+<script src="../../site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="../../site_libs/quarto-html/axe/axe-check.js" type="module"></script>
+<script src="../../site_libs/quarto-html/popper.min.js"></script>
+<script src="../../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../../site_libs/quarto-html/quarto-syntax-highlighting-dc55a5b9e770e841cd82e46aadbfb9b0.css" rel="stylesheet" class="quarto-color-scheme" id="quarto-text-highlighting-styles">
+<link href="../../site_libs/quarto-html/quarto-syntax-highlighting-dark-b651517ce65839d647a86e2780455cfb.css" rel="stylesheet" class="quarto-color-scheme quarto-color-alternate" id="quarto-text-highlighting-styles">
+<link href="../../site_libs/quarto-html/quarto-syntax-highlighting-dc55a5b9e770e841cd82e46aadbfb9b0.css" rel="stylesheet" class="quarto-color-scheme-extra" id="quarto-text-highlighting-styles">
+<script src="../../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../../site_libs/bootstrap/bootstrap-5b4ad623e5705c0698d39aec6f10cf02.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme" id="quarto-bootstrap" data-mode="light">
+<link href="../../site_libs/bootstrap/bootstrap-dark-7cd99d61f35755d4443da320b4f2583a.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme quarto-color-alternate" id="quarto-bootstrap" data-mode="dark">
+<link href="../../site_libs/bootstrap/bootstrap-5b4ad623e5705c0698d39aec6f10cf02.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme-extra" id="quarto-bootstrap" data-mode="light">
 <script id="quarto-search-options" type="application/json">{
   "location": "navbar",
   "copy-button": false,
@@ -73,22 +76,16 @@ ul.task-list li input[type="checkbox"] {
 }</script>
 
 
-<link rel="stylesheet" href="styles.css">
-<meta property="og:title" content="Manikandan (Mani) Ravi – Mani Ravi">
-<meta property="og:description" content="Mani Ravi is a Bioengineer and Data Scientist working on the intersection of Humans, Sensors and AI.">
-<meta property="og:image" content="https://maniravi.com/img/portrait.png">
+<link rel="stylesheet" href="../../styles.css">
+<meta property="og:title" content="A Tale of Two Eras: Handcrafted Features vs.&nbsp;Deep Learning for IMU Activity Recognition – Mani Ravi">
+<meta property="og:description" content="It no longer makes sense to spend hours engineering features for IMU activity recognition when deep learning can ‘just figure it out’. But at what cost?">
 <meta property="og:site_name" content="Mani Ravi">
-<meta property="og:image:height" content="2543">
-<meta property="og:image:width" content="1907">
-<meta name="twitter:title" content="Manikandan (Mani) Ravi – Mani Ravi">
-<meta name="twitter:description" content="Mani Ravi is a Bioengineer and Data Scientist working on the intersection of Humans, Sensors and AI.">
-<meta name="twitter:image" content="https://maniravi.com/img/portrait.png">
-<meta name="twitter:image-height" content="2543">
-<meta name="twitter:image-width" content="1907">
-<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="A Tale of Two Eras: Handcrafted Features vs.&nbsp;Deep Learning for IMU Activity Recognition – Mani Ravi">
+<meta name="twitter:description" content="It no longer makes sense to spend hours engineering features for IMU activity recognition when deep learning can ‘just figure it out’. But at what cost?">
+<meta name="twitter:card" content="summary">
 </head>
 
-<body class="nav-fixed quarto-light"><script id="quarto-html-before-body" type="application/javascript">
+<body class="floating nav-fixed quarto-light"><script id="quarto-html-before-body" type="application/javascript">
     const toggleBodyColorMode = (bsSheetEl) => {
       const mode = bsSheetEl.getAttribute("data-mode");
       const bodyEl = window.document.querySelector("body");
@@ -266,9 +263,9 @@ ul.task-list li input[type="checkbox"] {
     <nav class="navbar navbar-expand-lg " data-bs-theme="dark">
       <div class="navbar-container container-fluid">
       <div class="navbar-brand-container mx-auto">
-    <a href="./index.html" class="navbar-brand navbar-brand-logo">
+    <a href="../../index.html" class="navbar-brand navbar-brand-logo">
     </a>
-    <a class="navbar-brand" href="./index.html">
+    <a class="navbar-brand" href="../../index.html">
     <span class="navbar-title">Mani Ravi</span>
     </a>
   </div>
@@ -279,15 +276,15 @@ ul.task-list li input[type="checkbox"] {
           <div class="collapse navbar-collapse" id="navbarCollapse">
             <ul class="navbar-nav navbar-nav-scroll me-auto">
   <li class="nav-item">
-    <a class="nav-link active" href="./index.html" aria-current="page"> 
+    <a class="nav-link" href="../../index.html"> 
 <span class="menu-text">Home</span></a>
   </li>  
   <li class="nav-item">
-    <a class="nav-link" href="./projects"> 
+    <a class="nav-link" href="../../projects"> 
 <span class="menu-text">Projects</span></a>
   </li>  
   <li class="nav-item">
-    <a class="nav-link" href="./blog"> 
+    <a class="nav-link" href="../../blog"> 
 <span class="menu-text">Blog</span></a>
   </li>  
 </ul>
@@ -301,80 +298,78 @@ ul.task-list li input[type="checkbox"] {
 <!-- content -->
 <div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
 <!-- sidebar -->
-<!-- margin-sidebar -->
-    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
-        <nav id="TOC" role="doc-toc" class="toc-active">
+  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation floating overflow-auto">
+    <nav id="TOC" role="doc-toc" class="toc-active">
     <h2 id="toc-title">On this page</h2>
+   
   <ul>
-  <li><a href="#about-me" id="toc-about-me" class="nav-link active" data-scroll-target="#about-me">About Me</a></li>
-  <li><a href="#key-interests" id="toc-key-interests" class="nav-link" data-scroll-target="#key-interests">Key Interests</a></li>
-  <li><a href="#personal-life" id="toc-personal-life" class="nav-link" data-scroll-target="#personal-life">Personal Life</a></li>
-  <li><a href="#contact" id="toc-contact" class="nav-link" data-scroll-target="#contact">Contact</a></li>
+  <li><a href="#the-dataset" id="toc-the-dataset" class="nav-link active" data-scroll-target="#the-dataset">The Dataset</a></li>
   </ul>
 </nav>
+</nav>
+<div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar zindex-bottom">
     </div>
 <!-- main -->
-<div class="quarto-about-trestles">
-  <div class="about-entity">
-    <img src="img/portrait.png" class="about-image
-  rounded " style="width: 20em;">
+<main class="content" id="quarto-document-content">
+
+
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
-<h1 class="title">Manikandan (Mani) Ravi</h1>
+<h1 class="title">A Tale of Two Eras: Handcrafted Features vs.&nbsp;Deep Learning for IMU Activity Recognition</h1>
+  <div class="quarto-categories">
+    <div class="quarto-category">IMU</div>
+    <div class="quarto-category">Machine Learning</div>
+    <div class="quarto-category">Deep Learning</div>
+    <div class="quarto-category">CNN</div>
+    <div class="quarto-category">SVM</div>
+    <div class="quarto-category">XAI</div>
+  </div>
+  </div>
+
+<div>
+  <div class="description">
+    It no longer makes sense to spend hours engineering features for IMU activity recognition when deep learning can ‘just figure it out’. But at what cost?
+  </div>
 </div>
+
+
 <div class="quarto-title-meta">
+
+    
+    <div>
+    <div class="quarto-title-meta-heading">Published</div>
+    <div class="quarto-title-meta-contents">
+      <p class="date">February 25, 2026</p>
+    </div>
   </div>
+  
+    
+  </div>
+  
+
+
 </header>
-    <div class="about-links">
-  <a href="https://www.linkedin.com/in/mravi1/" class="about-link" rel="" target="">
-    <i class="bi bi-linkedin"></i>
-     <span class="about-link-text">LinkedIn</span>
-  </a>
-  <a href="https://github.com/Maniacravi" class="about-link" rel="" target="">
-    <i class="bi bi-github"></i>
-     <span class="about-link-text">GitHub</span>
-  </a>
-  <a href="https://scholar.google.com/citations?user=AFSbnDUAAAAJ" class="about-link" rel="" target="">
-    <i class="bi bi-img/google-scholar.png"></i>
-     <span class="about-link-text">Google Scholar</span>
-  </a>
-</div>
-  </div>
-  <div class="about-contents"><main class="content" id="quarto-document-content">
 
 
-<section id="about-me" class="level2">
-<h2 data-anchor-id="about-me">About Me</h2>
-<p>I’m a Biomedical Engineer and Data Scientist working on, and enthusiastic about, the intersection of Humans, Sensors and AI. I’ve spent over a decade developing algorithms that translate complex physiological signals - from EMG and ECG to PPG and IMU data - into meaningful, actionable information.</p>
-<p>I currently work at Kessler Foundation’s <a href="https://kesslerfoundation.org/research/tim-and-caroline-reynolds-center-spinal-stimulation">Center for Spinal Stimulation</a>, leading biomedical signal processing and machine learning projects focused on <a href="https://www.neuromodulation.com/about-neuromodulation">Neuromodulation</a> and spinal cord injury research.</p>
-<p>My long-term goal is to build technologies that make physiological data more actionable and interpretable. I’m endlessly curious about how technology can deepen our understanding of the body — the signals we measure tell stories about how we move, sleep, think, and even feel.</p>
-<blockquote class="blockquote">
-<p>“Nobody ever figures out what life is all about, and it doesn’t matter. Explore the world. Nearly everything is really interesting if you go into it deeply enough.” - Richard P. Feynman</p>
-</blockquote>
-</section>
-<section id="key-interests" class="level2">
-<h2 data-anchor-id="key-interests">Key Interests</h2>
-<ul>
-<li>Biomedical signal processing</li>
-<li>Wearables &amp; Digital Health</li>
-<li>Machine Learning and Deep Learning</li>
-<li>Brain-Computer Interfaces (BCI)</li>
-<li>Neuromodulation and Neuroengineering</li>
-</ul>
-</section>
-<section id="personal-life" class="level2">
-<h2 data-anchor-id="personal-life">Personal Life</h2>
-<p>I live in New Jersey where I split my time between work, side <a href="projects">projects</a>, playing badminton, watching physics lectures, reading philosophy books and catching up on sports - basketball, soccer and test cricket (yes, it’s 5 days long but there’s nothing quite like it!).</p>
-</section>
-<section id="contact" class="level2">
-<h2 data-anchor-id="contact">Contact</h2>
-<p>If you find something in here interesting or if you want to chat with me about something, please drop a message (or a connection request) on <a href="https://www.linkedin.com/in/mravi1/">LinkedIn</a>!</p>
+<p>In what seems like many lifetimes ago, it was standard practice to spend the majority of time on a machine learning project engineering features rather than training models. Support Vector Machines (SVMs) for example, were only as good as the features you gave it and therefore, researchers would spend weeks or months actually understanding the physics of the problem before writing a single line of code to build or train the model.</p>
+<p>Activity recognition from inertial measurement unit (IMU) is a good example. We couldn’t just hand the raw accelerometer signal to an SVM and hope for the best. Instead, we had to come up with features that would help the model distinguish between activities much like how basketball nerds have to come up with new statistics to classify players across eras into different tiers. The researchers had to think: what does walking actually look like in frequency space? How does the energy distribution change between sitting and standing? What time-domain statistics capture the difference between climbing stairs and walking on flat ground? Then they would compute those features - mean, variance, signal energy, FFT coefficients, jerk signals — window by window, axis by axis. It was slow. It required domain expertise and a lot of trial and error. And it worked pretty well.<a href="#fn1" class="footnote-ref" id="fnref1" role="doc-noteref"><sup>1</sup></a></p>
+<p>Then came deep learning models. Specifically Convolutional Neural Networks (CNNs) which could take in the raw IMU signal and <em>automatically</em> learn features that help in distinguisghing between activities. Even without any preprocessing or filtering whatsoever<a href="#fn2" class="footnote-ref" id="fnref2" role="doc-noteref"><sup>2</sup></a>.</p>
+<section id="the-dataset" class="level1">
+<h1>The Dataset</h1>
 
 
 </section>
-</main></div>
-</div>
- <!-- /main -->
+
+
+<div id="quarto-appendix" class="default"><section id="footnotes" class="footnotes footnotes-end-of-document" role="doc-endnotes"><h2 class="anchored quarto-appendix-heading">Footnotes</h2>
+
+<ol>
+<li id="fn1"><p>Okay to be honest, it worked for most activities but not all. Some activities are just too similar to be distinguished by handcrafted features alone.<a href="#fnref1" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn2"><p>Not counting hardware filtering like built-in low pass filters<a href="#fnref2" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+</ol>
+</section></div></main> <!-- /main -->
 <script id="quarto-html-after-body" type="application/javascript">
   window.document.addEventListener("DOMContentLoaded", function (event) {
     // Ensure there is a toggle, if there isn't float one in the top right
@@ -390,6 +385,13 @@ ul.task-list li input[type="checkbox"] {
       window.document.body.appendChild(a);
     }
     setColorSchemeToggle(hasAlternateSentinel())
+    const icon = "";
+    const anchorJS = new window.AnchorJS();
+    anchorJS.options = {
+      placement: 'right',
+      icon: icon
+    };
+    anchorJS.add('.anchored');
     const isCodeAnnotation = (el) => {
       for (const clz of el.classList) {
         if (clz.startsWith('code-annotation-')) {                     
