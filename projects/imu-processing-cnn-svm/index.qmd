@@ -17,7 +17,6 @@ date: 2026-02-25
 # Author Metadata
 author:
     name: Mani Ravi
-    affiliation: Kessler Foundation
     url: https://maniravi.com
 # Citation Metadata
 citation:
