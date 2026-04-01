@@ -10,9 +10,10 @@
 <atom:link href="https://maniravi.com/projects/index.xml" rel="self" type="application/rss+xml"/>
 <description>Mani Ravi is a Bioengineer and Data Scientist working on the intersection of Humans, Sensors and AI.</description>
 <generator>quarto-1.8.24</generator>
-<lastBuildDate>Wed, 25 Feb 2026 06:00:00 GMT</lastBuildDate>
+<lastBuildDate>Wed, 25 Feb 2026 05:00:00 GMT</lastBuildDate>
 <item>
   <title>A Tale of Two Eras: Handcrafted Features vs. Deep Learning for IMU Activity Recognition</title>
+  <dc:creator>Mani Ravi</dc:creator>
   <link>https://maniravi.com/projects/imu-processing-cnn-svm/</link>
   <description><![CDATA[ 
 
@@ -22,57 +23,260 @@
 
 <p>In what seems like many lifetimes ago, it was standard practice to spend the majority of time on a machine learning project engineering features rather than training models. Support Vector Machines (SVMs) for example, were only as good as the features you gave it and therefore, researchers would spend weeks or months actually understanding the physics of the problem before writing a single line of code to build or train the model.</p>
 <p>Activity recognition from inertial measurement unit (IMU) is a good example. We couldn’t just hand the raw accelerometer signal to an SVM and hope for the best. Instead, we had to come up with features that would help the model distinguish between activities much like how basketball nerds have to come up with new statistics to classify players across eras into different tiers. The researchers had to think: what does walking actually look like in frequency space? How does the energy distribution change between sitting and standing? What time-domain statistics capture the difference between climbing stairs and walking on flat ground? Then they would compute those features - mean, variance, signal energy, FFT coefficients, jerk signals — window by window, axis by axis. It was slow. It required domain expertise and a lot of trial and error. And it worked reasonably well.</p>
-<p>Then came deep learning models. Specifically Convolutional Neural Networks (CNNs) which could take in the raw IMU signal and <em>automatically</em> learn features that help in distinguisghing between activities. Even without any preprocessing or filtering whatsoever. We don’t even need to feed it the spectrogram of the signal or the FFT coefficients. One of the most common things to do is to remove the gravity component of the accelerometer signal<sup>1</sup>, but as we’ll see later, even this step isn’t necessary for the CNN model. The CNN can learn to ignore the gravity component if it doesn’t help with the classification task and conversely, it can also learn gravity if it helps [!insert a helpful link or explainer as to how a cnn model does this].</p>
-<section id="the-dataset" class="level1">
+<p>Then came deep learning models. Specifically, Convolutional Neural Networks (CNNs) which could take in the raw IMU signal and <em>automatically</em> learn features that help in distinguisghing between activities. Even without any preprocessing or filtering whatsoever. We don’t even need to feed it the spectrogram of the signal or the FFT coefficients. One of the most common things to do is to remove the gravity component of the accelerometer signal<sup>1</sup>, but as we’ll see later, even this step isn’t necessary for the CNN model. The CNN can learn to ignore the gravity component if it doesn’t help with the classification task and conversely, it can also learn gravity if it helps. Visit <a href="https://poloclub.github.io/cnn-explainer/">this website</a> for a great visual explainer of how CNNs work, albeit for image classification.</p>
+<div class="no-row-height column-margin column-container"><div id="fn1"><p><sup>1</sup>&nbsp;This is usually done by applying a low-pass filter (~0.3 Hz) and then subtracting the low-frequency components</p></div></div><section id="the-dataset" class="level1 page-columns page-full">
 <h1>The Dataset</h1>
-<p>To compare the two approaches, I chose a simple, public dataset provided by the researchers at University of California, Irvine (UCI). The dataset contains smartphone data, specifically 3-axes accelerometer and gyroscope when a total of 30 participants were doing the following activities - Walking, Walking Upstairs, Walking Downstairs, Sitting, Standing, Laying. They also provide 561 hand-engineered features [!link mindmap below] that calculate various statistical, time domain, frequency domain and derivative characteristics. Each time window was 2.56 seconds long and had 50% overlap. 70% of the windows were used for the training set and 30% was reserved for test set. <sup>2</sup></p>
-<div class="quarto-figure quarto-figure-center">
+<p>To compare the two approaches, I chose a simple, public dataset provided by the researchers at University of California, Irvine (UCI) <span class="citation" data-cites="uci-har-dataset">(Anguita et al. 2013)</span>. The dataset contains smartphone data, specifically 3-axes accelerometer and gyroscope when a total of 30 participants were doing the following activities - Walking, Walking Upstairs, Walking Downstairs, Sitting, Standing, Laying. They also provide 561 hand-engineered features that calculate various statistical, time domain, frequency domain and derivative characteristics. Each time window was 2.56 seconds long and had 50% overlap. 70% of the windows were used for the training set and 30% was reserved for test set. <sup>2</sup></p>
+<div class="no-row-height column-margin column-container"><div id="fn2"><p><sup>2</sup>&nbsp;I wouldn’t recommend this 70-30 split for any production system or for a scientific paper. Modern practice is to have a train-dev-test set (say 70-15-15) so that the models don’t learn from the test samples.</p></div></div><div class="quarto-figure quarto-figure-center">
 <figure class="figure">
 <p><img src="https://maniravi.com/projects/imu-processing-cnn-svm/har_features.svg" class="img-fluid figure-img"></p>
 <figcaption>UCI Dataset - Features</figcaption>
 </figure>
 </div>
 </section>
-<section id="support-vector-machine" class="level1">
+<section id="support-vector-machine" class="level1 page-columns page-full">
 <h1>Support Vector Machine</h1>
-<p>Using the features descrived above, a simple Support Vector Machine (SVM) was trained and the results were impressive (Macro-F1[! insert link to f1 explainer]: 0.9515), primarily due to the robustness of the features. Here’s the confusion matrix[!insert link to confusion matrix explainer] from the results:</p>
-<p>[!insert confusion matrix from SVM]</p>
-<p>As we can see, it does a really good job on most activities with the exception of sitting and standing where it seems to struggle a bit. In the feature set, the acceleration signal was split into two - body acceleration and gravity acceleration - using a 0.3 Hz Lowpass filter. When ablating (fancy word for removing) features derived from one of these signals, a pattern begins to emerge.</p>
-<p>[!insert image or plots showing effects on F1 score when removing the signals]</p>
+<p>Using the features described above, a simple Support Vector Machine (SVM) was trained and the results were impressive (<a href="https://towardsdatascience.com/micro-macro-weighted-averages-of-f1-score-clearly-explained-b603420b292f/">Macro-F1</a>: 0.9515), primarily due to the robustness of the features. Here’s the <a href="https://stanford.edu/~shervine/teaching/cs-229/cheatsheet-machine-learning-tips-and-tricks/#classification-metrics">confusion matrix</a> from the results:</p>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="https://maniravi.com/projects/imu-processing-cnn-svm/svm_confusion_matrix.png" class="img-fluid figure-img"></p>
+<figcaption>Confusion Matrix - SVM</figcaption>
+</figure>
+</div>
+<p>As we can see, it does a really good job on most activities with the exception of sitting and standing where it seems to struggle a bit <sup>3</sup>. In the feature set, the acceleration signal was split into two - body acceleration and gravity acceleration - using a 0.3 Hz Lowpass filter. When ablating (fancy word for removing) features derived from one of these signals, a pattern begins to emerge. The table below shows the impact of ablating some feature groups on the F1 score:</p>
+<div class="no-row-height column-margin column-container"><div id="fn3"><p><sup>3</sup>&nbsp;This is likely due to orientation of smartphone while performing the activities</p></div></div><div id="tbl-ablation" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-tbl figure">
+<figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-ablation-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Table&nbsp;1: Results of Feature Group Ablation on SVM Performance
+</figcaption>
+<div aria-describedby="tbl-ablation-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<table class="caption-top table">
+<thead>
+<tr class="header">
+<th style="text-align: left;">Signal Feature Group Removed</th>
+<th style="text-align: center;">New F1 Score</th>
+<th style="text-align: center;">F1 Score Drop</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;"><em>None (Baseline)</em></td>
+<td style="text-align: center;">0.9515</td>
+<td style="text-align: center;">—</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"><strong>tGravityAcc</strong></td>
+<td style="text-align: center;"><strong>0.7083</strong></td>
+<td style="text-align: center;"><strong>↓ 0.2432</strong></td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">fBodyAcc</td>
+<td style="text-align: center;">0.9022</td>
+<td style="text-align: center;">↓ 0.0493</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">tBodyAcc</td>
+<td style="text-align: center;">0.9174</td>
+<td style="text-align: center;">↓ 0.0341</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">tBodyGyro</td>
+<td style="text-align: center;">0.9187</td>
+<td style="text-align: center;">↓ 0.0328</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">fBodyGyro</td>
+<td style="text-align: center;">0.9384</td>
+<td style="text-align: center;">↓ 0.0131</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">angle_gravity</td>
+<td style="text-align: center;">0.9530</td>
+<td style="text-align: center;">↑ 0.0015</td>
+</tr>
+</tbody>
+</table>
+</div>
+</figure>
+</div>
 <p>Turns out, for these 6 tasks at least, gravity acceleration is far more important than body acceleration.</p>
 </section>
-<section id="convolutional-neural-network" class="level1">
+<section id="convolutional-neural-network" class="level1 page-columns page-full">
 <h1>Convolutional Neural Network</h1>
 <p>For the same time windows as above, 9 raw signals were also provided in the dataset.</p>
-<p>[!insert table showing the 9 signals]</p>
-<p>Using these signals, simple a Convolutional Neural Network (CNN) was trained with either 3 channels, 6 channels or all 9 channels. The architecture of the CNN remained the same - only number of channels was different. Here’s the architecture of one of the CNN models:</p>
-<p>[!insert CNN architecture or figure]</p>
-<p>It is important here to recognize that no further processing of the signals were done <sup>3</sup>. The signals were input directly into the CNN models along with the labels and everything else is done by the neural net. Here are the results from the different combinations of signals used:</p>
-<p>[!insert figure or bar plot showing f1 scores at different combinations]</p>
+<div id="tbl-signals" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-tbl figure">
+<figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-signals-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Table&nbsp;2: The 9 Raw Input Channels for the CNN Model
+</figcaption>
+<div aria-describedby="tbl-signals-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<table class="caption-top table">
+<colgroup>
+<col style="width: 29%">
+<col style="width: 23%">
+<col style="width: 23%">
+<col style="width: 23%">
+</colgroup>
+<thead>
+<tr class="header">
+<th style="text-align: center;">Signal Index</th>
+<th style="text-align: left;">Signal Name</th>
+<th style="text-align: left;">Physical Source</th>
+<th style="text-align: left;">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: center;">1-3</td>
+<td style="text-align: left;"><strong>Total Accel</strong> (X,Y,Z)</td>
+<td style="text-align: left;">Accelerometer</td>
+<td style="text-align: left;">The raw 3-axes accelerometer signals.</td>
+</tr>
+<tr class="even">
+<td style="text-align: center;">4-6</td>
+<td style="text-align: left;"><strong>Body Accel</strong> (X,Y,Z)</td>
+<td style="text-align: left;">Accelerometer</td>
+<td style="text-align: left;">The high-pass filtered “movement” component.</td>
+</tr>
+<tr class="odd">
+<td style="text-align: center;">7-9</td>
+<td style="text-align: left;"><strong>Body Gyro</strong> (X,Y,Z)</td>
+<td style="text-align: left;">Gyroscope</td>
+<td style="text-align: left;">The angular velocity (rotational speed).</td>
+</tr>
+</tbody>
+</table>
+</div>
+</figure>
+</div>
+<p>Using these signals, a simple Convolutional Neural Network (CNN) was trained with either 3 channels, 6 channels or all 9 channels. The architecture of the CNN remained the same - only number of channels was different. Here’s the architecture of one of the CNN models:</p>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="https://maniravi.com/projects/imu-processing-cnn-svm/cnn_architecture.png" class="img-fluid figure-img"></p>
+<figcaption>CNN Architecture</figcaption>
+</figure>
+</div>
+<p>It is important here to recognize that no further processing of the signals were done <sup>4</sup>. The signals were input directly into the CNN models along with the labels and everything else is done by the neural net. Here are the results from the different combinations of signals used:</p>
+<div class="no-row-height column-margin column-container"><div id="fn4"><p><sup>4</sup>&nbsp;Other than the initial filtering that was already done by the researchers</p></div></div><div id="tbl-cnn-ablation" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-tbl figure">
+<figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-cnn-ablation-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Table&nbsp;3: CNN Model Performance vs.&nbsp;Input Signal Combinations
+</figcaption>
+<div aria-describedby="tbl-cnn-ablation-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<table class="caption-top table">
+<thead>
+<tr class="header">
+<th style="text-align: left;">Input Signals</th>
+<th style="text-align: center;">Channels</th>
+<th style="text-align: center;">Macro-F1 Score</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;"><strong>Single Sensor Source</strong></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Total Accel Only</td>
+<td style="text-align: center;">3</td>
+<td style="text-align: center;">0.8967</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Body Accel Only</td>
+<td style="text-align: center;">3</td>
+<td style="text-align: center;">0.7482</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Gyroscope Only</td>
+<td style="text-align: center;">3</td>
+<td style="text-align: center;">0.7355</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;"><strong>Dual Sensor Combinations</strong></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Total Accel + Gyro</td>
+<td style="text-align: center;">6</td>
+<td style="text-align: center;"><strong>0.9291</strong></td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Total Accel + Body Accel</td>
+<td style="text-align: center;">6</td>
+<td style="text-align: center;">0.9206</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Body Accel + Gyro</td>
+<td style="text-align: center;">6</td>
+<td style="text-align: center;">0.8213</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;"><strong>All Signals</strong></td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"><strong>Total + Body + Gyro</strong></td>
+<td style="text-align: center;"><strong>9</strong></td>
+<td style="text-align: center;"><strong>0.9362</strong></td>
+</tr>
+</tbody>
+</table>
+</div>
+</figure>
+</div>
 <p>It is interesting to see that the same pattern from the SVM is repeating here. Since body acceleration has no gravity information encoded in it, it consistently underperforms when compared with total acceleration. One other thing to note here is that the CNN does surprisingly well <em>just</em> with the total acceleration signals even without the gyroscope signals (F1: 0.8967). But the accuracy does improve when gyroscope signals were included. Here’s the confusion matrix from the CNN model with total accelerometer and gyroscope signals:</p>
-<p>[!insert confusion matrix from Total + Gyro CNN]</p>
-<p>An F-1 score of 0.9291 is slightly below that of the SVM (0.9515) but quite impressive considering the simplicity of the CNN achitecture<sup>4</sup> and the fact that we didn’t need <em>any</em> domain expertise. In fact, the only domain expertise we did here is to seperate out the body acceleration signal and when you add those 3 signals in, we only get a marginal increase in F1 score (0.9362). Since the gravity and body signal are already in the total accelerometer signal, the CNN does a pretty darn good job of teasing them out all on its own.</p>
-</section>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="https://maniravi.com/projects/imu-processing-cnn-svm/cnn_total_gyro_confusion_matrix.png" class="img-fluid figure-img"></p>
+<figcaption>Confusion Matrix for CNN model that used Total Accel and Gyro signals</figcaption>
+</figure>
+</div>
+<p>An F-1 score of 0.9291 is slightly below that of the SVM (0.9515) but quite impressive considering the simplicity of the CNN architecture<sup>5</sup> and the fact that we didn’t need <em>any</em> domain expertise. In fact, the only domain expertise we did here is to separate out the body acceleration signal and when you add those 3 signals in, we only get a marginal increase in F1 score (0.9362). Since the gravity and body signal are already in the total accelerometer signal, the CNN does a pretty darn good job of teasing them out all on its own.</p>
+<div class="no-row-height column-margin column-container"><div id="fn5"><p><sup>5</sup>&nbsp;This CNN has ~33,000 parameters. Modern CNNs are easily 100 times this size</p></div></div></section>
 <section id="conclusion" class="level1">
 <h1>Conclusion</h1>
 <p>So, what’s the point here? It may be tempting to conclude that since CNNs are almost as good as old school methods like the SVMs, we should focus more on improving the architecture of CNNs rather than spending months trying to come up with better features. I love CNNs and use them often for signal and image processing or classification tasks. They’re incredibly versatile and work really well for most use cases.</p>
-<p>But there’s a problem here: we can explain the results from the SVMs way better than we can with the CNNs. We can rank which features perform best for which classification task - for example, we can say that the angular acceleration on the y and z axis predominantly distinguish between standing and walking. Whereas in the CNN, we essentially have no idea why or how the model worked. The only thing we can do is similar to what I did here - go through different itireations of inputs (leaving some out) and deduce which signals are important.</p>
-<p>While this may not matter much in this case, it deos matter in a lot of other cases. Take automated cancer detection as an example. The CNN may have a 96% accuracy in classifying a suspicious looking mass in an X-ray as cancer but we’ll need to know why it missed the 4% so that we can improve the model. Another example is in frontier science - in areas where we humans lack knowledge ourselves. An example of this is Blood Pressure (BP) estimation using Photoplethysmography (PPG) signals using Neural Networks. There’s no consensus yet as to specifically what features of the PPG signal influence or help in detetcting BP so even if the model works reasonably well, we need to <em>why</em> it worked. If we increasingly rely on unexplainable AI models, we would be no closer to actually understanding the underlying mechanisms of the problem at hand.</p>
-<p>In the last couple years, there has been an active push by scientists and engineers in the area of Explainable AI (XAI) which is great news. Tools such as [!list XAI tools here] help</p>
+<p>But there’s a catch here: we can explain the results from the SVMs way better than we can with the CNNs. We can rank which features perform best for which classification task - for example, we can say that the angular acceleration on the y and z axis predominantly distinguish between standing and walking. Whereas with the CNN, we essentially have no idea why or how the model worked. The only thing we can do is similar to what I did here - go through different iterations of inputs (leaving some out) and deduce which signals are important.</p>
+<p>While this may not matter much in this case, it does matter in a lot of other cases. Take automated cancer detection as an example. The CNN may have a 96% accuracy in classifying a suspicious looking mass in an X-ray as cancer but we’ll need to know why it missed the 4% so that we can improve the model. Another example is in frontier science - in areas where we humans lack knowledge ourselves. An example of this is Blood Pressure (BP) estimation using Photoplethysmography (PPG) signals using Neural Networks. There’s no consensus yet as to specifically what features of the PPG signal influence or help in detetcting BP so even if the model works reasonably well, we need to know <em>why</em> it worked. If we increasingly rely on unexplainable AI models, we would be no closer to actually understanding the underlying mechanisms of the problem at hand.</p>
+<p>In the last few years, there has been an active push by scientists and engineers in the area of Explainable AI (XAI) which is great news. Tools such as SHAP (SHapley Additive exPlanations) <span class="citation" data-cites="lundberg2017unified">(Lundberg and Lee 2017)</span>, LIME (Local Interpretable Model-agnostic Explanations) <span class="citation" data-cites="ribeiro2016why">(Ribeiro, Singh, and Guestrin 2016)</span>, and Grad-CAM (Gradient-weighted Class Activation Mapping) <span class="citation" data-cites="selvaraju2017gradcam">(Selvaraju et al. 2017)</span> help us peek inside the ‘black box’ of deep learning models and better understand which aspects of the input signals are influencing the model’s predictions. However, these tools are still in their infancy and wide adoption of these tools is essential to advance our knowledge of the underlying mechanisms of the problems we’re trying to solve.</p>
+</section>
+<section id="references" class="level1">
+<h1>References</h1>
+<div id="refs" class="references csl-bib-body hanging-indent" data-entry-spacing="0">
+<div id="ref-uci-har-dataset" class="csl-entry">
+Anguita, Davide, Alessandro Ghio, Luca Oneto, Xavier Parra, and Jorge Luis Reyes-Ortiz. 2013. <span>“A Public Domain Dataset for Human Activity Recognition Using Smartphones.”</span> In <em>Proceedings of the 21st European Symposium on Artificial Neural Networks, Computational Intelligence and Machine Learning (ESANN)</em>. <a href="https://archive.ics.uci.edu/ml/datasets/human+activity+recognition+using+smartphones">https://archive.ics.uci.edu/ml/datasets/human+activity+recognition+using+smartphones</a>.
+</div>
+<div id="ref-lundberg2017unified" class="csl-entry">
+Lundberg, Scott M, and Su-In Lee. 2017. <span>“A Unified Approach to Interpreting Model Predictions.”</span> In <em>Advances in Neural Information Processing Systems (NeurIPS)</em>. Vol. 30. <a href="https://proceedings.neurips.cc/paper/2017/hash/8a20a8621978632d76c43dfd28b67767-Abstract.html">https://proceedings.neurips.cc/paper/2017/hash/8a20a8621978632d76c43dfd28b67767-Abstract.html</a>.
+</div>
+<div id="ref-ribeiro2016why" class="csl-entry">
+Ribeiro, Marco Tulio, Sameer Singh, and Carlos Guestrin. 2016. <span>“"Why Should i Trust You?": Explaining the Predictions of Any Classifier.”</span> In <em>Proceedings of the 22nd ACM SIGKDD International Conference on Knowledge Discovery and Data Mining (KDD)</em>, 1135–44. <a href="https://doi.org/10.1145/2939672.2939778">https://doi.org/10.1145/2939672.2939778</a>.
+</div>
+<div id="ref-selvaraju2017gradcam" class="csl-entry">
+Selvaraju, Ramprasaath R, Michael Cogswell, Abhishek Das, Ramakrishna Vedantam, Devi Parikh, and Dhruv Batra. 2017. <span>“Grad-CAM: Visual Explanations from Deep Networks via Gradient-Based Localization.”</span> In <em>Proceedings of the IEEE International Conference on Computer Vision (ICCV)</em>, 618–26. <a href="https://openaccess.thecvf.com/content_iccv_2017/html/Selvaraju_Grad-CAM_Visual_Explanations_ICCV_2017_paper.html">https://openaccess.thecvf.com/content_iccv_2017/html/Selvaraju_Grad-CAM_Visual_Explanations_ICCV_2017_paper.html</a>.
+</div>
+</div>
 
 
 </section>
 
 
-<div id="quarto-appendix" class="default"><section id="footnotes" class="footnotes footnotes-end-of-document"><h2 class="anchored quarto-appendix-heading">Footnotes</h2>
-
-<ol>
-<li id="fn1"><p>This is usually done by applying a low-pass filter (~0.3 Hz) and then subtracting the low-frequency components↩︎</p></li>
-<li id="fn2"><p>I wouldn’t recommend this 70-30 split for any production system or for a scientific paper. Modern practice is to have a train-dev-test set (say 70-15-15) so that the models don’t learn from the test samples.↩︎</p></li>
-<li id="fn3"><p>Other than the hardware filtering that was already done by the researchers↩︎</p></li>
-<li id="fn4"><p>This CNN has ~33,000 parameters. Modern CNNs are easily 100 times this size↩︎</p></li>
-</ol>
-</section></div> ]]></description>
+<div id="quarto-appendix" class="default"><section class="quarto-appendix-contents" id="quarto-citation"><h2 class="anchored quarto-appendix-heading">Citation</h2><div><div class="quarto-appendix-secondary-label">BibTeX citation:</div><pre class="sourceCode code-with-copy quarto-appendix-bibtex"><code class="sourceCode bibtex">@misc{ravi2026,
+  author = {Ravi, Mani},
+  title = {A {Tale} of {Two} {Eras:} {Handcrafted} {Features} Vs. {Deep}
+    {Learning} for {IMU} {Activity} {Recognition}},
+  date = {2026-02-25},
+  url = {https://maniravi.com/projects/imu-processing-cnn-svm/},
+  langid = {en}
+}
+</code></pre><div class="quarto-appendix-secondary-label">For attribution, please cite this work as:</div><div id="ref-ravi2026" class="csl-entry quarto-appendix-citeas">
+Ravi, Mani. 2026. <span>“A Tale of Two Eras: Handcrafted Features Vs.
+Deep Learning for IMU Activity Recognition.”</span> February 25, 2026.
+<a href="https://maniravi.com/projects/imu-processing-cnn-svm/">https://maniravi.com/projects/imu-processing-cnn-svm/</a>.
+</div></div></section></div> ]]></description>
   <category>IMU</category>
   <category>Machine Learning</category>
   <category>Deep Learning</category>
@@ -80,7 +284,7 @@
   <category>SVM</category>
   <category>XAI</category>
   <guid>https://maniravi.com/projects/imu-processing-cnn-svm/</guid>
-  <pubDate>Wed, 25 Feb 2026 06:00:00 GMT</pubDate>
+  <pubDate>Wed, 25 Feb 2026 05:00:00 GMT</pubDate>
 </item>
 </channel>
 </rss>

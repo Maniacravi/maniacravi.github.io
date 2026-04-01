@@ -1,12 +1,12 @@
 [
   {
-    "listing": "/blog/index.html",
-    "items": []
-  },
-  {
     "listing": "/projects/index.html",
     "items": [
       "/projects/imu-processing-cnn-svm/index.html"
     ]
+  },
+  {
+    "listing": "/blog/index.html",
+    "items": []
   }
 ]
