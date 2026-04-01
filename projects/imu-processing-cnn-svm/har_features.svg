@@ -1,0 +1,121 @@
+<?xml version="1.0" encoding="utf-8"?>
+<svg width="900" height="407" viewBox="0 0 900 407" xmlns="http://www.w3.org/2000/svg" font-family="'Helvetica Neue', Arial, sans-serif">
+  <rect width="900" height="407" fill="#F8F9F9" rx="8" style=""/>
+  <text x="450" y="36" text-anchor="middle" font-size="15" font-weight="600" fill="#2C3E50" style="white-space: pre;">UCI-HAR: From Raw Signals to 561 Features</text>
+  <text x="72" y="68" text-anchor="middle" font-size="11" font-weight="600" fill="#717D7E" letter-spacing="0.5" style="white-space: pre;">RAW SIGNALS</text>
+  <text x="240" y="68" text-anchor="middle" font-size="11" font-weight="600" fill="#717D7E" letter-spacing="0.5" style="white-space: pre;">PROCESSING</text>
+  <text x="450" y="68" text-anchor="middle" font-size="11" font-weight="600" fill="#717D7E" letter-spacing="0.5" style="white-space: pre;">SIGNAL GROUPS</text>
+  <text x="726" y="68" text-anchor="middle" font-size="11" font-weight="600" fill="#717D7E" letter-spacing="0.5" style="white-space: pre; font-size: 11px;">STATISTICS<tspan x="726" dy="1em">​</tspan><tspan x="726" dy="1em">​</tspan></text>
+  <line x1="155" y1="55" x2="155" y2="383.989" stroke="#D5D8DC" stroke-width="0.5" stroke-dasharray="4 3" style=""/>
+  <line x1="330" y1="55" x2="330" y2="386.728" stroke="#D5D8DC" stroke-width="0.5" stroke-dasharray="4 3" style=""/>
+  <line x1="570" y1="55" x2="570" y2="387.461" stroke="#D5D8DC" stroke-width="0.5" stroke-dasharray="4 3" style=""/>
+  <rect x="16" y="82" width="112" height="44" rx="6" fill="#2980B9"/>
+  <text x="72" y="100" text-anchor="middle" font-size="11" font-weight="600" fill="#fff" style="white-space: pre;">Accelerometer</text>
+  <text x="72" y="116" text-anchor="middle" font-size="10" fill="#D6EAF8" style="white-space: pre;">3-axis (X, Y, Z)</text>
+  <rect x="16" y="146" width="112" height="44" rx="6" fill="#27AE60"/>
+  <text x="72" y="164" text-anchor="middle" font-size="11" font-weight="600" fill="#fff" style="white-space: pre;">Gyroscope</text>
+  <text x="72" y="180" text-anchor="middle" font-size="10" fill="#D5F5E3" style="white-space: pre;">3-axis (X, Y, Z)</text>
+  <rect x="168" y="82" width="144" height="36" rx="6" fill="#5DADE2"/>
+  <text x="240" y="96" text-anchor="middle" font-size="10" font-weight="600" fill="#fff" style="white-space: pre;">Noise filter</text>
+  <text x="240" y="110" text-anchor="middle" font-size="9" fill="#EBF5FB" style="white-space: pre;">Median + 20 Hz Butterworth</text>
+  <rect x="168" y="132" width="144" height="36" rx="6" fill="#5DADE2"/>
+  <text x="240" y="146" text-anchor="middle" font-size="10" font-weight="600" fill="#fff" style="white-space: pre;">Gravity separation</text>
+  <text x="240" y="160" text-anchor="middle" font-size="9" fill="#EBF5FB" style="white-space: pre;">0.3 Hz low-pass filter</text>
+  <rect x="168" y="182" width="144" height="36" rx="6" fill="#5DADE2"/>
+  <text x="240" y="196" text-anchor="middle" font-size="10" font-weight="600" fill="#fff" style="white-space: pre;">Jerk signals</text>
+  <text x="240" y="210" text-anchor="middle" font-size="9" fill="#EBF5FB" style="white-space: pre;">Time derivative of acc &amp; gyro</text>
+  <rect x="168" y="232" width="144" height="36" rx="6" fill="#5DADE2"/>
+  <text x="240" y="246" text-anchor="middle" font-size="10" font-weight="600" fill="#fff" style="white-space: pre;">Magnitude</text>
+  <text x="240" y="260" text-anchor="middle" font-size="9" fill="#EBF5FB" style="white-space: pre;">Euclidean norm of XYZ</text>
+  <rect x="168" y="282" width="144" height="36" rx="6" fill="#1A5276"/>
+  <text x="240" y="297" text-anchor="middle" font-size="10" font-weight="600" fill="#fff" style="white-space: pre;">Frequency transform</text>
+  <text x="240" y="311" text-anchor="middle" font-size="9" fill="#AED6F1" style="white-space: pre;">Fast Fourier Transform (FFT)</text>
+  <line x1="128" y1="100" x2="166" y2="100" stroke="#2980B9" stroke-width="1.5" marker-end="url(#arr-blue)"/>
+  <line x1="128" y1="104" x2="148" y2="104" stroke="#2980B9" stroke-width="1" stroke-dasharray="3 2"/>
+  <line x1="148" y1="104" x2="148" y2="150" stroke="#2980B9" stroke-width="1" stroke-dasharray="3 2"/>
+  <line x1="148" y1="150" x2="166" y2="150" stroke="#2980B9" stroke-width="1" stroke-dasharray="3 2" marker-end="url(#arr-blue)"/>
+  <line x1="128" y1="168" x2="148" y2="168" stroke="#27AE60" stroke-width="1" stroke-dasharray="3 2"/>
+  <line x1="148" y1="168" x2="148" y2="200" stroke="#27AE60" stroke-width="1" stroke-dasharray="3 2"/>
+  <line x1="148" y1="200" x2="166" y2="200" stroke="#27AE60" stroke-width="1" stroke-dasharray="3 2" marker-end="url(#arr-green)"/>
+  <line x1="148" y1="200" x2="148" y2="250" stroke="#717D7E" stroke-width="1" stroke-dasharray="3 2"/>
+  <line x1="148" y1="250" x2="166" y2="250" stroke="#717D7E" stroke-width="1" stroke-dasharray="3 2" marker-end="url(#arr-gray)"/>
+  <line x1="148" y1="250" x2="148" y2="300" stroke="#1A5276" stroke-width="1" stroke-dasharray="3 2"/>
+  <line x1="148" y1="300" x2="166" y2="300" stroke="#1A5276" stroke-width="1" stroke-dasharray="3 2" marker-end="url(#arr-dark)"/>
+  <rect x="342" y="78" width="216" height="18" rx="4" fill="#D4E6F1"/>
+  <text x="450" y="91" text-anchor="middle" font-size="10" font-weight="600" fill="#1A5276" style="white-space: pre;">TIME DOMAIN</text>
+  <rect x="342" y="102" width="100" height="32" rx="5" fill="#2980B9"/>
+  <text x="392" y="116" text-anchor="middle" font-size="10" font-weight="600" fill="#fff" style="white-space: pre;">Body accel</text>
+  <text x="392" y="128" text-anchor="middle" font-size="9" fill="#D6EAF8" style="white-space: pre;">XYZ + magnitude</text>
+  <rect x="458" y="102" width="100" height="32" rx="5" fill="#1F618D"/>
+  <text x="508" y="116" text-anchor="middle" font-size="10" font-weight="600" fill="#fff" style="white-space: pre;">Gravity accel</text>
+  <text x="508" y="128" text-anchor="middle" font-size="9" fill="#AED6F1" style="white-space: pre;">XYZ + magnitude</text>
+  <rect x="342" y="144" width="100" height="32" rx="5" fill="#27AE60"/>
+  <text x="392" y="158" text-anchor="middle" font-size="10" font-weight="600" fill="#fff" style="white-space: pre;">Body jerk</text>
+  <text x="392" y="170" text-anchor="middle" font-size="9" fill="#D5F5E3" style="white-space: pre;">Accel XYZ + mag</text>
+  <rect x="458" y="144" width="100" height="32" rx="5" fill="#1E8449"/>
+  <text x="508" y="158" text-anchor="middle" font-size="10" font-weight="600" fill="#fff" style="white-space: pre;">Gyroscope</text>
+  <text x="508" y="170" text-anchor="middle" font-size="9" fill="#A9DFBF" style="white-space: pre;">XYZ + magnitude</text>
+  <rect x="400" y="186" width="100" height="32" rx="5" fill="#1A7A44"/>
+  <text x="450" y="200" text-anchor="middle" font-size="10" font-weight="600" fill="#fff" style="white-space: pre;">Gyro jerk</text>
+  <text x="450" y="212" text-anchor="middle" font-size="9" fill="#A9DFBF" style="white-space: pre;">XYZ + magnitude</text>
+  <rect x="342" y="232" width="216" height="18" rx="4" fill="#1A5276"/>
+  <text x="450" y="245" text-anchor="middle" font-size="10" font-weight="600" fill="#AED6F1" style="white-space: pre;">FREQUENCY DOMAIN</text>
+  <rect x="342" y="256" width="100" height="32" rx="5" fill="#8E44AD"/>
+  <text x="392" y="270" text-anchor="middle" font-size="10" font-weight="600" fill="#fff" style="white-space: pre;">Body accel</text>
+  <text x="392" y="282" text-anchor="middle" font-size="9" fill="#E8DAEF" style="white-space: pre;">XYZ + magnitude</text>
+  <rect x="458" y="256" width="100" height="32" rx="5" fill="#76448A"/>
+  <text x="508" y="270" text-anchor="middle" font-size="10" font-weight="600" fill="#fff" style="white-space: pre;">Body jerk</text>
+  <text x="508" y="282" text-anchor="middle" font-size="9" fill="#E8DAEF" style="white-space: pre;">Accel + gyro + mags</text>
+  <rect x="342" y="312" width="216" height="18" rx="4" fill="#D35400"/>
+  <text x="450" y="325" text-anchor="middle" font-size="10" font-weight="600" fill="#fff" style="white-space: pre;">ANGLE FEATURES</text>
+  <rect x="342" y="336" width="216" height="32" rx="5" fill="#E67E22"/>
+  <text x="450" y="350" text-anchor="middle" font-size="10" font-weight="600" fill="#fff" style="white-space: pre;">Body signals vs gravity vectors</text>
+  <text x="450" y="364" text-anchor="middle" font-size="9" fill="#FDEBD0" style="white-space: pre;">5 signal means × gravity mean + 3 axes</text>
+  <rect x="582" y="78" width="302" height="18" rx="4" fill="#F0F3F4"/>
+  <text x="733" y="91" text-anchor="middle" font-size="10" font-weight="600" fill="#717D7E" style="white-space: pre;">APPLIED TO EACH TIME-DOMAIN SIGNAL GROUP</text>
+  <rect x="582" y="102" width="142" height="69.475" rx="5" fill="#2C3E50" style=""/>
+  <text x="653" y="118" text-anchor="middle" font-size="10" font-weight="600" fill="#fff" style="white-space: pre;">Basic</text>
+  <text x="653" y="132" text-anchor="middle" font-size="9" fill="#BDC3C7" style="white-space: pre;">mean, std, min, max</text>
+  <text x="653" y="145" text-anchor="middle" font-size="9" fill="#BDC3C7" style="white-space: pre;">MAD, IQR, SMA</text>
+  <text x="653" y="158" text-anchor="middle" font-size="9" fill="#BDC3C7" style="white-space: pre;">energy, entropy</text>
+  <rect x="734" y="102" width="142" height="68.673" rx="5" fill="#2C3E50" style=""/>
+  <text x="805" y="118" text-anchor="middle" font-size="10" font-weight="600" fill="#fff" style="white-space: pre;">Shape &amp; model</text>
+  <text x="805" y="132" text-anchor="middle" font-size="9" fill="#BDC3C7" style="white-space: pre;">skewness, kurtosis</text>
+  <text x="805" y="145" text-anchor="middle" font-size="9" fill="#BDC3C7" style="white-space: pre;">AR coefficients (×4)</text>
+  <text x="805" y="158" text-anchor="middle" font-size="9" fill="#BDC3C7" style="white-space: pre;">correlation (pairs)</text>
+  <rect x="582" y="232" width="302" height="18" rx="4" fill="#F0F3F4"/>
+  <text x="733" y="245" text-anchor="middle" font-size="10" font-weight="600" fill="#717D7E" style="white-space: pre;">FREQUENCY DOMAIN ONLY</text>
+  <rect x="582" y="256" width="142" height="65.733" rx="5" fill="#512E5F" style=""/>
+  <text x="653" y="272" text-anchor="middle" font-size="10" font-weight="600" fill="#fff" style="white-space: pre;">Spectral</text>
+  <text x="653" y="286" text-anchor="middle" font-size="9" fill="#D7BDE2" style="white-space: pre;">mean frequency</text>
+  <text x="653" y="299" text-anchor="middle" font-size="9" fill="#D7BDE2" style="white-space: pre;">band energy (×42)</text>
+  <text x="653" y="312" text-anchor="middle" font-size="9" fill="#D7BDE2" style="white-space: pre;">max index</text>
+  <rect x="734" y="256" width="142" height="64.599" rx="5" fill="#512E5F" style=""/>
+  <text x="805" y="272" text-anchor="middle" font-size="10" font-weight="600" fill="#fff" style="white-space: pre;">Shape</text>
+  <text x="805" y="286" text-anchor="middle" font-size="9" fill="#D7BDE2" style="white-space: pre;">skewness</text>
+  <text x="805" y="299" text-anchor="middle" font-size="9" fill="#D7BDE2" style="white-space: pre;">kurtosis</text>
+  <line x1="558" y1="140" x2="580" y2="140" stroke="#2C3E50" stroke-width="1.2" marker-end="url(#arr-dark2)"/>
+  <line x1="558" y1="272" x2="580" y2="272" stroke="#512E5F" stroke-width="1.2" marker-end="url(#arr-purple2)"/>
+  <text x="236.871" y="342.806" text-anchor="middle" font-size="9" fill="#99A3A4" style="white-space: pre; font-size: 9px;">50 Hz sampling · 2.56 s windows · 50% overlap</text>
+  <defs>
+    <marker id="arr-blue" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="5" markerHeight="5" orient="auto-start-reverse">
+      <path d="M1 1L7 4L1 7" fill="none" stroke="#2980B9" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+    </marker>
+    <marker id="arr-green" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="5" markerHeight="5" orient="auto-start-reverse">
+      <path d="M1 1L7 4L1 7" fill="none" stroke="#27AE60" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+    </marker>
+    <marker id="arr-gray" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="5" markerHeight="5" orient="auto-start-reverse">
+      <path d="M1 1L7 4L1 7" fill="none" stroke="#717D7E" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+    </marker>
+    <marker id="arr-dark" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="5" markerHeight="5" orient="auto-start-reverse">
+      <path d="M1 1L7 4L1 7" fill="none" stroke="#1A5276" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+    </marker>
+    <marker id="arr-dark2" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="5" markerHeight="5" orient="auto-start-reverse">
+      <path d="M1 1L7 4L1 7" fill="none" stroke="#2C3E50" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+    </marker>
+    <marker id="arr-purple2" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="5" markerHeight="5" orient="auto-start-reverse">
+      <path d="M1 1L7 4L1 7" fill="none" stroke="#512E5F" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+    </marker>
+  </defs>
+  <line x1="316.161" y1="198.762" x2="338.161" y2="198.762" stroke="#512E5F" stroke-width="1.2" marker-end="url(#arr-purple2)"/>
+</svg>
