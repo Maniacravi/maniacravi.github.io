@@ -16,7 +16,7 @@ website:
       - href: blog
         text: Blog
   page-footer:
-    left: "(c) Manikandan Ravi, 2020–. All rights reserved. [Disclaimer](disclaimer)"
+    left: "(c) Manikandan Ravi, 2024–. All rights reserved. [Disclaimer](disclaimer)"
   twitter-card: true
   open-graph: true
 
@@ -24,8 +24,8 @@ format:
   html:
     respect-user-color-scheme: true
     theme:
-      light: cosmo
       dark: [cosmo, theme-dark.scss]
+      light: cosmo
     theme-toggle: true
     toc-location: left
     css: styles.css
