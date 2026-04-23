@@ -10,7 +10,114 @@
 <atom:link href="https://maniravi.com/projects/index.xml" rel="self" type="application/rss+xml"/>
 <description>Mani Ravi is a Bioengineer and Data Scientist working on the intersection of Humans, Sensors and AI.</description>
 <generator>quarto-1.8.24</generator>
-<lastBuildDate>Wed, 25 Feb 2026 05:00:00 GMT</lastBuildDate>
+<lastBuildDate>Wed, 22 Apr 2026 04:00:00 GMT</lastBuildDate>
+<item>
+  <title>The Accuracy Trap: Class Imbalance and Domain Knowledge in ECG Arrhythmia Classification</title>
+  <dc:creator>Mani Ravi</dc:creator>
+  <link>https://maniravi.com/projects/ecg-arrhythmia-mit/</link>
+  <description><![CDATA[ 
+
+
+
+
+
+<p>Numbers don’t lie, but they do mislead. Especially when we look at them without the full context. For example, say there’s a deep learning model that’s 91% accurate. While that number <em>sounds</em> impressive, the model is essentially useless. I recently built a baseline Convolutional Neural Network (CNN) model to classify Electrocardiogram (ECG) signals into five classes: Normal (N), Supraventricular (S), Ventricular (V), Fusion (F), and Paced (Q) (More detail about the classes and the dataset are provided below). This, in theory, is a textbook example of where deep learning (DL) models should shine <sup>1</sup>. However, there’s one huge problem with the dataset: classes are severely imbalanced. One class makes up 83% of all the examples (the Normal class) and if the model simply predicts that everything in the dataset belongs to that class, then it would get an accuracy score of 83% yet fail to detect a single arrhythmia beat. This problem is called <em>class imbalance</em> and it can be notoriously hard to deal with for ML/DL projects.</p>
+<div class="no-row-height column-margin column-container"><div id="fn1"><p><sup>1</sup>&nbsp;similar to image classification tasks where they’re <a href="https://poloclub.github.io/cnn-explainer/">quite good</a></p></div></div><div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="https://maniravi.com/projects/ecg-arrhythmia-mit/class_distribution.png" class="img-fluid figure-img"></p>
+<figcaption>Class distribution of the five AAMI beat classes in MIT-BIH. Normal beats make up 83% of the dataset.</figcaption>
+</figure>
+</div>
+<section id="the-dataset" class="level1">
+<h1>The Dataset</h1>
+<p>I used the MIT-BIH Arrhythmia Dataset (!insert bibliography link here), which is one of the most widely used benchmarks in cardiac signal processing research. The dataset contains 48 half-hour recordings taken from 47 different patients using Holter monitors. Each recording contains two channels of ECG (Lead II and one of the V-leads), sampled at 360 Hz and over 109,000 individual heartbeats were manually reviewed and annotated by two independent cardiologists. I grouped the various annotations into 5 super classes, following AAMI guidelines (!link guideline site/paper):</p>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 33%">
+<col style="width: 33%">
+<col style="width: 33%">
+</colgroup>
+<thead>
+<tr class="header">
+<th style="text-align: left;">Class</th>
+<th style="text-align: left;">Clinical Description</th>
+<th style="text-align: left;">Annotations Included</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;"><strong>N</strong> (Normal)</td>
+<td style="text-align: left;">Standard heartbeat following the regular electrical pathway. Includes slight conduction delays (like bundle branch blocks) that are not premature.</td>
+<td style="text-align: left;"><code>N</code>, <code>L</code>, <code>R</code>, <code>e</code>, <code>j</code></td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"><strong>S</strong> (Supraventricular)</td>
+<td style="text-align: left;">Premature beat originating in the atria. Travels down the normal pathway, making it look morphologically similar to an ‘N’ beat, but temporally early.</td>
+<td style="text-align: left;"><code>A</code>, <code>a</code>, <code>J</code>, <code>S</code></td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;"><strong>V</strong> (Ventricular)</td>
+<td style="text-align: left;">Premature beat originating in the ventricles. Travels backward through tissue, resulting in a wide, bizarre morphology distinct from ‘N’ beats.</td>
+<td style="text-align: left;"><code>V</code>, <code>E</code></td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"><strong>F</strong> (Fusion)</td>
+<td style="text-align: left;">A temporal collision between a normal beat and a ventricular beat, resulting in a hybrid morphology that blends ‘N’ and ‘V’ characteristics.</td>
+<td style="text-align: left;"><code>F</code></td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;"><strong>Q</strong> (Paced/Unknown)</td>
+<td style="text-align: left;">Unclassifiable or artificially generated beats, including pacemaker spikes or segments corrupted by severe noise and movement artifacts.</td>
+<td style="text-align: left;"><code>/</code>, <code>f</code>, <code>U</code></td>
+</tr>
+</tbody>
+</table>
+<p>The morphological differences between classes are visible in the raw ECG signal but as we’ll see later, morphology alone isn’t always enough.</p>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><a href="beat_examples.png" class="lightbox" data-gallery="quarto-lightbox-gallery-1" title="Example beats from each AAMI class. Notice that the N and S beats look similar but the timings are different. V beats have a wide QRS complex and look ‘bizarre’ compared to N and S. F beats are a fusion between N and V. Q beats look completely unrecognizable."><img src="https://maniravi.com/projects/ecg-arrhythmia-mit/beat_examples.png" class="img-fluid figure-img" alt="Example beats from each AAMI class. Notice that the N and S beats look similar but the timings are different. V beats have a wide QRS complex and look ‘bizarre’ compared to N and S. F beats are a fusion between N and V. Q beats look completely unrecognizable."></a></p>
+<figcaption>Example beats from each AAMI class. Notice that the N and S beats look similar but the timings are different. V beats have a wide QRS complex and look ‘bizarre’ compared to N and S. F beats are a fusion between N and V. Q beats look completely unrecognizable.</figcaption>
+</figure>
+</div>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Note</span>A Note on Train/Test Split
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>I used the standard DS1/DS2 patient-wise split defined by AAMI EC57 standard, which divides the data into 22 records for training and 22 for testing with no patient appearing in both. This ensures that there’s no data leakage from the Training set onto the Testing set. ECG morphology is highly individual and random beat-level splitting with same patients in both training and test set inflates every metric. In fact, most papers that report over 98% accuracy on this dataset use intra-patient splits.</p>
+</div>
+</div>
+
+
+</section>
+
+
+<div id="quarto-appendix" class="default"><section class="quarto-appendix-contents" id="quarto-citation"><h2 class="anchored quarto-appendix-heading">Citation</h2><div><div class="quarto-appendix-secondary-label">BibTeX citation:</div><pre class="sourceCode code-with-copy quarto-appendix-bibtex"><code class="sourceCode bibtex">@misc{ravi2026,
+  author = {Ravi, Mani},
+  title = {The {Accuracy} {Trap:} {Class} {Imbalance} and {Domain}
+    {Knowledge} in {ECG} {Arrhythmia} {Classification}},
+  date = {2026-04-22},
+  url = {https://maniravi.com/projects/ecg-arrhythmia-mit/},
+  langid = {en}
+}
+</code></pre><div class="quarto-appendix-secondary-label">For attribution, please cite this work as:</div><div id="ref-ravi2026" class="csl-entry quarto-appendix-citeas">
+Ravi, Mani. 2026. <span>“The Accuracy Trap: Class Imbalance and Domain
+Knowledge in ECG Arrhythmia Classification.”</span> April 22, 2026. <a href="https://maniravi.com/projects/ecg-arrhythmia-mit/">https://maniravi.com/projects/ecg-arrhythmia-mit/</a>.
+</div></div></section></div> ]]></description>
+  <category>ECG</category>
+  <category>Machine Learning</category>
+  <category>Deep Learning</category>
+  <category>CNN</category>
+  <category>Grad-CAM</category>
+  <category>XAI</category>
+  <guid>https://maniravi.com/projects/ecg-arrhythmia-mit/</guid>
+  <pubDate>Wed, 22 Apr 2026 04:00:00 GMT</pubDate>
+</item>
 <item>
   <title>A Tale of Two Eras: Handcrafted Features vs. Deep Learning for IMU Activity Recognition</title>
   <dc:creator>Mani Ravi</dc:creator>

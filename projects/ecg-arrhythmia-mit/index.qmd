@@ -1,0 +1,57 @@
+---
+title: "The Accuracy Trap: Class Imbalance and Domain Knowledge in ECG Arrhythmia Classification"
+description: "Why domain knowledge remains essential in developing better models in clinical settings"
+jupyter: python3
+format:
+    html:
+        reference-location: margin
+        toc: true
+        code-fold: true
+        # lightbox: true
+#bibliography: references.bib
+categories:
+  - ECG
+  - Machine Learning
+  - Deep Learning
+  - CNN
+  - Grad-CAM
+  - XAI
+date: 2026-04-22
+# Author Metadata
+author:
+    name: Mani Ravi
+    url: https://maniravi.com
+# Citation Metadata
+citation:
+    title: "The Accuracy Trap: Class Imbalance and Domain Knowledge in ECG Arrhythmia Classification"
+    type: post-weblog
+    url: https://maniravi.com/projects/ecg-arrhythmia-mit/
+google-scholar: true
+draft: true
+---
+
+Numbers don't lie, but they do mislead. Especially when we look at them without the full context. For example, say there's a deep learning model that's 91% accurate. While that number *sounds* impressive, the model is essentially useless. I recently built a baseline Convolutional Neural Network (CNN) model to classify Electrocardiogram (ECG) signals into five classes: Normal (N), Supraventricular (S), Ventricular (V), Fusion (F), and Paced (Q) (More detail about the classes and the dataset are provided below). This, in theory, is a textbook example of where deep learning (DL) models should shine ^[similar to image classification tasks where they're [quite good](https://poloclub.github.io/cnn-explainer/)]. However, there's one huge problem with the dataset: classes are severely imbalanced. One class makes up 83% of all the examples (the Normal class) and if the model simply predicts that everything in the dataset belongs to that class, then it would get an accuracy score of 83% yet fail to detect a single arrhythmia beat. This problem is called *class imbalance* and it can be notoriously hard to deal with for ML/DL projects.
+
+![Class distribution of the five AAMI beat classes in MIT-BIH. Normal beats make up 83% of the dataset.](class_distribution.png)
+
+# The Dataset
+
+I used the MIT-BIH Arrhythmia Dataset (!insert bibliography link here), which is one of the most widely used benchmarks in cardiac signal processing research. The dataset contains 48 half-hour recordings taken from 47 different patients using Holter monitors. Each recording contains two channels of ECG (Lead II and one of the V-leads), sampled at 360 Hz and over 109,000 individual heartbeats were manually reviewed and annotated by two independent cardiologists. I grouped the various annotations into 5 super classes, following AAMI guidelines (!link guideline site/paper):
+
+| Class | Clinical Description | Annotations Included |
+| :--- | :--- | :--- |
+| **N** (Normal) | Standard heartbeat following the regular electrical pathway. Includes slight conduction delays (like bundle branch blocks) that are not premature. | `N`, `L`, `R`, `e`, `j` |
+| **S** (Supraventricular) | Premature beat originating in the atria. Travels down the normal pathway, making it look morphologically similar to an 'N' beat, but temporally early. | `A`, `a`, `J`, `S` |
+| **V** (Ventricular) | Premature beat originating in the ventricles. Travels backward through tissue, resulting in a wide, bizarre morphology distinct from 'N' beats. | `V`, `E` |
+| **F** (Fusion) | A temporal collision between a normal beat and a ventricular beat, resulting in a hybrid morphology that blends 'N' and 'V' characteristics. | `F` |
+| **Q** (Paced/Unknown) | Unclassifiable or artificially generated beats, including pacemaker spikes or segments corrupted by severe noise and movement artifacts. | `/`, `f`, `U` |
+
+The morphological differences between classes are visible in the raw ECG signal but as we'll see later, morphology alone isn't always enough.
+
+![Example beats from each AAMI class. Notice that the N and S beats look similar but the timings are different. V beats have a wide QRS complex and look 'bizarre' compared to N and S. F beats are a fusion between N and V. Q beats look completely unrecognizable.](beat_examples.png){.lightbox}
+
+::: {.callout-note}
+## A Note on Train/Test Split
+
+I used the standard DS1/DS2 patient-wise split defined by AAMI EC57 standard, which divides the data into 22 records for training and 22 for testing with no patient appearing in both. This ensures that there's no data leakage from the Training set onto the Testing set. ECG morphology is highly individual and random beat-level splitting with same patients in both training and test set inflates every metric. In fact, most papers that report over 98% accuracy on this dataset use intra-patient splits. 
+:::
