@@ -88,13 +88,13 @@
     "href": "projects/ecg-arrhythmia-mit/index.html#focal-loss",
     "title": "The Accuracy Trap: Class Imbalance and Domain Knowledge in ECG Arrhythmia Classification",
     "section": "Focal Loss",
-    "text": "Focal Loss\nFocal Loss makes the network focus on ‘hard to classify’ beats by using a dynamically scaling loss that down-weights easy examples. This is the preferred loss function in standard ML workflows for datasets with severe class imbalance. However, in this case, it failed to outperform weighted cross-entropy loss."
+    "text": "Focal Loss\nFocal Loss (Lin et al. 2017) makes the network focus on ‘hard to classify’ beats by using a dynamically scaling loss that down-weights easy examples. This is the preferred loss function in standard ML workflows for datasets with severe class imbalance. However, in this case, it failed to outperform weighted cross-entropy loss 3.\n3 A gamma value of 2.0 was used, which is the default. Read the original paper for more details"
   },
   {
     "objectID": "projects/ecg-arrhythmia-mit/index.html#synthetic-data-smote",
     "href": "projects/ecg-arrhythmia-mit/index.html#synthetic-data-smote",
     "title": "The Accuracy Trap: Class Imbalance and Domain Knowledge in ECG Arrhythmia Classification",
     "section": "Synthetic Data (SMOTE)",
-    "text": "Synthetic Data (SMOTE)\nSMOTE (Synthetic Minority Over-sampling Technique) is an ML algorithm that creates synthetic samples for under-represented classes by essentially interpolating the existing examples from that class 3. For this dataset and model, it provided best S class result so far (0.15) but failed to move the needle on other classes.\n3 The math behind SMOTE and some its variants are presented hereTo understand why SMOTE failed in this case, we only need to look at examples of the synthetic data. The Q class also is at a severe disadvantage because there are only 8 real examples in the DS1 training split and interpolating between them to create 45,833 beats means creating a whole lot of randomness.\n\n\n\nExamples of a SMOTE-generated waveform for each minority class"
+    "text": "Synthetic Data (SMOTE)\nSMOTE (Synthetic Minority Over-sampling Technique) is an ML algorithm that creates synthetic samples for under-represented classes by essentially interpolating the existing examples from that class 4. For this dataset and model, it provided best S class result so far (0.15) but failed to move the needle on other classes.\n4 The math behind SMOTE and some its variants are presented hereTo understand why SMOTE failed in this case, we only need to look at examples of the synthetic data. The Q class also is at a severe disadvantage because there are only 8 real examples in the DS1 training split and interpolating between them to create 45,833 beats means creating a whole lot of randomness.\n\n\n\nExamples of a SMOTE-generated waveform for each minority class\n\n\nUltimately, these are general purpose tools that lack domain knowledge. Applying them to a dataset with severe class imbalance is far less likely to succeed unless we provide it relevant information."
   }
 ]

@@ -23,7 +23,27 @@ ul.task-list li input[type="checkbox"] {
   margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
   vertical-align: middle;
 }
-</style>
+/* CSS for citations */
+div.csl-bib-body { }
+div.csl-entry {
+  clear: both;
+  margin-bottom: 0em;
+}
+.hanging-indent div.csl-entry {
+  margin-left:2em;
+  text-indent:-2em;
+}
+div.csl-left-margin {
+  min-width:2em;
+  float:left;
+}
+div.csl-right-inline {
+  margin-left:2em;
+  padding-left:1em;
+}
+div.csl-indent {
+  margin-left: 2em;
+}</style>
 
 
 <script src="../../site_libs/quarto-nav/quarto-nav.js"></script>
@@ -78,6 +98,35 @@ ul.task-list li input[type="checkbox"] {
 }</script>
 <meta name="quarto:status" content="draft">
 
+  <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
+
+<script type="text/javascript">
+const typesetMath = (el) => {
+  if (window.MathJax) {
+    // MathJax Typeset
+    window.MathJax.typeset([el]);
+  } else if (window.katex) {
+    // KaTeX Render
+    var mathElements = el.getElementsByClassName("math");
+    var macros = [];
+    for (var i = 0; i < mathElements.length; i++) {
+      var texText = mathElements[i].firstChild;
+      if (mathElements[i].tagName == "SPAN" && texText && texText.data) {
+        window.katex.render(texText.data, mathElements[i], {
+          displayMode: mathElements[i].classList.contains('display'),
+          throwOnError: false,
+          macros: macros,
+          fleqn: false
+        });
+      }
+    }
+  }
+}
+window.Quarto = {
+  typesetMath
+};
+</script>
 
 <link rel="stylesheet" href="../../styles.css">
 <meta property="og:title" content="The Accuracy Trap: Class Imbalance and Domain Knowledge in ECG Arrhythmia Classification – Mani Ravi">
@@ -100,6 +149,8 @@ ul.task-list li input[type="checkbox"] {
 <meta name="citation_online_date" content="2026-04-22">
 <meta name="citation_fulltext_html_url" content="https://maniravi.com/projects/ecg-arrhythmia-mit/">
 <meta name="citation_language" content="en">
+<meta name="citation_reference" content="citation_title=Focal loss for dense object detection;,citation_author=Tsung-Yi Lin;,citation_author=Priya Goyal;,citation_author=Ross Girshick;,citation_author=Kaiming He;,citation_author=Piotr Dollár;,citation_publication_date=2017;,citation_cover_date=2017;,citation_year=2017;,citation_conference_title=Proceedings of the IEEE international conference on computer vision;">
+<meta name="citation_reference" content="citation_title=Grad-CAM: Visual explanations from deep networks via gradient-based localization;,citation_author=Ramprasaath R Selvaraju;,citation_author=Michael Cogswell;,citation_author=Abhishek Das;,citation_author=Ramakrishna Vedantam;,citation_author=Devi Parikh;,citation_author=Dhruv Batra;,citation_publication_date=2020;,citation_cover_date=2020;,citation_year=2020;,citation_issue=2;,citation_volume=128;,citation_journal_title=International journal of computer vision;,citation_publisher=Springer;">
 </head>
 
 <body class="floating nav-fixed slimcontent quarto-dark"><script id="quarto-html-before-body" type="application/javascript">
@@ -326,6 +377,9 @@ ul.task-list li input[type="checkbox"] {
   <li><a href="#focal-loss" id="toc-focal-loss" class="nav-link" data-scroll-target="#focal-loss">Focal Loss</a></li>
   <li><a href="#synthetic-data-smote" id="toc-synthetic-data-smote" class="nav-link" data-scroll-target="#synthetic-data-smote">Synthetic Data (SMOTE)</a></li>
   </ul></li>
+  <li><a href="#domain-knowledge" id="toc-domain-knowledge" class="nav-link" data-scroll-target="#domain-knowledge">Domain Knowledge</a></li>
+  <li><a href="#grad-cam" id="toc-grad-cam" class="nav-link" data-scroll-target="#grad-cam">Grad-CAM</a></li>
+  <li><a href="#conclusion" id="toc-conclusion" class="nav-link" data-scroll-target="#conclusion">Conclusion</a></li>
   </ul>
 </nav>
 </nav>
@@ -455,14 +509,14 @@ ul.task-list li input[type="checkbox"] {
 </section>
 <section id="baseline-cnn-model" class="level1">
 <h1>Baseline CNN Model</h1>
-<p>To establish a baseline, I built an intentionally simple 1D CNN model with 3 convuliotional layers, global aberage pooling and a five-class dense output layer. It takes in a 360 sample window centered around the R-peak of the beat. Here’s the <a href="https://scikit-learn.org/stable/auto_examples/model_selection/plot_confusion_matrix.html">normalized confusion matrix</a> on the model’s predictions from the unseen DS2 test set:</p>
+<p>To establish a baseline, I built an intentionally simple 1D CNN model with 3 convolutional layers, global average pooling and a five-class dense output layer. It takes in a 360 sample window centered around the R-peak of the beat. Here’s the <a href="https://scikit-learn.org/stable/auto_examples/model_selection/plot_confusion_matrix.html">normalized confusion matrix</a> on the model’s predictions from the unseen DS2 test set:</p>
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
 <p><img src="baseline_cnn_cm_normalized.png" class="img-fluid figure-img"></p>
 <figcaption>Normalized confusion matrix from the baseline CNN model’s predictions</figcaption>
 </figure>
 </div>
-<p>It’s clear that the model is just predicting most fo the beats as N class and a few as V class. The recall for the rest of the classes is non-existent. The accuracy of this model would be 91% yet failed to detect a single arrhythmia class reliably and would be an unmitigated disaster if deployed in the real-world. A better metric in this case would be the <a href="https://towardsdatascience.com/micro-macro-weighted-averages-of-f1-score-clearly-explained-b603420b292f/">f1-score</a>. The Macro-F1 for this model was 0.29.</p>
+<p>It’s clear that the model is just predicting most of the beats as N class and a few as V class. The recall for the rest of the classes is non-existent. The accuracy of this model would be 91% yet failed to detect a single arrhythmia class reliably and would be an unmitigated disaster if deployed in the real-world. A better metric in this case would be the <a href="https://towardsdatascience.com/micro-macro-weighted-averages-of-f1-score-clearly-explained-b603420b292f/">f1-score</a>. The Macro-F1 for this model was 0.29.</p>
 <div id="tbl-classification-report" class="quarto-float quarto-figure quarto-figure-center anchored">
 <figure class="quarto-float quarto-float-tbl figure">
 <figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-classification-report-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
@@ -544,32 +598,202 @@ Table&nbsp;1: Classification Report - Baseline CNN Model
 </section>
 <section id="standard-fixes" class="level1 page-columns page-full">
 <h1>Standard Fixes</h1>
-<p>The standard approaches in ML woprkflows when encountering this kind of class imbalance is to tweak the <a href="https://www.datacamp.com/tutorial/loss-function-in-machine-learning">loss function</a> or to generate ‘synthetic’ data for classes with less examples for the model to train on.</p>
+<p>The standard approaches in ML workflows when encountering this kind of class imbalance is to tweak the <a href="https://www.datacamp.com/tutorial/loss-function-in-machine-learning">loss function</a> or to generate ‘synthetic’ data for classes with less examples for the model to train on.</p>
 <section id="weighted-cross-entropy-loss" class="level2 page-columns page-full">
 <h2 class="anchored" data-anchor-id="weighted-cross-entropy-loss">Weighted Cross-Entropy Loss</h2>
 <p>Instead of having all classes have the same weight <a href="#fn2" class="footnote-ref" id="fnref2" role="doc-noteref"><sup>2</sup></a>, weighted cross-entropy loss assigns weight based on class distribution. This penalizes the network more for missing rare classes. The Ventricular (V) F1 score improved slightly (0.51 to 0.59), but the S class barely moved (0.01 to 0.07). The Macro F1 nudged along from 0.29 to 0.30.</p>
 <div class="no-row-height column-margin column-container"><div id="fn2"><p><sup>2</sup>&nbsp;As in Standard Cross-Entropy Loss, which was the loss function used in the baseline CNN model (and most simple classification models)</p></div></div></section>
-<section id="focal-loss" class="level2">
+<section id="focal-loss" class="level2 page-columns page-full">
 <h2 class="anchored" data-anchor-id="focal-loss">Focal Loss</h2>
-<p>Focal Loss makes the network focus on ‘hard to classify’ beats by using a dynamically scaling loss that down-weights easy examples. This is the preferred loss function in standard ML workflows for datasets with severe class imbalance. However, in this case, it failed to outperform weighted cross-entropy loss.</p>
-</section>
+<p>Focal Loss <span class="citation" data-cites="lin2017focal">(<a href="#ref-lin2017focal" role="doc-biblioref">Lin et al. 2017</a>)</span> makes the network focus on ‘hard to classify’ beats by using a dynamically scaling loss that down-weights easy examples. This is the preferred loss function in standard ML workflows for datasets with severe class imbalance. However, in this case, it failed to outperform weighted cross-entropy loss <a href="#fn3" class="footnote-ref" id="fnref3" role="doc-noteref"><sup>3</sup></a>.</p>
+<div class="no-row-height column-margin column-container"><div id="fn3"><p><sup>3</sup>&nbsp;A gamma value of 2.0 was used, which is the default. Read the <a href="https://arxiv.org/abs/1708.02002">original paper</a> for more details</p></div></div></section>
 <section id="synthetic-data-smote" class="level2 page-columns page-full">
 <h2 class="anchored" data-anchor-id="synthetic-data-smote">Synthetic Data (SMOTE)</h2>
-<p>SMOTE (Synthetic Minority Over-sampling Technique) is an ML algorithm that creates synthetic samples for under-represented classes by essentially interpolating the existing examples from that class <a href="#fn3" class="footnote-ref" id="fnref3" role="doc-noteref"><sup>3</sup></a>. For this dataset and model, it provided best S class result so far (0.15) but failed to move the needle on other classes.</p>
-<div class="no-row-height column-margin column-container"><div id="fn3"><p><sup>3</sup>&nbsp;The math behind SMOTE and some its variants are presented <a href="https://www.emergentmind.com/topics/smote-algorithm">here</a></p></div></div><p>To understand why SMOTE failed in this case, we only need to look at examples of the synthetic data. The Q class also is at a severe disadvantage because there are only 8 real examples in the DS1 training split and interpolating between them to create 45,833 beats means creating a whole lot of randomness.</p>
+<p>SMOTE (Synthetic Minority Over-sampling Technique) is an ML algorithm that creates synthetic samples for under-represented classes by essentially interpolating the existing examples from that class <a href="#fn4" class="footnote-ref" id="fnref4" role="doc-noteref"><sup>4</sup></a>. For this dataset and model, it provided best S class result so far (0.15) but failed to move the needle on other classes.</p>
+<div class="no-row-height column-margin column-container"><div id="fn4"><p><sup>4</sup>&nbsp;The math behind SMOTE and some its variants are presented <a href="https://www.emergentmind.com/topics/smote-algorithm">here</a></p></div></div><p>To understand why SMOTE failed in this case, we only need to look at examples of the synthetic data. The Q class also is at a severe disadvantage because there are only 8 real examples in the DS1 training split and interpolating between them to create 45,833 beats means creating a whole lot of randomness.</p>
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
 <p><a href="smote_comparison.png" class="lightbox" data-gallery="quarto-lightbox-gallery-2" title="Examples of a SMOTE-generated waveform for each minority class"><img src="smote_comparison.png" class="img-fluid figure-img" alt="Examples of a SMOTE-generated waveform for each minority class"></a></p>
 <figcaption>Examples of a SMOTE-generated waveform for each minority class</figcaption>
 </figure>
 </div>
+<p>Ultimately, these are general purpose tools that lack domain knowledge. Applying them to a dataset with severe class imbalance is far less likely to succeed unless we provide it relevant information.</p>
+</section>
+</section>
+<section id="domain-knowledge" class="level1">
+<h1>Domain Knowledge</h1>
+<p>Deep Learning models like the CNN are really good at extracting morpholgical features from a given signal - like edges, curves and slopes. This is why the baseline model does a decent job in classifying V class, as their QRS complexes are distinctly wider than N beats. However, the model doesn’t know that what makes the S beats different from N beats is their timing. Cardiologists don’t just look at the shapes of individual beats but they also look at their timings (RR intervals) and S beats, although morphologically similar to N beats, are <em>premature</em> beats. A model that only looks at a beat’s morphology has no access to the timing of the beats before or after.</p>
+<p>To fix this, I calculated 3 specific timing-related features for all the beats:</p>
+<div id="tbl-rr-features" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-tbl figure">
+<figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-rr-features-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Table&nbsp;2: RR Interval Features
+</figcaption>
+<div aria-describedby="tbl-rr-features-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<table class="caption-top table">
+<colgroup>
+<col style="width: 50%">
+<col style="width: 50%">
+</colgroup>
+<thead>
+<tr class="header">
+<th style="text-align: left;">Feature</th>
+<th style="text-align: left;">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;"><strong>Pre-RR Interval</strong></td>
+<td style="text-align: left;">The time elapsed since the previous R-wave.</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"><strong>Post-RR Interval</strong></td>
+<td style="text-align: left;">The time until the next R-wave.</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;"><strong>Local RR Ratio</strong></td>
+<td style="text-align: left;">The current RR interval divided by a moving average of the patient’s recent heart rate.</td>
+</tr>
+</tbody>
+</table>
+</div>
+</figure>
+</div>
+<p>When calculating these features per class, the difference was obvious. Average pre-RR interval for N class was 0.778 seconds whereas for S class, it was 0.506 seconds. I updated the CNN architecture so these 3 features are added to the flattened morphological embeddings from the CNN, right before the final dense classification layer.</p>
+<p>The results were meaningful - especially for S and V classes. S class F1 score went up to 0.48 from 0.01 and V class F1-score also increased to 0.7. Just adding these three numbers increased the overall macro-F1 score from 0.3 to 0.44 while the standard methods couldn’t improve it at all.</p>
+<div id="tbl-results-comp" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-tbl figure">
+<figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-results-comp-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Table&nbsp;3: Results Comparison
+</figcaption>
+<div aria-describedby="tbl-results-comp-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<table class="caption-top table">
+<thead>
+<tr class="header">
+<th style="text-align: left;">Experiment</th>
+<th style="text-align: right;">Accuracy</th>
+<th style="text-align: right;">Macro F1</th>
+<th style="text-align: right;">S F1</th>
+<th style="text-align: right;">V F1</th>
+<th style="text-align: right;">F F1</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;"><strong>Baseline CNN</strong></td>
+<td style="text-align: right;">0.91</td>
+<td style="text-align: right;">0.29</td>
+<td style="text-align: right;">0.01</td>
+<td style="text-align: right;">0.51</td>
+<td style="text-align: right;">0.00</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"><strong>Weighted CE loss</strong></td>
+<td style="text-align: right;">0.69</td>
+<td style="text-align: right;">0.30</td>
+<td style="text-align: right;">0.07</td>
+<td style="text-align: right;">0.59</td>
+<td style="text-align: right;">0.02</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;"><strong>Focal loss (<span class="math inline">\(\gamma=2\)</span>)</strong></td>
+<td style="text-align: right;">0.90</td>
+<td style="text-align: right;">0.30</td>
+<td style="text-align: right;">0.00</td>
+<td style="text-align: right;">0.53</td>
+<td style="text-align: right;">0.00</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"><strong>SMOTE oversampling</strong></td>
+<td style="text-align: right;">0.65</td>
+<td style="text-align: right;">0.29</td>
+<td style="text-align: right;">0.15</td>
+<td style="text-align: right;">0.52</td>
+<td style="text-align: right;">0.01</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;"><strong>CNN + RR features</strong></td>
+<td style="text-align: right;">0.85</td>
+<td style="text-align: right;">0.44</td>
+<td style="text-align: right;">0.48</td>
+<td style="text-align: right;">0.70</td>
+<td style="text-align: right;">0.10</td>
+</tr>
+</tbody>
+</table>
+</div>
+</figure>
+</div>
+</section>
+<section id="grad-cam" class="level1">
+<h1>Grad-CAM</h1>
+<p>Numbers only tell part of the story. Like I wrote in the <a href="https://maniravi.com/projects/imu-processing-cnn-svm/">Activity Recognition post</a>, it’s important to figure out what features a deep learning model is actually learning or missing. To do this, I implemented a widely used technique called Grad-CAM (Gradient-weighted Class Activation Mapping) <span class="citation" data-cites="selvaraju2020grad">(<a href="#ref-selvaraju2020grad" role="doc-biblioref">Selvaraju et al. 2020</a>)</span>. Put simply, Grad-CAM visually highlights the regions in the signal (or image) that had the most influence in the network’s classification decision. I hooked it up to the final convolutional layer and ran some examples through it to produce the heatplots below.</p>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><a href="gradcam_3_examples.png" class="lightbox" data-gallery="quarto-lightbox-gallery-3" title="Grad-CAM Heatplots of 3 example beats per class"><img src="gradcam_3_examples.png" class="img-fluid figure-img" alt="Grad-CAM Heatplots of 3 example beats per class"></a></p>
+<figcaption>Grad-CAM Heatplots of 3 example beats per class</figcaption>
+</figure>
+</div>
+<div id="tbl-attention-analysis" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-tbl figure">
+<figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-attention-analysis-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Table&nbsp;4: Attention Map Analysis
+</figcaption>
+<div aria-describedby="tbl-attention-analysis-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<table class="caption-top table">
+<colgroup>
+<col style="width: 50%">
+<col style="width: 50%">
+</colgroup>
+<thead>
+<tr class="header">
+<th style="text-align: left;">Beat Type</th>
+<th style="text-align: left;">Attention Analysis</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;"><strong>N &amp; V Beats</strong></td>
+<td style="text-align: left;">Consistent focus on meaningful signal parts (e.g., wide QRS). The model learned something real.</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"><strong>S Beats</strong></td>
+<td style="text-align: left;">Consistently focuses on QRS to verify shape. Injected RR features do the heavy lifting for classification.</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;"><strong>F Beats</strong></td>
+<td style="text-align: left;">Completely inconsistent attention. No learned strategy, explaining the dismal F1 score.</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"><strong>Q Beats</strong></td>
+<td style="text-align: left;">Diffuse, wildly different heatmaps. The model is just guessing.</td>
+</tr>
+</tbody>
+</table>
+</div>
+</figure>
+</div>
+<p>Reading across the rows of the figure gives us valuable information about the model’s performance and tell us whether the model learned something clinically grounded. For F and Q classes, the problem is in the dataset. It is extremely build any model to accurately detect only 414 training examples of a morphologically ambiguous class.</p>
+</section>
+<section id="conclusion" class="level1 page-columns page-full">
+<h1>Conclusion</h1>
+<p>I intentionally tried to keep things simple in this project - a simple CNN model, standard mitigation strategies and just a handful of timing features added - because my main aim was to explain the need for clinical grounding. There are some papers that have achieved a high F1-score on this dataset <a href="#fn5" class="footnote-ref" id="fnref5" role="doc-noteref"><sup>5</sup></a> by using advanced methods such as a CNN+BiLSTM architecture (!insert most cited paper here) that takes in longer windows (3 to 5 beats) as input so it can calculate some of the timing features that I hand-engineered. Another technique is to use a Transformer architecture with multi-headed attention mechanism (!insert most cited/relevant paper here) where instead of treating every part opf the signal equally, the model learns to dynamically focus its attention on specific temporal areas of the signal.</p>
+<div class="no-row-height column-margin column-container"><div id="fn5"><p><sup>5</sup>&nbsp;Once again, be sure to check the train-test split when reading <em>any</em> paper that use this dataset. A lot of them don’t use the strict DS1/DS2 patient-level that I used here</p></div></div><p>I chose a very strict train-test split on purpose to make sure that there wasn’t any patient data leakage from training data to the test data. This ensures that the results are accurately representative of what the model might do if it encounters a completely new patient. For practical purposes, however, it is possible that the real-time system can use a short amount of patient specific data (say, the first 2-5 minutes) to perform patient-specific calibration that can meaningfully improve accuracy and recall.</p>
+<p>My main takeaway from this project was that clinical grounding is essential when making decisions at every step in clincial AI development. From dataset split, feature engineering, evaluation metric to explainability: ask if this is what a clinician would be looking at and if this reflects what years of clinical knowledge has taught us.</p>
+
 
 
 </section>
-</section>
 
 
-<div id="quarto-appendix" class="default"><section class="quarto-appendix-contents" id="quarto-citation"><h2 class="anchored quarto-appendix-heading">Citation</h2><div><div class="quarto-appendix-secondary-label">BibTeX citation:</div><pre class="sourceCode code-with-copy quarto-appendix-bibtex"><code class="sourceCode bibtex">@misc{ravi2026,
+<div id="quarto-appendix" class="default"><section class="quarto-appendix-contents" role="doc-bibliography" id="quarto-bibliography"><h2 class="anchored quarto-appendix-heading">References</h2><div id="refs" class="references csl-bib-body hanging-indent" data-entry-spacing="0" role="list">
+<div id="ref-lin2017focal" class="csl-entry" role="listitem">
+Lin, Tsung-Yi, Priya Goyal, Ross Girshick, Kaiming He, and Piotr Dollár. 2017. <span>“Focal Loss for Dense Object Detection.”</span> In <em>Proceedings of the IEEE International Conference on Computer Vision</em>, 2980–88.
+</div>
+<div id="ref-selvaraju2020grad" class="csl-entry" role="listitem">
+Selvaraju, Ramprasaath R, Michael Cogswell, Abhishek Das, Ramakrishna Vedantam, Devi Parikh, and Dhruv Batra. 2020. <span>“Grad-CAM: Visual Explanations from Deep Networks via Gradient-Based Localization.”</span> <em>International Journal of Computer Vision</em> 128 (2): 336–59.
+</div>
+</div></section><section class="quarto-appendix-contents" id="quarto-citation"><h2 class="anchored quarto-appendix-heading">Citation</h2><div><div class="quarto-appendix-secondary-label">BibTeX citation:</div><pre class="sourceCode code-with-copy quarto-appendix-bibtex"><code class="sourceCode bibtex">@misc{ravi2026,
   author = {Ravi, Mani},
   title = {The {Accuracy} {Trap:} {Class} {Imbalance} and {Domain}
     {Knowledge} in {ECG} {Arrhythmia} {Classification}},
