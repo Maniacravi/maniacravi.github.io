@@ -44,8 +44,8 @@ ul.task-list li input[type="checkbox"] {
 <link href="../../site_libs/quarto-html/quarto-syntax-highlighting-dark-b651517ce65839d647a86e2780455cfb.css" rel="stylesheet" class="quarto-color-scheme quarto-color-alternate" id="quarto-text-highlighting-styles">
 <script src="../../site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="../../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="../../site_libs/bootstrap/bootstrap-5b4ad623e5705c0698d39aec6f10cf02.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme" id="quarto-bootstrap" data-mode="light">
-<link href="../../site_libs/bootstrap/bootstrap-dark-7cd99d61f35755d4443da320b4f2583a.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme quarto-color-alternate" id="quarto-bootstrap" data-mode="dark">
+<link href="../../site_libs/bootstrap/bootstrap-e31584831b205ffbb2d98406f31c2a5b.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme" id="quarto-bootstrap" data-mode="light">
+<link href="../../site_libs/bootstrap/bootstrap-dark-22e23c4c804e1fc22b42c79d8db08a63.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme quarto-color-alternate" id="quarto-bootstrap" data-mode="dark">
 <script src="../../site_libs/quarto-contrib/glightbox/glightbox.min.js"></script>
 <link href="../../site_libs/quarto-contrib/glightbox/glightbox.min.css" rel="stylesheet">
 <link href="../../site_libs/quarto-contrib/glightbox/lightbox.css" rel="stylesheet">
@@ -76,6 +76,7 @@ ul.task-list li input[type="checkbox"] {
     "search-label": "Search"
   }
 }</script>
+<meta name="quarto:status" content="draft">
 
 
 <link rel="stylesheet" href="../../styles.css">
@@ -273,7 +274,7 @@ ul.task-list li input[type="checkbox"] {
   </script>
 
 <div id="quarto-search-results"></div>
-  <header id="quarto-header" class="headroom fixed-top">
+  <header id="quarto-header" class="headroom fixed-top"><div id="quarto-draft-alert" class="alert alert-warning"><i class="bi bi-pencil-square"></i>Draft</div>
     <nav class="navbar navbar-expand-lg " data-bs-theme="dark">
       <div class="navbar-container container-fluid">
       <div class="navbar-brand-container mx-auto">
@@ -318,6 +319,13 @@ ul.task-list li input[type="checkbox"] {
    
   <ul>
   <li><a href="#the-dataset" id="toc-the-dataset" class="nav-link active" data-scroll-target="#the-dataset">The Dataset</a></li>
+  <li><a href="#baseline-cnn-model" id="toc-baseline-cnn-model" class="nav-link" data-scroll-target="#baseline-cnn-model">Baseline CNN Model</a></li>
+  <li><a href="#standard-fixes" id="toc-standard-fixes" class="nav-link" data-scroll-target="#standard-fixes">Standard Fixes</a>
+  <ul class="collapse">
+  <li><a href="#weighted-cross-entropy-loss" id="toc-weighted-cross-entropy-loss" class="nav-link" data-scroll-target="#weighted-cross-entropy-loss">Weighted Cross-Entropy Loss</a></li>
+  <li><a href="#focal-loss" id="toc-focal-loss" class="nav-link" data-scroll-target="#focal-loss">Focal Loss</a></li>
+  <li><a href="#synthetic-data-smote" id="toc-synthetic-data-smote" class="nav-link" data-scroll-target="#synthetic-data-smote">Synthetic Data (SMOTE)</a></li>
+  </ul></li>
   </ul>
 </nav>
 </nav>
@@ -374,7 +382,7 @@ ul.task-list li input[type="checkbox"] {
 
 
 <p>Numbers don’t lie, but they do mislead. Especially when we look at them without the full context. For example, say there’s a deep learning model that’s 91% accurate. While that number <em>sounds</em> impressive, the model is essentially useless. I recently built a baseline Convolutional Neural Network (CNN) model to classify Electrocardiogram (ECG) signals into five classes: Normal (N), Supraventricular (S), Ventricular (V), Fusion (F), and Paced (Q) (More detail about the classes and the dataset are provided below). This, in theory, is a textbook example of where deep learning (DL) models should shine <a href="#fn1" class="footnote-ref" id="fnref1" role="doc-noteref"><sup>1</sup></a>. However, there’s one huge problem with the dataset: classes are severely imbalanced. One class makes up 83% of all the examples (the Normal class) and if the model simply predicts that everything in the dataset belongs to that class, then it would get an accuracy score of 83% yet fail to detect a single arrhythmia beat. This problem is called <em>class imbalance</em> and it can be notoriously hard to deal with for ML/DL projects.</p>
-<div class="no-row-height column-margin column-container"><div id="fn1"><p><sup>1</sup>&nbsp;similar to image classification tasks where they’re <a href="https://poloclub.github.io/cnn-explainer/">quite good</a></p></div></div><div class="quarto-figure quarto-figure-center">
+<div class="no-row-height column-margin column-container"><div id="fn1"><p><sup>1</sup>&nbsp;Similar to image classification tasks where they’re <a href="https://poloclub.github.io/cnn-explainer/">quite good</a></p></div></div><div class="quarto-figure quarto-figure-center">
 <figure class="figure">
 <p><img src="class_distribution.png" class="img-fluid figure-img"></p>
 <figcaption>Class distribution of the five AAMI beat classes in MIT-BIH. Normal beats make up 83% of the dataset.</figcaption>
@@ -444,8 +452,120 @@ ul.task-list li input[type="checkbox"] {
 <p>I used the standard DS1/DS2 patient-wise split defined by AAMI EC57 standard, which divides the data into 22 records for training and 22 for testing with no patient appearing in both. This ensures that there’s no data leakage from the Training set onto the Testing set. ECG morphology is highly individual and random beat-level splitting with same patients in both training and test set inflates every metric. In fact, most papers that report over 98% accuracy on this dataset use intra-patient splits.</p>
 </div>
 </div>
+</section>
+<section id="baseline-cnn-model" class="level1">
+<h1>Baseline CNN Model</h1>
+<p>To establish a baseline, I built an intentionally simple 1D CNN model with 3 convuliotional layers, global aberage pooling and a five-class dense output layer. It takes in a 360 sample window centered around the R-peak of the beat. Here’s the <a href="https://scikit-learn.org/stable/auto_examples/model_selection/plot_confusion_matrix.html">normalized confusion matrix</a> on the model’s predictions from the unseen DS2 test set:</p>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="baseline_cnn_cm_normalized.png" class="img-fluid figure-img"></p>
+<figcaption>Normalized confusion matrix from the baseline CNN model’s predictions</figcaption>
+</figure>
+</div>
+<p>It’s clear that the model is just predicting most fo the beats as N class and a few as V class. The recall for the rest of the classes is non-existent. The accuracy of this model would be 91% yet failed to detect a single arrhythmia class reliably and would be an unmitigated disaster if deployed in the real-world. A better metric in this case would be the <a href="https://towardsdatascience.com/micro-macro-weighted-averages-of-f1-score-clearly-explained-b603420b292f/">f1-score</a>. The Macro-F1 for this model was 0.29.</p>
+<div id="tbl-classification-report" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-tbl figure">
+<figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-classification-report-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Table&nbsp;1: Classification Report - Baseline CNN Model
+</figcaption>
+<div aria-describedby="tbl-classification-report-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<table class="caption-top table">
+<thead>
+<tr class="header">
+<th style="text-align: left;">Class / Metric</th>
+<th style="text-align: right;">Precision</th>
+<th style="text-align: right;">Recall</th>
+<th style="text-align: right;">F1-Score</th>
+<th style="text-align: right;">Support</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;"><strong>N</strong></td>
+<td style="text-align: right;">0.92</td>
+<td style="text-align: right;">0.99</td>
+<td style="text-align: right;">0.95</td>
+<td style="text-align: right;">44235</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"><strong>S</strong></td>
+<td style="text-align: right;">0.22</td>
+<td style="text-align: right;">0.01</td>
+<td style="text-align: right;">0.01</td>
+<td style="text-align: right;">1837</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;"><strong>V</strong></td>
+<td style="text-align: right;">0.70</td>
+<td style="text-align: right;">0.40</td>
+<td style="text-align: right;">0.51</td>
+<td style="text-align: right;">3220</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"><strong>F</strong></td>
+<td style="text-align: right;">0.00</td>
+<td style="text-align: right;">0.00</td>
+<td style="text-align: right;">0.00</td>
+<td style="text-align: right;">388</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;"><strong>Q</strong></td>
+<td style="text-align: right;">0.00</td>
+<td style="text-align: right;">0.00</td>
+<td style="text-align: right;">0.00</td>
+<td style="text-align: right;">7</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"><strong>accuracy</strong></td>
+<td style="text-align: right;"></td>
+<td style="text-align: right;"></td>
+<td style="text-align: right;">0.91</td>
+<td style="text-align: right;">49687</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;"><strong>macro avg</strong></td>
+<td style="text-align: right;">0.37</td>
+<td style="text-align: right;">0.28</td>
+<td style="text-align: right;">0.29</td>
+<td style="text-align: right;">49687</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"><strong>weighted avg</strong></td>
+<td style="text-align: right;">0.87</td>
+<td style="text-align: right;">0.91</td>
+<td style="text-align: right;">0.88</td>
+<td style="text-align: right;">49687</td>
+</tr>
+</tbody>
+</table>
+</div>
+</figure>
+</div>
+</section>
+<section id="standard-fixes" class="level1 page-columns page-full">
+<h1>Standard Fixes</h1>
+<p>The standard approaches in ML woprkflows when encountering this kind of class imbalance is to tweak the <a href="https://www.datacamp.com/tutorial/loss-function-in-machine-learning">loss function</a> or to generate ‘synthetic’ data for classes with less examples for the model to train on.</p>
+<section id="weighted-cross-entropy-loss" class="level2 page-columns page-full">
+<h2 class="anchored" data-anchor-id="weighted-cross-entropy-loss">Weighted Cross-Entropy Loss</h2>
+<p>Instead of having all classes have the same weight <a href="#fn2" class="footnote-ref" id="fnref2" role="doc-noteref"><sup>2</sup></a>, weighted cross-entropy loss assigns weight based on class distribution. This penalizes the network more for missing rare classes. The Ventricular (V) F1 score improved slightly (0.51 to 0.59), but the S class barely moved (0.01 to 0.07). The Macro F1 nudged along from 0.29 to 0.30.</p>
+<div class="no-row-height column-margin column-container"><div id="fn2"><p><sup>2</sup>&nbsp;As in Standard Cross-Entropy Loss, which was the loss function used in the baseline CNN model (and most simple classification models)</p></div></div></section>
+<section id="focal-loss" class="level2">
+<h2 class="anchored" data-anchor-id="focal-loss">Focal Loss</h2>
+<p>Focal Loss makes the network focus on ‘hard to classify’ beats by using a dynamically scaling loss that down-weights easy examples. This is the preferred loss function in standard ML workflows for datasets with severe class imbalance. However, in this case, it failed to outperform weighted cross-entropy loss.</p>
+</section>
+<section id="synthetic-data-smote" class="level2 page-columns page-full">
+<h2 class="anchored" data-anchor-id="synthetic-data-smote">Synthetic Data (SMOTE)</h2>
+<p>SMOTE (Synthetic Minority Over-sampling Technique) is an ML algorithm that creates synthetic samples for under-represented classes by essentially interpolating the existing examples from that class <a href="#fn3" class="footnote-ref" id="fnref3" role="doc-noteref"><sup>3</sup></a>. For this dataset and model, it provided best S class result so far (0.15) but failed to move the needle on other classes.</p>
+<div class="no-row-height column-margin column-container"><div id="fn3"><p><sup>3</sup>&nbsp;The math behind SMOTE and some its variants are presented <a href="https://www.emergentmind.com/topics/smote-algorithm">here</a></p></div></div><p>To understand why SMOTE failed in this case, we only need to look at examples of the synthetic data. The Q class also is at a severe disadvantage because there are only 8 real examples in the DS1 training split and interpolating between them to create 45,833 beats means creating a whole lot of randomness.</p>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><a href="smote_comparison.png" class="lightbox" data-gallery="quarto-lightbox-gallery-2" title="Examples of a SMOTE-generated waveform for each minority class"><img src="smote_comparison.png" class="img-fluid figure-img" alt="Examples of a SMOTE-generated waveform for each minority class"></a></p>
+<figcaption>Examples of a SMOTE-generated waveform for each minority class</figcaption>
+</figure>
+</div>
 
 
+</section>
 </section>
 
 
@@ -879,7 +999,7 @@ Knowledge in ECG Arrhythmia Classification.”</span> April 22, 2026. <a href="h
   <div class="nav-footer">
     <div class="nav-footer-left">
 <ol start="3" type="a">
-<li>Manikandan Ravi, 2026. All rights reserved. <a href="../../disclaimer">Disclaimer</a></li>
+<li>Manikandan Ravi, 2026. All rights reserved. <a href="../..\disclaimer">Disclaimer</a></li>
 </ol>
 </div>   
     <div class="nav-footer-center">
