@@ -19,11 +19,11 @@ comments: false
 
 ## About Me
 
-I'm a Biomedical Engineer and Data Scientist working on, and enthusiastic about, the intersection of Humans, Sensors and AI. I've spent over a decade developing algorithms that translate complex physiological signals - from EMG and ECG to PPG and IMU data - into meaningful, actionable information. 
+I'm a Biomedical Engineer and Data Scientist working at the intersection of Humans, Sensors and AI. I've spent over a decade developing algorithms that translate complex physiological signals (EMG, ECG, PPG, IMU etc.) into meaningful, actionable information. 
 
 I currently work at Kessler Foundation's [Center for Spinal Stimulation](https://kesslerfoundation.org/research/tim-and-caroline-reynolds-center-spinal-stimulation), leading biomedical signal processing and machine learning projects focused on [Neuromodulation](https://www.neuromodulation.com/about-neuromodulation) and spinal cord injury research. 
 
-My long-term goal is to build technologies that make physiological data more actionable and interpretable. I’m endlessly curious about how technology can deepen our understanding of the body — the signals we measure tell stories about how we move, sleep, think, and even feel.
+My goal is simple: I want to build things that matter. Technologies that help people who need it the most, tools that give clinicians better information, and products that show people a side of their health they couldn't see before.
 
 > "Nobody ever figures out what life is all about, and it doesn't matter. Explore the world. Nearly everything is really interesting if you go into it deeply enough." - Richard P. Feynman
 
@@ -37,7 +37,7 @@ My long-term goal is to build technologies that make physiological data more act
 
 ## Personal Life
 
-I live in New Jersey where I split my time between work, side [projects](projects), playing badminton, watching physics lectures, reading philosophy books and catching up on sports - basketball, soccer and test cricket (yes, it's 5 days long but there's nothing quite like it!).
+I live in New Jersey where I split my time between work, side [projects](projects), playing badminton, watching physics lectures, reading philosophy books and catching up on sports: basketball, soccer and test cricket (yes, it's 5 days long but there's nothing quite like it!).
 
 ## Contact 
 

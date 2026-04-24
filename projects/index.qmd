@@ -10,8 +10,8 @@ listing:
   type: default
 page-layout: full
 title: Projects
-# description: Some of my projects — from short explorations to months-long endeavors.
+# description: Some of my projects: from short explorations to months-long endeavors.
 title-block-banner: false
 ---
 
-A collection of projects exploring the intersection of data science, bioengineering, and AI-driven sensing — with links to code and demos where available.
+A collection of projects that I've worked on and written about. Mostly focused on biosignal processing and machine learning.

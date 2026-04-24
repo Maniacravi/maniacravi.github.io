@@ -7,7 +7,6 @@ format:
         reference-location: margin
         toc: true
         code-fold: true
-        # lightbox: true
 bibliography: references.bib
 categories:
   - ECG
@@ -27,16 +26,15 @@ citation:
     type: post-weblog
     url: https://maniravi.com/projects/ecg-arrhythmia-mit/
 google-scholar: true
-draft: true
 ---
 
-Numbers don't lie, but they do mislead. Especially when we look at them without the full context. For example, say there's a deep learning model that's 91% accurate. While that number *sounds* impressive, the model is essentially useless. I recently built a baseline Convolutional Neural Network (CNN) model to classify Electrocardiogram (ECG) signals into five classes: Normal (N), Supraventricular (S), Ventricular (V), Fusion (F), and Paced (Q) (More detail about the classes and the dataset are provided below). This, in theory, is a textbook example of where deep learning (DL) models should shine ^[Similar to image classification tasks where they're [quite good](https://poloclub.github.io/cnn-explainer/)]. However, there's one huge problem with the dataset: classes are severely imbalanced. One class makes up 83% of all the examples (the Normal class) and if the model simply predicts that everything in the dataset belongs to that class, then it would get an accuracy score of 83% yet fail to detect a single arrhythmia beat. This problem is called *class imbalance* and it can be notoriously hard to deal with for ML/DL projects.
+Numbers don't lie, but they do mislead. Especially when we look at them without the full context. For example, say there's a deep learning model that's 91% accurate. While that number *sounds* impressive, the model is essentially useless. I recently built a baseline Convolutional Neural Network (CNN) model to classify Electrocardiogram (ECG) signals into five classes: Normal (N), Supraventricular (S), Ventricular (V), Fusion (F), and Paced (Q) (More detail about the classes and the dataset are provided below). This, in theory, is a textbook example of where deep learning (DL) models should shine ^[Similar to image classification tasks where they're [quite good](https://poloclub.github.io/cnn-explainer/)]. However, there's one huge problem with the dataset: classes are severely imbalanced. One class makes up 83% of all the examples (the Normal class) and if the model simply predicts that everything in the dataset belongs to that class, then it would get an accuracy score of 83% yet fail to detect a single arrhythmia. This problem is called *class imbalance* and it can be notoriously hard to deal with for ML/DL projects.
 
 ![Class distribution of the five AAMI beat classes in MIT-BIH. Normal beats make up 83% of the dataset.](class_distribution.png)
 
 # The Dataset
 
-I used the MIT-BIH Arrhythmia Dataset (!insert bibliography link here), which is one of the most widely used benchmarks in cardiac signal processing research. The dataset contains 48 half-hour recordings taken from 47 different patients using Holter monitors. Each recording contains two channels of ECG (Lead II and one of the V-leads), sampled at 360 Hz and over 109,000 individual heartbeats were manually reviewed and annotated by two independent cardiologists. I grouped the various annotations into 5 super classes, following AAMI guidelines (!link guideline site/paper):
+I used the MIT-BIH Arrhythmia Dataset [@moody2001impact], which is one of the most widely used benchmarks in cardiac signal processing research. The dataset contains 48 half-hour recordings taken from 47 different patients using Holter monitors. Each recording contains two channels of ECG (Lead II and one of the V-leads), sampled at 360 Hz and two independent cardiologists manually reviewed and annotated over 109,000 individual heartbeats. I grouped the various annotations into 5 super classes, following AAMI guidelines [@aami_ec57_1998]:
 
 | Class | Clinical Description | Annotations Included |
 | :--- | :--- | :--- |
@@ -62,7 +60,7 @@ To establish a baseline, I built an intentionally simple 1D CNN model with 3 con
 
 ![Normalized confusion matrix from the baseline CNN model's predictions](baseline_cnn_cm_normalized.png)
 
-It's clear that the model is just predicting most of the beats as N class and a few as V class. The recall for the rest of the classes is non-existent. The accuracy of this model would be 91% yet failed to detect a single arrhythmia class reliably and would be an unmitigated disaster if deployed in the real-world. A better metric in this case would be the [f1-score](https://towardsdatascience.com/micro-macro-weighted-averages-of-f1-score-clearly-explained-b603420b292f/). The Macro-F1 for this model was 0.29.
+It's clear that the model is just predicting most of the beats as N class and a few as V class. The recall for the rest of the classes is non-existent. The accuracy of this model would be 91% yet failed to detect a single arrhythmia class reliably and would be dangerous if deployed in a clinical setting. A better metric in this case would be the [f1-score](https://towardsdatascience.com/micro-macro-weighted-averages-of-f1-score-clearly-explained-b603420b292f/). The Macro-F1 for this model was 0.29.
 
 | Class / Metric | Precision | Recall | F1-Score | Support |
 |:---|---:|---:|---:|---:|
@@ -79,7 +77,7 @@ It's clear that the model is just predicting most of the beats as N class and a 
 
 # Standard Fixes
 
-The standard approaches in ML workflows when encountering this kind of class imbalance is to tweak the [loss function](https://www.datacamp.com/tutorial/loss-function-in-machine-learning) or to generate 'synthetic' data for classes with less examples for the model to train on.
+The standard approaches in ML workflows when encountering this kind of class imbalance are to tweak the [loss function](https://www.datacamp.com/tutorial/loss-function-in-machine-learning) or to generate 'synthetic' data for classes with fewer examples for the model to train on.
 
 ## Weighted Cross-Entropy Loss
 
@@ -93,15 +91,15 @@ Focal Loss [@lin2017focal] makes the network focus on 'hard to classify' beats b
 
 SMOTE (Synthetic Minority Over-sampling Technique) is an ML algorithm that creates synthetic samples for under-represented classes by essentially interpolating the existing examples from that class ^[The math behind SMOTE and some its variants are presented [here](https://www.emergentmind.com/topics/smote-algorithm)]. For this dataset and model, it provided best S class result so far (0.15) but failed to move the needle on other classes.
 
-To understand why SMOTE failed in this case, we only need to look at examples of the synthetic data. The Q class also is at a severe disadvantage because there are only 8 real examples in the DS1 training split and interpolating between them to create 45,833 beats means creating a whole lot of randomness. 
+To understand why SMOTE failed in this case, we only need to look at examples of the synthetic data. The Q class is at a severe disadvantage because there are only 8 real examples in the DS1 training split and interpolating between them to create 45,833 beats means the resulting synthetic beats are essentially just noise. 
 
 ![Examples of a SMOTE-generated waveform for each minority class](smote_comparison.png){.lightbox}
 
-Ultimately, these are general purpose tools that lack domain knowledge. Applying them to a dataset with severe class imbalance is far less likely to succeed unless we provide it relevant information.
+Ultimately, these are general purpose tools that lack domain knowledge. Applying them to a dataset with severe class imbalance is far less likely to succeed.
 
 # Domain Knowledge
 
-Deep Learning models like the CNN are really good at extracting morpholgical features from a given signal - like edges, curves and slopes. This is why the baseline model does a decent job in classifying V class, as their QRS complexes are distinctly wider than N beats. However, the model doesn't know that what makes the S beats different from N beats is their timing. Cardiologists don't just look at the shapes of individual beats but they also look at their timings (RR intervals) and S beats, although morphologically similar to N beats, are *premature* beats. A model that only looks at a beat's morphology has no access to the timing of the beats before or after.
+Deep Learning models like the CNN are really good at extracting morphological features from a given signal - like edges, curves and slopes. This is why the baseline model does a decent job classifying V class, as their QRS complexes are distinctly wider than N beats. However, the model doesn't know that what makes the S beats different from N beats is their timing. Cardiologists don't just look at the shapes of individual beats but they also look at their timings (RR intervals) and S beats, although morphologically similar to N beats, are *premature* beats. A model that only looks at a beat's morphology has no access to the timing of the beats before or after.
 
 To fix this, I calculated 3 specific timing-related features for all the beats:
 
@@ -113,9 +111,9 @@ To fix this, I calculated 3 specific timing-related features for all the beats:
 
 : RR Interval Features {#tbl-rr-features}
 
-When calculating these features per class, the difference was obvious. Average pre-RR interval for N class was 0.778 seconds whereas for S class, it was 0.506 seconds. I updated the CNN architecture so these 3 features are added to the flattened morphological embeddings from the CNN, right before the final dense classification layer.
+When calculating these features per class, the difference was obvious. Average pre-RR interval for N class was 0.778 seconds whereas for S class, it was 0.506 seconds. I updated the CNN architecture so these 3 features are added to the flattened morphological embeddings from the CNN, right before the final dense classification layer. The results were meaningful - especially for S and V classes. S class F1 score went up to 0.55 from 0.01 and V class F1-score also increased to 0.80. 
 
-The results were meaningful - especially for S and V classes. S class F1 score went up to 0.48 from 0.01 and V class F1-score also increased to 0.7. Just adding these three numbers increased the overall macro-F1 score from 0.3 to 0.44 while the standard methods couldn't improve it at all. 
+Just adding these three numbers increased the overall macro-F1 score from 0.3 to 0.45 while the standard methods couldn't improve it at all. 
 
 | Experiment | Accuracy | Macro F1 | S F1 | V F1 | F F1 |
 |:---|---:|---:|---:|---:|---:|
@@ -123,15 +121,15 @@ The results were meaningful - especially for S and V classes. S class F1 score w
 | **Weighted CE loss** | 0.69 | 0.30 | 0.07 | 0.59 | 0.02 |
 | **Focal loss ($\gamma=2$)** | 0.90 | 0.30 | 0.00 | 0.53 | 0.00 |
 | **SMOTE oversampling** | 0.65 | 0.29 | 0.15 | 0.52 | 0.01 |
-| **CNN + RR features** | 0.85 | 0.44 | 0.48 | 0.70 | 0.10 |
+| **CNN + RR features** | 0.85 | **0.45** | **0.55** | **0.80** | 0.02 |
 
 : Results Comparison {#tbl-results-comp}
 
 # Grad-CAM
 
-Numbers only tell part of the story. Like I wrote in the [Activity Recognition post](https://maniravi.com/projects/imu-processing-cnn-svm/), it's important to figure out what features a deep learning model is actually learning or missing. To do this, I implemented a widely used technique called Grad-CAM (Gradient-weighted Class Activation Mapping) [@selvaraju2020grad]. Put simply, Grad-CAM visually highlights the regions in the signal (or image) that had the most influence in the network's classification decision. I hooked it up to the final convolutional layer and ran some examples through it to produce the heatplots below.
+Numbers only tell part of the story. Like I wrote in the [Activity Recognition post](https://maniravi.com/projects/imu-processing-cnn-svm/), it's important to figure out what features a deep learning model is actually learning or where it's falling short. To do this, I implemented a widely used technique called Grad-CAM (Gradient-weighted Class Activation Mapping) [@selvaraju2020grad]. Put simply, Grad-CAM visually highlights the regions in the signal (or image) that had the most influence in the network's classification decision. I hooked it up to the final convolutional layer and ran some examples through it to produce the heatmaps below.
 
-![Grad-CAM Heatplots of 3 example beats per class](gradcam_3_examples.png){.lightbox}
+![Grad-CAM Heatmaps of 3 example beats per class](gradcam_3_examples.png){.lightbox}
 
 | Beat Type | Attention Analysis |
 |:---|:---|
@@ -142,12 +140,18 @@ Numbers only tell part of the story. Like I wrote in the [Activity Recognition p
 
 : Attention Map Analysis {#tbl-attention-analysis}
 
-Reading across the rows of the figure gives us valuable information about the model's performance and tell us whether the model learned something clinically grounded. For F and Q classes, the problem is in the dataset. It is extremely build any model to accurately detect only 414 training examples of a morphologically ambiguous class.
+Reading across the rows of the figure gives us valuable information about the model's performance and tells us whether the model learned something clinically grounded. For F and Q classes, the problem is in the dataset. It is extremely difficult to build any model to accurately detect a morphologically ambiguous class with only 414 training examples.
 
 # Conclusion
 
-I intentionally tried to keep things simple in this project - a simple CNN model, standard mitigation strategies and just a handful of timing features added - because my main aim was to explain the need for clinical grounding. There are some papers that have achieved a high F1-score on this dataset ^[Once again, be sure to check the train-test split when reading *any* paper that use this dataset. A lot of them don't use the strict DS1/DS2 patient-level that I used here] by using advanced methods such as a CNN+BiLSTM architecture (!insert most cited paper here) that takes in longer windows (3 to 5 beats) as input so it can calculate some of the timing features that I hand-engineered. Another technique is to use a Transformer architecture with multi-headed attention mechanism (!insert most cited/relevant paper here) where instead of treating every part opf the signal equally, the model learns to dynamically focus its attention on specific temporal areas of the signal.
+I kept things intentionally simple in this project - a simple CNN model, standard mitigation strategies and just three timing features added - because my main aim was to explain the need for clinical grounding. There are some papers that have achieved a high F1-score on this dataset ^[Once again, be sure to check the train-test split when reading *any* paper that uses this dataset. A lot of them don't use the strict DS1/DS2 patient-level that I used here] by using advanced methods such as a CNN+BiLSTM architecture (@hassan2022classification) that takes in longer windows (3 to 5 beats) as input so it can calculate some of the timing features that I hand-engineered. Another technique is to use a Transformer architecture with multi-headed attention mechanism (@hu2022transformer) where instead of treating every part of the signal equally, the model learns to dynamically focus its attention on specific temporal areas of the signal.
 
-I chose a very strict train-test split on purpose to make sure that there wasn't any patient data leakage from training data to the test data. This ensures that the results are accurately representative of what the model might do if it encounters a completely new patient. For practical purposes, however, it is possible that the real-time system can use a short amount of patient specific data (say, the first 2-5 minutes) to perform patient-specific calibration that can meaningfully improve accuracy and recall.
+Beyond architecture, there's also personalization. I chose a very strict train-test split on purpose to make sure that there wasn't any patient data leakage from training data to the test data. This ensures that the results are accurately representative of what the model might do if it encounters a completely new patient. For practical purposes, however, it is possible that the real-time system can use a short amount of patient specific data (say, the first 2-5 minutes) to perform patient-specific calibration that can meaningfully improve accuracy and recall.
 
-My main takeaway from this project was that clinical grounding is essential when making decisions at every step in clincial AI development. From dataset split, feature engineering, evaluation metric to explainability: ask if this is what a clinician would be looking at and if this reflects what years of clinical knowledge has taught us.
+My main takeaway from this project was that clinical grounding is essential when making decisions at every step in clinical AI development. From dataset split, feature engineering, evaluation metric to explainability: ask if this is what a clinician would be looking at and if this reflects what years of clinical knowledge has taught us.
+
+My main takeaway from this project is that clinical grounding is essential at every step of the AI development process. From how to split the dataset, what features to extract, what evaluation metric to use and what explainability techniques to choose: all of them should align with existing clinical knowledge and fit the clinical use case. The biggest improvement in this project didn't come from a better algorithm, but from from asking what a cardiologist would look at.
+
+::: {.text-center}
+[{{< fa brands github >}} View Project Repository on GitHub](https://github.com/Maniacravi/ecg-arrhythmia-mitbih){.btn .btn-outline-primary .btn-lg}
+:::
