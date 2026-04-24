@@ -148,8 +148,6 @@ I kept things intentionally simple in this project - a simple CNN model, standar
 
 Beyond architecture, there's also personalization. I chose a very strict train-test split on purpose to make sure that there wasn't any patient data leakage from training data to the test data. This ensures that the results are accurately representative of what the model might do if it encounters a completely new patient. For practical purposes, however, it is possible that the real-time system can use a short amount of patient specific data (say, the first 2-5 minutes) to perform patient-specific calibration that can meaningfully improve accuracy and recall.
 
-My main takeaway from this project was that clinical grounding is essential when making decisions at every step in clinical AI development. From dataset split, feature engineering, evaluation metric to explainability: ask if this is what a clinician would be looking at and if this reflects what years of clinical knowledge has taught us.
-
 My main takeaway from this project is that clinical grounding is essential at every step of the AI development process. From how to split the dataset, what features to extract, what evaluation metric to use and what explainability techniques to choose: all of them should align with existing clinical knowledge and fit the clinical use case. The biggest improvement in this project didn't come from a better algorithm, but from from asking what a cardiologist would look at.
 
 ::: {.text-center}
