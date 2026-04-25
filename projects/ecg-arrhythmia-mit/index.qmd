@@ -38,15 +38,17 @@ I used the MIT-BIH Arrhythmia Dataset [@moody2001impact], which is one of the mo
 
 | Class | Clinical Description | Annotations Included |
 | :--- | :--- | :--- |
-| **N** (Normal) | Standard heartbeat following the regular electrical pathway. Includes slight conduction delays (like bundle branch blocks) that are not premature. | `N`, `L`, `R`, `e`, `j` |
-| **S** (Supraventricular) | Premature beat originating in the atria. Travels down the normal pathway, making it look morphologically similar to an 'N' beat, but temporally early. | `A`, `a`, `J`, `S` |
-| **V** (Ventricular) | Premature beat originating in the ventricles. Travels backward through tissue, resulting in a wide, bizarre morphology distinct from 'N' beats. | `V`, `E` |
-| **F** (Fusion) | A temporal collision between a normal beat and a ventricular beat, resulting in a hybrid morphology that blends 'N' and 'V' characteristics. | `F` |
-| **Q** (Paced/Unknown) | Unclassifiable or artificially generated beats, including pacemaker spikes or segments corrupted by severe noise and movement artifacts. | `/`, `f`, `U` |
+| **N** (Normal) | Normal beat that follows the standard conduction pathways. Includes Bundle Branch Blocks: beats that look slightly wider due to a delay, but still follow the standard pathways | `N`, `L`, `R`, `e`, `j` |
+| **S** (Supraventricular Ectopic) | Premature beat originating above the Ventricles (Atria or AV node). Travels down the normal pathways making it look morphologically similar to an 'N' beat, but arrives early | `A`, `a`, `J`, `S` |
+| **V** (Ventricular Ectopic) | Abnormal beat originating in the ventricles, bypassing the normal pathways. Morphologically distinct from 'N' and 'V' beats (wide QRS complex) | `V`, `E` |
+| **F** (Fusion) | A beat produced when a normal supraventricular impulse and a ventricular ectopic impulse activate the ventricles simultaneously. Resulting morphology is a fusion of 'N' and 'S' beats | `F` |
+| **Q** (Paced/Unknown) | Beats that are artificially paced or too ambiguous/noise-corrupted to classify reliably | `/`, `f`, `Q` |
+
+: Description of the 5 AAMI super-classes^[Beat class definitions follow [@aami_ec57_1998] and full annotation symbol list defined [here](https://www.physionet.org/physiobank/database/html/mitdbdir/intro.htm#symbols). Supraventricular Ectopic (S) and Ventricular Ectopic (V) classes are abbreviated as Supraventricular (S) and Ventricular (V) in this article.] {tbl-aami-classes}
 
 The morphological differences between classes are visible in the raw ECG signal but as we'll see later, morphology alone isn't always enough.
 
-![Example beats from each AAMI class. Notice that the N and S beats look similar but the timings are different. V beats have a wide QRS complex and look 'bizarre' compared to N and S. F beats are a fusion between N and V. Q beats look completely unrecognizable.](beat_examples.png){.lightbox}
+![Example beats from each AAMI class. Notice that the N and S beats look similar but the timings (rhythm) are different. V beats have a wide QRS complex and look 'bizarre' compared to N and S. F beats are a fusion between N and V. Q beats contain pacemaker spikes or are too obscured by noise.](beat_examples.png){.lightbox}
 
 ::: {.callout-note}
 ## A Note on Train/Test Split
@@ -60,7 +62,7 @@ To establish a baseline, I built an intentionally simple 1D CNN model with 3 con
 
 ![Normalized confusion matrix from the baseline CNN model's predictions](baseline_cnn_cm_normalized.png)
 
-It's clear that the model is just predicting most of the beats as N class and a few as V class. The recall for the rest of the classes is non-existent. The accuracy of this model would be 91% yet failed to detect a single arrhythmia class reliably and would be dangerous if deployed in a clinical setting. A better metric in this case would be the [f1-score](https://towardsdatascience.com/micro-macro-weighted-averages-of-f1-score-clearly-explained-b603420b292f/). The Macro-F1 for this model was 0.29.
+It's clear that the model is just predicting most of the beats as N class and a few as V class. The recall for the rest of the classes is non-existent. The accuracy of this model would be 91% yet fail to detect a single arrhythmia class reliably and would be dangerous if deployed in a clinical setting. A better metric in this case would be the [f1-score](https://towardsdatascience.com/micro-macro-weighted-averages-of-f1-score-clearly-explained-b603420b292f/). The Macro-F1 for this model was 0.29.
 
 | Class / Metric | Precision | Recall | F1-Score | Support |
 |:---|---:|---:|---:|---:|
@@ -111,6 +113,8 @@ To fix this, I calculated 3 specific timing-related features for all the beats:
 
 : RR Interval Features {#tbl-rr-features}
 
+The Pre-RR interval is clinically known as the 'coupling interval' and the Post-RR interval dictates the 'compensatory pause'. These timing features play a big role when classifying the beats. For example, Ventricular beats typically have a full compensatory pause but a Supraventricular beat resets the sinus node so a full compensatory pause is not found, thereby appearing as a premature beat. 
+
 When calculating these features per class, the difference was obvious. Average pre-RR interval for N class was 0.778 seconds whereas for S class, it was 0.506 seconds. I updated the CNN architecture so these 3 features are added to the flattened morphological embeddings from the CNN, right before the final dense classification layer. The results were meaningful - especially for S and V classes. S class F1 score went up to 0.55 from 0.01 and V class F1-score also increased to 0.80. 
 
 Just adding these three numbers increased the overall macro-F1 score from 0.3 to 0.45 while the standard methods couldn't improve it at all. 
@@ -144,11 +148,11 @@ Reading across the rows of the figure gives us valuable information about the mo
 
 # Conclusion
 
-I kept things intentionally simple in this project - a simple CNN model, standard mitigation strategies and just three timing features added - because my main aim was to explain the need for clinical grounding. There are some papers that have achieved a high F1-score on this dataset ^[Once again, be sure to check the train-test split when reading *any* paper that uses this dataset. A lot of them don't use the strict DS1/DS2 patient-level that I used here] by using advanced methods such as a CNN+BiLSTM architecture (@hassan2022classification) that takes in longer windows (3 to 5 beats) as input so it can calculate some of the timing features that I hand-engineered. Another technique is to use a Transformer architecture with multi-headed attention mechanism (@hu2022transformer) where instead of treating every part of the signal equally, the model learns to dynamically focus its attention on specific temporal areas of the signal.
+I kept things intentionally simple in this project - a simple CNN model, standard mitigation strategies and just three timing features added - because my main aim was to explain the need for clinical grounding. There are some papers that have achieved a high F1-score on this dataset ^[Once again, be sure to check the train-test split when reading *any* paper that uses this dataset. A lot of them don't use the strict DS1/DS2 patient-level split that I used here] by using advanced methods such as a CNN+BiLSTM architecture (@hassan2022classification) that takes in longer windows (3 to 5 beats) as input so it can calculate some of the timing features that I hand-engineered. Another technique is to use a Transformer architecture with multi-headed attention mechanism (@hu2022transformer) where instead of treating every part of the signal equally, the model learns to dynamically focus its attention on specific temporal areas of the signal.
 
 Beyond architecture, there's also personalization. I chose a very strict train-test split on purpose to make sure that there wasn't any patient data leakage from training data to the test data. This ensures that the results are accurately representative of what the model might do if it encounters a completely new patient. For practical purposes, however, it is possible that the real-time system can use a short amount of patient specific data (say, the first 2-5 minutes) to perform patient-specific calibration that can meaningfully improve accuracy and recall.
 
-My main takeaway from this project is that clinical grounding is essential at every step of the AI development process. From how to split the dataset, what features to extract, what evaluation metric to use and what explainability techniques to choose: all of them should align with existing clinical knowledge and fit the clinical use case. The biggest improvement in this project didn't come from a better algorithm, but from from asking what a cardiologist would look at.
+My main takeaway from this project is that clinical grounding is essential at every step of the AI development process. From how to split the dataset, what features to extract, what evaluation metric to use and what explainability techniques to choose: all of them should align with existing clinical knowledge and fit the clinical use case. The biggest improvement in this project didn't come from a better algorithm, but from asking what a cardiologist would look at.
 
 ::: {.text-center}
 [{{< fa brands github >}} View Project Repository on GitHub](https://github.com/Maniacravi/ecg-arrhythmia-mitbih){.btn .btn-outline-primary .btn-lg}
