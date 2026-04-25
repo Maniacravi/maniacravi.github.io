@@ -447,15 +447,11 @@ window.Quarto = {
 <figcaption>Class distribution of the five AAMI beat classes in MIT-BIH. Normal beats make up 83% of the dataset.</figcaption>
 </figure>
 </div>
-<section id="the-dataset" class="level1">
+<section id="the-dataset" class="level1 page-columns page-full">
 <h1>The Dataset</h1>
 <p>I used the MIT-BIH Arrhythmia Dataset <span class="citation" data-cites="moody2001impact">(<a href="#ref-moody2001impact" role="doc-biblioref">Moody and Mark 2001</a>)</span>, which is one of the most widely used benchmarks in cardiac signal processing research. The dataset contains 48 half-hour recordings taken from 47 different patients using Holter monitors. Each recording contains two channels of ECG (Lead II and one of the V-leads), sampled at 360 Hz and two independent cardiologists manually reviewed and annotated over 109,000 individual heartbeats. I grouped the various annotations into 5 super classes, following AAMI guidelines <span class="citation" data-cites="aami_ec57_1998">(<a href="#ref-aami_ec57_1998" role="doc-biblioref">Association for the Advancement of Medical Instrumentation 1998 (Reaffirmed 2003)</a>)</span>:</p>
 <table class="caption-top table">
-<colgroup>
-<col style="width: 33%">
-<col style="width: 33%">
-<col style="width: 33%">
-</colgroup>
+<caption>Description of the 5 AAMI super-classes<a href="#fn2" class="footnote-ref" id="fnref2" role="doc-noteref"><sup>2</sup></a></caption>
 <thead>
 <tr class="header">
 <th style="text-align: left;">Class</th>
@@ -466,36 +462,36 @@ window.Quarto = {
 <tbody>
 <tr class="odd">
 <td style="text-align: left;"><strong>N</strong> (Normal)</td>
-<td style="text-align: left;">Standard heartbeat following the regular electrical pathway. Includes slight conduction delays (like bundle branch blocks) that are not premature.</td>
+<td style="text-align: left;">Normal beat that follows the standard conduction pathways. Includes Bundle Branch Blocks: beats that look slightly wider due to a delay, but still follow the standard pathways</td>
 <td style="text-align: left;"><code>N</code>, <code>L</code>, <code>R</code>, <code>e</code>, <code>j</code></td>
 </tr>
 <tr class="even">
-<td style="text-align: left;"><strong>S</strong> (Supraventricular)</td>
-<td style="text-align: left;">Premature beat originating in the atria. Travels down the normal pathway, making it look morphologically similar to an ‘N’ beat, but temporally early.</td>
+<td style="text-align: left;"><strong>S</strong> (Supraventricular Ectopic)</td>
+<td style="text-align: left;">Premature beat originating above the Ventricles (Atria or AV node). Travels down the normal pathways making it look morphologically similar to an ‘N’ beat, but arrives early</td>
 <td style="text-align: left;"><code>A</code>, <code>a</code>, <code>J</code>, <code>S</code></td>
 </tr>
 <tr class="odd">
-<td style="text-align: left;"><strong>V</strong> (Ventricular)</td>
-<td style="text-align: left;">Premature beat originating in the ventricles. Travels backward through tissue, resulting in a wide, bizarre morphology distinct from ‘N’ beats.</td>
+<td style="text-align: left;"><strong>V</strong> (Ventricular Ectopic)</td>
+<td style="text-align: left;">Abnormal beat originating in the ventricles, bypassing the normal pathways. Morphologically distinct from ‘N’ and ‘V’ beats (wide QRS complex)</td>
 <td style="text-align: left;"><code>V</code>, <code>E</code></td>
 </tr>
 <tr class="even">
 <td style="text-align: left;"><strong>F</strong> (Fusion)</td>
-<td style="text-align: left;">A temporal collision between a normal beat and a ventricular beat, resulting in a hybrid morphology that blends ‘N’ and ‘V’ characteristics.</td>
+<td style="text-align: left;">A beat produced when a normal supraventricular impulse and a ventricular ectopic impulse activate the ventricles simultaneously. Resulting morphology is a fusion of ‘N’ and ‘S’ beats</td>
 <td style="text-align: left;"><code>F</code></td>
 </tr>
 <tr class="odd">
 <td style="text-align: left;"><strong>Q</strong> (Paced/Unknown)</td>
-<td style="text-align: left;">Unclassifiable or artificially generated beats, including pacemaker spikes or segments corrupted by severe noise and movement artifacts.</td>
-<td style="text-align: left;"><code>/</code>, <code>f</code>, <code>U</code></td>
+<td style="text-align: left;">Beats that are artificially paced or too ambiguous/noise-corrupted to classify reliably</td>
+<td style="text-align: left;"><code>/</code>, <code>f</code>, <code>Q</code></td>
 </tr>
 </tbody>
 </table>
-<p>The morphological differences between classes are visible in the raw ECG signal but as we’ll see later, morphology alone isn’t always enough.</p>
+<div class="no-row-height column-margin column-container"><div id="fn2"><p><sup>2</sup>&nbsp;Beat class definitions follow <span class="citation" data-cites="aami_ec57_1998">(<a href="#ref-aami_ec57_1998" role="doc-biblioref">Association for the Advancement of Medical Instrumentation 1998 (Reaffirmed 2003)</a>)</span> and full annotation symbol list defined <a href="https://www.physionet.org/physiobank/database/html/mitdbdir/intro.htm#symbols">here</a>. Supraventricular Ectopic (S) and Ventricular Ectopic (V) classes are abbreviated as Supraventricular (S) and Ventricular (V) in this article.</p></div></div><p>The morphological differences between classes are visible in the raw ECG signal but as we’ll see later, morphology alone isn’t always enough.</p>
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
-<p><a href="beat_examples.png" class="lightbox" data-gallery="quarto-lightbox-gallery-1" title="Example beats from each AAMI class. Notice that the N and S beats look similar but the timings are different. V beats have a wide QRS complex and look ‘bizarre’ compared to N and S. F beats are a fusion between N and V. Q beats look completely unrecognizable."><img src="beat_examples.png" class="img-fluid figure-img" alt="Example beats from each AAMI class. Notice that the N and S beats look similar but the timings are different. V beats have a wide QRS complex and look ‘bizarre’ compared to N and S. F beats are a fusion between N and V. Q beats look completely unrecognizable."></a></p>
-<figcaption>Example beats from each AAMI class. Notice that the N and S beats look similar but the timings are different. V beats have a wide QRS complex and look ‘bizarre’ compared to N and S. F beats are a fusion between N and V. Q beats look completely unrecognizable.</figcaption>
+<p><a href="beat_examples.png" class="lightbox" data-gallery="quarto-lightbox-gallery-1" title="Example beats from each AAMI class. Notice that the N and S beats look similar but the timings (rhythm) are different. V beats have a wide QRS complex and look ‘bizarre’ compared to N and S. F beats are a fusion between N and V. Q beats contain pacemaker spikes or are too obscured by noise."><img src="beat_examples.png" class="img-fluid figure-img" alt="Example beats from each AAMI class. Notice that the N and S beats look similar but the timings (rhythm) are different. V beats have a wide QRS complex and look ‘bizarre’ compared to N and S. F beats are a fusion between N and V. Q beats contain pacemaker spikes or are too obscured by noise."></a></p>
+<figcaption>Example beats from each AAMI class. Notice that the N and S beats look similar but the timings (rhythm) are different. V beats have a wide QRS complex and look ‘bizarre’ compared to N and S. F beats are a fusion between N and V. Q beats contain pacemaker spikes or are too obscured by noise.</figcaption>
 </figure>
 </div>
 <div class="callout callout-style-default callout-note callout-titled">
@@ -521,7 +517,7 @@ window.Quarto = {
 <figcaption>Normalized confusion matrix from the baseline CNN model’s predictions</figcaption>
 </figure>
 </div>
-<p>It’s clear that the model is just predicting most of the beats as N class and a few as V class. The recall for the rest of the classes is non-existent. The accuracy of this model would be 91% yet failed to detect a single arrhythmia class reliably and would be dangerous if deployed in a clinical setting. A better metric in this case would be the <a href="https://towardsdatascience.com/micro-macro-weighted-averages-of-f1-score-clearly-explained-b603420b292f/">f1-score</a>. The Macro-F1 for this model was 0.29.</p>
+<p>It’s clear that the model is just predicting most of the beats as N class and a few as V class. The recall for the rest of the classes is non-existent. The accuracy of this model would be 91% yet fail to detect a single arrhythmia class reliably and would be dangerous if deployed in a clinical setting. A better metric in this case would be the <a href="https://towardsdatascience.com/micro-macro-weighted-averages-of-f1-score-clearly-explained-b603420b292f/">f1-score</a>. The Macro-F1 for this model was 0.29.</p>
 <div id="tbl-classification-report" class="quarto-float quarto-figure quarto-figure-center anchored">
 <figure class="quarto-float quarto-float-tbl figure">
 <figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-classification-report-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
@@ -606,16 +602,16 @@ Table&nbsp;1: Classification Report - Baseline CNN Model
 <p>The standard approaches in ML workflows when encountering this kind of class imbalance are to tweak the <a href="https://www.datacamp.com/tutorial/loss-function-in-machine-learning">loss function</a> or to generate ‘synthetic’ data for classes with fewer examples for the model to train on.</p>
 <section id="weighted-cross-entropy-loss" class="level2 page-columns page-full">
 <h2 class="anchored" data-anchor-id="weighted-cross-entropy-loss">Weighted Cross-Entropy Loss</h2>
-<p>Instead of having all classes have the same weight <a href="#fn2" class="footnote-ref" id="fnref2" role="doc-noteref"><sup>2</sup></a>, weighted cross-entropy loss assigns weight based on class distribution. This penalizes the network more for missing rare classes. The Ventricular (V) F1 score improved slightly (0.51 to 0.59), but the S class barely moved (0.01 to 0.07). The Macro F1 nudged along from 0.29 to 0.30.</p>
-<div class="no-row-height column-margin column-container"><div id="fn2"><p><sup>2</sup>&nbsp;As in Standard Cross-Entropy Loss, which was the loss function used in the baseline CNN model (and most simple classification models)</p></div></div></section>
+<p>Instead of having all classes have the same weight <a href="#fn3" class="footnote-ref" id="fnref3" role="doc-noteref"><sup>3</sup></a>, weighted cross-entropy loss assigns weight based on class distribution. This penalizes the network more for missing rare classes. The Ventricular (V) F1 score improved slightly (0.51 to 0.59), but the S class barely moved (0.01 to 0.07). The Macro F1 nudged along from 0.29 to 0.30.</p>
+<div class="no-row-height column-margin column-container"><div id="fn3"><p><sup>3</sup>&nbsp;As in Standard Cross-Entropy Loss, which was the loss function used in the baseline CNN model (and most simple classification models)</p></div></div></section>
 <section id="focal-loss" class="level2 page-columns page-full">
 <h2 class="anchored" data-anchor-id="focal-loss">Focal Loss</h2>
-<p>Focal Loss <span class="citation" data-cites="lin2017focal">(<a href="#ref-lin2017focal" role="doc-biblioref">Lin et al. 2017</a>)</span> makes the network focus on ‘hard to classify’ beats by using a dynamically scaling loss that down-weights easy examples. This is the preferred loss function in standard ML workflows for datasets with severe class imbalance. However, in this case, it failed to outperform weighted cross-entropy loss <a href="#fn3" class="footnote-ref" id="fnref3" role="doc-noteref"><sup>3</sup></a>.</p>
-<div class="no-row-height column-margin column-container"><div id="fn3"><p><sup>3</sup>&nbsp;A gamma value of 2.0 was used, which is the default. Read the <a href="https://arxiv.org/abs/1708.02002">original paper</a> for more details</p></div></div></section>
+<p>Focal Loss <span class="citation" data-cites="lin2017focal">(<a href="#ref-lin2017focal" role="doc-biblioref">Lin et al. 2017</a>)</span> makes the network focus on ‘hard to classify’ beats by using a dynamically scaling loss that down-weights easy examples. This is the preferred loss function in standard ML workflows for datasets with severe class imbalance. However, in this case, it failed to outperform weighted cross-entropy loss <a href="#fn4" class="footnote-ref" id="fnref4" role="doc-noteref"><sup>4</sup></a>.</p>
+<div class="no-row-height column-margin column-container"><div id="fn4"><p><sup>4</sup>&nbsp;A gamma value of 2.0 was used, which is the default. Read the <a href="https://arxiv.org/abs/1708.02002">original paper</a> for more details</p></div></div></section>
 <section id="synthetic-data-smote" class="level2 page-columns page-full">
 <h2 class="anchored" data-anchor-id="synthetic-data-smote">Synthetic Data (SMOTE)</h2>
-<p>SMOTE (Synthetic Minority Over-sampling Technique) is an ML algorithm that creates synthetic samples for under-represented classes by essentially interpolating the existing examples from that class <a href="#fn4" class="footnote-ref" id="fnref4" role="doc-noteref"><sup>4</sup></a>. For this dataset and model, it provided best S class result so far (0.15) but failed to move the needle on other classes.</p>
-<div class="no-row-height column-margin column-container"><div id="fn4"><p><sup>4</sup>&nbsp;The math behind SMOTE and some its variants are presented <a href="https://www.emergentmind.com/topics/smote-algorithm">here</a></p></div></div><p>To understand why SMOTE failed in this case, we only need to look at examples of the synthetic data. The Q class is at a severe disadvantage because there are only 8 real examples in the DS1 training split and interpolating between them to create 45,833 beats means the resulting synthetic beats are essentially just noise.</p>
+<p>SMOTE (Synthetic Minority Over-sampling Technique) is an ML algorithm that creates synthetic samples for under-represented classes by essentially interpolating the existing examples from that class <a href="#fn5" class="footnote-ref" id="fnref5" role="doc-noteref"><sup>5</sup></a>. For this dataset and model, it provided best S class result so far (0.15) but failed to move the needle on other classes.</p>
+<div class="no-row-height column-margin column-container"><div id="fn5"><p><sup>5</sup>&nbsp;The math behind SMOTE and some its variants are presented <a href="https://www.emergentmind.com/topics/smote-algorithm">here</a></p></div></div><p>To understand why SMOTE failed in this case, we only need to look at examples of the synthetic data. The Q class is at a severe disadvantage because there are only 8 real examples in the DS1 training split and interpolating between them to create 45,833 beats means the resulting synthetic beats are essentially just noise.</p>
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
 <p><a href="smote_comparison.png" class="lightbox" data-gallery="quarto-lightbox-gallery-2" title="Examples of a SMOTE-generated waveform for each minority class"><img src="smote_comparison.png" class="img-fluid figure-img" alt="Examples of a SMOTE-generated waveform for each minority class"></a></p>
@@ -664,6 +660,7 @@ Table&nbsp;2: RR Interval Features
 </div>
 </figure>
 </div>
+<p>The Pre-RR interval is clinically known as the ‘coupling interval’ and the Post-RR interval dictates the ‘compensatory pause’. These timing features play a big role when classifying the beats. For example, Ventricular beats typically have a full compensatory pause but a Supraventricular beat resets the sinus node so a full compensatory pause is not found, thereby appearing as a premature beat.</p>
 <p>When calculating these features per class, the difference was obvious. Average pre-RR interval for N class was 0.778 seconds whereas for S class, it was 0.506 seconds. I updated the CNN architecture so these 3 features are added to the flattened morphological embeddings from the CNN, right before the final dense classification layer. The results were meaningful - especially for S and V classes. S class F1 score went up to 0.55 from 0.01 and V class F1-score also increased to 0.80.</p>
 <p>Just adding these three numbers increased the overall macro-F1 score from 0.3 to 0.45 while the standard methods couldn’t improve it at all.</p>
 <div id="tbl-results-comp" class="quarto-float quarto-figure quarto-figure-center anchored">
@@ -782,9 +779,9 @@ Table&nbsp;4: Attention Map Analysis
 </section>
 <section id="conclusion" class="level1 page-columns page-full">
 <h1>Conclusion</h1>
-<p>I kept things intentionally simple in this project - a simple CNN model, standard mitigation strategies and just three timing features added - because my main aim was to explain the need for clinical grounding. There are some papers that have achieved a high F1-score on this dataset <a href="#fn5" class="footnote-ref" id="fnref5" role="doc-noteref"><sup>5</sup></a> by using advanced methods such as a CNN+BiLSTM architecture (<span class="citation" data-cites="hassan2022classification">Hassan et al. (<a href="#ref-hassan2022classification" role="doc-biblioref">2022</a>)</span>) that takes in longer windows (3 to 5 beats) as input so it can calculate some of the timing features that I hand-engineered. Another technique is to use a Transformer architecture with multi-headed attention mechanism (<span class="citation" data-cites="hu2022transformer">Hu, Chen, and Zhou (<a href="#ref-hu2022transformer" role="doc-biblioref">2022</a>)</span>) where instead of treating every part of the signal equally, the model learns to dynamically focus its attention on specific temporal areas of the signal.</p>
-<div class="no-row-height column-margin column-container"><div id="fn5"><p><sup>5</sup>&nbsp;Once again, be sure to check the train-test split when reading <em>any</em> paper that uses this dataset. A lot of them don’t use the strict DS1/DS2 patient-level that I used here</p></div></div><p>Beyond architecture, there’s also personalization. I chose a very strict train-test split on purpose to make sure that there wasn’t any patient data leakage from training data to the test data. This ensures that the results are accurately representative of what the model might do if it encounters a completely new patient. For practical purposes, however, it is possible that the real-time system can use a short amount of patient specific data (say, the first 2-5 minutes) to perform patient-specific calibration that can meaningfully improve accuracy and recall.</p>
-<p>My main takeaway from this project is that clinical grounding is essential at every step of the AI development process. From how to split the dataset, what features to extract, what evaluation metric to use and what explainability techniques to choose: all of them should align with existing clinical knowledge and fit the clinical use case. The biggest improvement in this project didn’t come from a better algorithm, but from from asking what a cardiologist would look at.</p>
+<p>I kept things intentionally simple in this project - a simple CNN model, standard mitigation strategies and just three timing features added - because my main aim was to explain the need for clinical grounding. There are some papers that have achieved a high F1-score on this dataset <a href="#fn6" class="footnote-ref" id="fnref6" role="doc-noteref"><sup>6</sup></a> by using advanced methods such as a CNN+BiLSTM architecture (<span class="citation" data-cites="hassan2022classification">Hassan et al. (<a href="#ref-hassan2022classification" role="doc-biblioref">2022</a>)</span>) that takes in longer windows (3 to 5 beats) as input so it can calculate some of the timing features that I hand-engineered. Another technique is to use a Transformer architecture with multi-headed attention mechanism (<span class="citation" data-cites="hu2022transformer">Hu, Chen, and Zhou (<a href="#ref-hu2022transformer" role="doc-biblioref">2022</a>)</span>) where instead of treating every part of the signal equally, the model learns to dynamically focus its attention on specific temporal areas of the signal.</p>
+<div class="no-row-height column-margin column-container"><div id="fn6"><p><sup>6</sup>&nbsp;Once again, be sure to check the train-test split when reading <em>any</em> paper that uses this dataset. A lot of them don’t use the strict DS1/DS2 patient-level split that I used here</p></div></div><p>Beyond architecture, there’s also personalization. I chose a very strict train-test split on purpose to make sure that there wasn’t any patient data leakage from training data to the test data. This ensures that the results are accurately representative of what the model might do if it encounters a completely new patient. For practical purposes, however, it is possible that the real-time system can use a short amount of patient specific data (say, the first 2-5 minutes) to perform patient-specific calibration that can meaningfully improve accuracy and recall.</p>
+<p>My main takeaway from this project is that clinical grounding is essential at every step of the AI development process. From how to split the dataset, what features to extract, what evaluation metric to use and what explainability techniques to choose: all of them should align with existing clinical knowledge and fit the clinical use case. The biggest improvement in this project didn’t come from a better algorithm, but from asking what a cardiologist would look at.</p>
 <div class="text-center">
 <p><a href="https://github.com/Maniacravi/ecg-arrhythmia-mitbih" class="btn btn-outline-primary btn-lg"><i class="fa-brands fa-github" aria-label="github"></i> View Project Repository on GitHub</a></p>
 </div>
